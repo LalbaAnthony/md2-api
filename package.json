@@ -23,7 +23,7 @@
     "test:watch": "vitest",
     "dev": "tsx watch src/index.ts",
     "start": "node --enable-source-maps dist/index.js",
-    "prepare": "git config core.hooksPath .githooks"
+    "prepare": "node tools/install-git-hooks.mjs"
   },
   "dependencies": {
     "@fastify/cors": "11.3.0",

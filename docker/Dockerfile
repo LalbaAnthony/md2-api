@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 FROM base AS deps
 COPY package.json package-lock.json ./
+COPY tools/install-git-hooks.mjs ./tools/install-git-hooks.mjs
 RUN --mount=type=cache,target=/root/.npm npm ci
 
 FROM deps AS build

@@ -46,8 +46,25 @@ Both corpora arrive in later lots. Until then the two scripts pass `--passWithNo
 The OpenAPI document and `tools/export-openapi.mjs` arrive in Lot 3. The comparison step is added
 to the workflow at that point.
 
-## 6. Additional packages
+## 6. Additional modules and packages
+
+`src/lib/readiness.ts` is not named in the tree of section 3. `/readyz` has to answer on the
+state of theme loading and backend warm up, and that state is owned neither by the server nor by
+a route. It is a four line module that later lots write into.
+
+### Packages
 
 `@fastify/cors` and `globals` are not listed in section 2.6 or 2.7. The first implements the CORS
 policy required by section 9.2, the second supplies the environment globals to the flat ESLint
 configuration. `@eslint/js` is likewise required by the flat configuration.
+
+## 7. The `prepare` script and the Dockerfile `deps` stage
+
+Git hook installation runs from the `prepare` lifecycle script, so a fresh clone gets the hooks
+from a plain `npm ci`. That script also runs during the image build, where git is absent, so
+installation is delegated to `tools/install-git-hooks.mjs`, which exits successfully when there
+is no git working tree or no git binary.
+
+The `deps` stage of `docker/Dockerfile` therefore copies that one file before `npm ci`, which is
+the only departure from the Dockerfile given in section 15.1. The alternative, `npm ci
+--ignore-scripts`, would also skip the install scripts of native dependencies.
