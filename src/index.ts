@@ -8,9 +8,8 @@ const SHUTDOWN_SIGNALS: readonly NodeJS.Signals[] = ["SIGTERM", "SIGINT"];
 const start = async (): Promise<void> => {
   const config = loadConfig();
   const readiness = createReadinessState();
-  const app = await buildServer(config, readiness);
+  const app = await buildServer(config, { readiness });
 
-  readiness.themesLoaded = true;
   readiness.formatsWarmedUp = true;
 
   let shuttingDown = false;

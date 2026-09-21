@@ -14,3 +14,10 @@ export interface ConversionLogFields {
   readonly outputBytes: number;
   readonly warningCount: number;
 }
+
+export interface StructuredLogger {
+  debug(details: Record<string, unknown>, message: string): void;
+  info(details: Record<string, unknown>, message: string): void;
+  warn(details: Record<string, unknown>, message: string): void;
+  error(details: Record<string, unknown>, message: string): void;
+}

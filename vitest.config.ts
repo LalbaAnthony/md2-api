@@ -27,6 +27,12 @@ export default defineConfig({
           functions: 95,
           statements: 95,
         },
+        "src/theme/schema.ts": {
+          lines: 95,
+          branches: 95,
+          functions: 95,
+          statements: 95,
+        },
       },
     },
   },

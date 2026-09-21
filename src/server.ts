@@ -30,9 +30,12 @@ import {
 } from "./errors.ts";
 import { createReadinessState } from "./lib/readiness.ts";
 import { healthRoutes } from "./routes/health.ts";
+import { themeRoutes } from "./routes/themes.ts";
+import { createThemeRegistry } from "./theme/registry.ts";
 import type { AppConfig } from "./types/config.ts";
-import type { ReadinessState } from "./types/api.ts";
+import type { ReadinessState, ServerDependencies, ThemeCaveatProvider } from "./types/api.ts";
 import type { JsonObject } from "./types/json.ts";
+import type { ThemeRegistry } from "./types/theme-registry.ts";
 
 const FASTIFY_BODY_TOO_LARGE_CODE = "FST_ERR_CTP_BODY_TOO_LARGE";
 const UNDER_PRESSURE_CODE = "FST_UNDER_PRESSURE";
@@ -89,11 +92,15 @@ const mapThrownToAppError = (thrown: unknown): AppError => {
   return toAppError(thrown);
 };
 
+const noThemeCaveats: ThemeCaveatProvider = () => ({});
+
 export const buildServer = async (
   config: AppConfig,
-  readiness: ReadinessState = createReadinessState(),
+  overrides: Partial<ServerDependencies> = {},
 ): Promise<FastifyInstance> => {
   const exposeDiagnostics = config.NODE_ENV !== "production";
+  const readiness: ReadinessState = overrides.readiness ?? createReadinessState();
+  const themeCaveats: ThemeCaveatProvider = overrides.themeCaveats ?? noThemeCaveats;
 
   const app = Fastify({
     logger: buildLoggerOptions(config),
@@ -155,7 +162,18 @@ export const buildServer = async (
     );
   });
 
+  const themes: ThemeRegistry =
+    overrides.themes ?? (await createThemeRegistry({ config, logger: app.log }));
+  readiness.themesLoaded = true;
+
+  app.addHook("onClose", async () => {
+    if (overrides.themes === undefined) {
+      await themes.close();
+    }
+  });
+
   await app.register(healthRoutes(readiness));
+  await app.register(themeRoutes(themes, themeCaveats));
 
   return app;
 };

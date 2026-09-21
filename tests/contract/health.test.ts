@@ -43,14 +43,20 @@ describe("GET /healthz", () => {
 });
 
 describe("GET /readyz", () => {
-  it("answers 503 until themes and formats are ready", async () => {
+  it("reports loaded themes as soon as the server is built", async () => {
+    const readiness = createReadinessState();
+    app = await startTestServer({}, readiness);
+    expect(readiness.themesLoaded).toBe(true);
+  });
+
+  it("answers 503 while the output formats are not warmed up", async () => {
     const readiness = createReadinessState();
     app = await startTestServer({}, readiness);
     const response = await app.inject({ method: "GET", url: "/readyz" });
     expect(response.statusCode).toBe(503);
     expect(response.json()).toEqual({
       status: "starting",
-      themesLoaded: false,
+      themesLoaded: true,
       formatsWarmedUp: false,
     });
   });
@@ -58,7 +64,6 @@ describe("GET /readyz", () => {
   it("answers 200 once themes and formats are ready", async () => {
     const readiness = createReadinessState();
     app = await startTestServer({}, readiness);
-    readiness.themesLoaded = true;
     readiness.formatsWarmedUp = true;
     const response = await app.inject({ method: "GET", url: "/readyz" });
     expect(response.statusCode).toBe(200);

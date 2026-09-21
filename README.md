@@ -65,19 +65,23 @@ Install the hooks once with `npm run prepare`, which points `core.hooksPath` at 
 
 ## Documentation
 
-| File                                | Contents                                        |
-| ----------------------------------- | ----------------------------------------------- |
-| `docs/architecture.md`              | pipeline, layering, error handling, containers  |
-| `docs/units.md`                     | every unit, every conversion, every trap        |
-| `docs/adr/0001-toolchain.md`        | retained versions                               |
-| `docs/adr/0002-branded-units.md`    | branded units and the assertion boundary        |
-| `docs/adr/0003-lot-0-deviations.md` | departures from the specification, with reasons |
+| File                                   | Contents                                               |
+| -------------------------------------- | ------------------------------------------------------ |
+| `docs/architecture.md`                 | pipeline, layering, error handling, containers         |
+| `docs/units.md`                        | every unit, every conversion, every trap               |
+| `docs/adr/0001-toolchain.md`           | retained versions                                      |
+| `docs/adr/0002-branded-units.md`       | branded units and the assertion boundary               |
+| `docs/adr/0003-lot-0-deviations.md`    | departures from the specification, with reasons        |
+| `docs/adr/0004-theme-schema-mirror.md` | why the theme schema uses readonly wrappers and codecs |
 
 ## Delivery status
 
-Lot 0 of the specification is complete: tree, strict toolchain, conformance tooling, unit system,
-error hierarchy, configuration, minimal server with `/healthz` and `/readyz`, containers and CI.
+Lot 0 is complete: tree, strict toolchain, conformance tooling, unit system, error hierarchy,
+configuration, minimal server with `/healthz` and `/readyz`, containers and CI.
 
-Later lots add the theme model, the format registry, the conversion pipeline and the DOCX
-backend. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
+Lot 1 is complete: the theme interface and its proven Zod mirror, the token helpers, the theme
+registry with its production and development behaviours, the `default` theme, and the `/themes`
+and `/themes/:id` routes.
+
+Later lots add the format registry, the conversion pipeline and the DOCX backend. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
 `docs/ooxml-notes.md` and `docs/perf.md` arrive with the lots that make them meaningful.

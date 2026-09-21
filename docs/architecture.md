@@ -45,6 +45,33 @@ it is flattened by propagating indentation, borders and overrides. The DocIR per
 flattening once, explicitly, in `normalize`. Each renderer then becomes a local block to element
 function that can be unit tested.
 
+## Themes
+
+A theme is not a format configuration. It is a set of semantic tokens that compile to the
+configuration of a backend. Adding a theme changes no backend, and adding a backend changes no
+theme.
+
+`src/types/theme.ts` holds the interface, which is the source of truth. `src/theme/schema.ts`
+holds the Zod mirror, proven equal to the interface by a type test, and
+`docs/adr/0004-theme-schema-mirror.md` explains the two mechanisms that keep the mirror exact.
+
+`src/theme/registry.ts` loads the built in themes first, then every `*.json` of `THEMES_DIR`, in
+name order. A theme file must be named after the identifier it declares. A theme from the
+directory overrides a built in theme of the same identifier, with a warning.
+
+An invalid theme refuses the start in production. Outside production it is logged as an error and
+excluded, so that the service stays usable while an author iterates. A theme directory that does
+not exist is not an error: the production image ships no theme directory and runs on the built in
+themes alone.
+
+`src/theme/tokens.ts` derives what both the normaliser and the backends need from a theme:
+`computeContentWidth` is the usable width that image and table sizing depend on, and the colour
+helpers derive callout tints from a single accent colour.
+
+Each theme carries a content hash. A backend caches its compiled form per identifier and hash, so
+editing a theme in development invalidates exactly what it should. `ENABLE_THEME_WATCH` makes the
+registry watch the directory and notify its listeners after a debounce.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

@@ -17,13 +17,13 @@ export const testConfig = (overrides: EnvironmentSource = {}): AppConfig =>
 export const buildTestServer = async (
   overrides: EnvironmentSource = {},
   readiness: ReadinessState = createReadinessState(),
-): Promise<FastifyInstance> => buildServer(testConfig(overrides), readiness);
+): Promise<FastifyInstance> => buildServer(testConfig(overrides), { readiness });
 
 export const startTestServer = async (
   overrides: EnvironmentSource = {},
   readiness: ReadinessState = createReadinessState(),
 ): Promise<FastifyInstance> => {
-  const app = await buildServer(testConfig(overrides), readiness);
+  const app = await buildServer(testConfig(overrides), { readiness });
   await app.ready();
   return app;
 };
