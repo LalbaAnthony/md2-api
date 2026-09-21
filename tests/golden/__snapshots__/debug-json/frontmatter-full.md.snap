@@ -1,0 +1,60 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [
+      "Ada Lovelace",
+      "Grace Hopper"
+    ],
+    "custom": {
+      "department": "Engineering",
+      "revision": "7"
+    },
+    "date": "2026-03-31",
+    "keywords": [
+      "front matter",
+      "metadata"
+    ],
+    "language": "en",
+    "subject": "Testing",
+    "subtitle": "Every known key",
+    "title": "The Complete Front Matter"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 6
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "The body after the front matter."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    }
+  ]
+}

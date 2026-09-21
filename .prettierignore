@@ -4,3 +4,4 @@ node_modules
 package-lock.json
 tests/visual/baseline
 tests/golden/__snapshots__
+docs/openapi.json

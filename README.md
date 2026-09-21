@@ -85,8 +85,14 @@ registry with its production and development behaviours, the `default` theme, an
 and `/themes/:id` routes.
 
 Lot 2 is complete: the backend contract, the format registry, content negotiation, the
-`debug-json` backend and the `/formats` and `/formats/:id` routes. No DOCX code exists yet, which
-is what makes the pipeline independence verifiable rather than merely claimed.
+`debug-json` backend and the `/formats` and `/formats/:id` routes.
 
-Later lots add the conversion pipeline, `POST /convert` and the DOCX backend. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
+Lot 3 is complete: `parse`, the front matter, link and anchor passes, the flattening to the
+intermediate representation for paragraphs, headings, thematic breaks and the full inline set,
+a minimal DOCX backend with compiled styles and numbering, `POST /convert` and
+`POST /convert/:themeId`, the OpenAPI document with Swagger UI, and the first golden snapshots.
+
+Lists, code blocks, tables, images, quotes, callouts, page furniture, footnotes and mathematics
+arrive in Lots 4 to 10. Until then the DOCX backend reports each of them as a conversion warning
+rather than failing. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
 `docs/ooxml-notes.md` and `docs/perf.md` arrive with the lots that make them meaningful.

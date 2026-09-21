@@ -1,5 +1,6 @@
 import { validationError } from "../errors.ts";
 import { debugJsonBackend } from "./debug-json/backend.ts";
+import { docxBackend } from "./docx/backend.ts";
 import type {
   FormatBackend,
   FormatDescriptor,
@@ -8,7 +9,7 @@ import type {
   OutputFormatId,
 } from "../types/format.ts";
 
-const ALL_BACKENDS: readonly FormatBackend[] = [debugJsonBackend];
+const ALL_BACKENDS: readonly FormatBackend[] = [docxBackend, debugJsonBackend];
 
 const DEVELOPMENT_ONLY_BACKEND_IDS: ReadonlySet<OutputFormatId> = new Set(["debug-json"]);
 
@@ -46,13 +47,19 @@ export const createFormatRegistry = (options: FormatRegistryOptions): FormatRegi
     }
   }
 
-  for (const requested of config.ENABLED_FORMATS) {
-    if (!knownIds.has(requested)) {
-      logger.warn(
-        { formatId: requested, known: [...knownIds] },
-        "ENABLED_FORMATS names an output format that no backend implements, ignoring it.",
-      );
+  const unimplemented = config.ENABLED_FORMATS.filter((requested) => !knownIds.has(requested));
+  if (unimplemented.length > 0) {
+    if (isProduction) {
+      throw validationError("ENABLED_FORMATS names an output format that no backend implements.", {
+        variable: "ENABLED_FORMATS",
+        unimplemented: [...unimplemented],
+        known: [...knownIds],
+      });
     }
+    logger.warn(
+      { unimplemented: [...unimplemented], known: [...knownIds] },
+      "ENABLED_FORMATS names an output format that no backend implements, ignoring it.",
+    );
   }
 
   const registered = candidates.filter((backend) =>

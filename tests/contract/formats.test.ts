@@ -22,7 +22,14 @@ describe("GET /formats outside production", () => {
     const response = await app.inject({ method: "GET", url: "/formats" });
     expect(response.statusCode).toBe(200);
     const body: FormatListBody = response.json();
-    expect(body.formats.map((format) => format.id)).toEqual(["debug-json"]);
+    expect(body.formats.map((format) => format.id)).toEqual(["docx", "debug-json"]);
+  });
+
+  it("lists the development backend after the production one", async () => {
+    app = await startTestServer();
+    const response = await app.inject({ method: "GET", url: "/formats" });
+    const body: FormatListBody = response.json();
+    expect(body.formats.map((format) => format.productionReady)).toEqual([true, false]);
   });
 
   it("describes the capabilities of each format", async () => {
@@ -89,7 +96,7 @@ describe("GET /formats/:id", () => {
     expect(response.statusCode).toBe(404);
     const body: ErrorResponseBody = response.json();
     expect(body.error.code).toBe("FORMAT_NOT_FOUND");
-    expect(body.error.details).toEqual({ requested: "pdf", available: ["debug-json"] });
+    expect(body.error.details).toEqual({ requested: "pdf", available: ["docx", "debug-json"] });
   });
 });
 
@@ -98,6 +105,6 @@ describe("theme caveats per format", () => {
     app = await startTestServer();
     const response = await app.inject({ method: "GET", url: "/themes/default" });
     const body: { caveats: Record<string, string[]> } = response.json();
-    expect(Object.keys(body.caveats)).toEqual(["debug-json"]);
+    expect(Object.keys(body.caveats)).toEqual(["docx", "debug-json"]);
   });
 });

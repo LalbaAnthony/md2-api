@@ -96,6 +96,29 @@ Each backend also validates its own slice of `theme.formats`, and the server pas
 validators to the theme registry, so an invalid extension is caught when the theme is loaded
 rather than when a conversion is attempted.
 
+## The pipeline
+
+`src/pipeline/parse.ts` holds the unified processor and nothing else. It carries no transform
+plugin, so `parseMarkdown` returns raw mdast and every decision belongs to `normalize`.
+
+`src/pipeline/normalize/` runs its passes in the order of section 5.3. As of this lot the order
+is front matter, link references, anchors, flatten. Each pass consumes the result of the
+previous one, and the warning sink is threaded through all of them so that a single conversion
+reports every degradation at once.
+
+Anchors come from one `GithubSlugger` instance walking the headings in document order. The same
+table resolves internal links, so a duplicate heading and the link pointing at it always agree.
+Two instances would mean two duplicate counters and dead links.
+
+`src/pipeline/convert.ts` is the orchestrator: it checks the input size, parses, normalises,
+calls the backend, and merges the warnings of the pipeline with those of the backend. It is
+wrapped in a timeout, and the route wraps it in a semaphore bounded by `MAX_CONCURRENCY` with a
+queue of `MAX_CONCURRENCY * 8`, beyond which a request is refused immediately rather than
+queued without bound.
+
+The timeout bounds the awaited pipeline. It cannot interrupt a synchronous renderer, which is
+one more reason the renderers stay small and total.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

@@ -18,3 +18,11 @@ export const LOG_REDACTION_PATHS: readonly string[] = [
   "body",
   "markdown",
 ];
+
+export const DEFAULT_DOCUMENT_LANGUAGE = "en";
+export const MARKDOWN_CONTENT_TYPES: readonly string[] = [
+  "text/markdown",
+  "text/x-markdown",
+  "text/plain",
+];
+export const CONVERSION_QUEUE_FACTOR = 8;

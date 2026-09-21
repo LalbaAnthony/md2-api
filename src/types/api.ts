@@ -1,3 +1,5 @@
+import type { AppConfig } from "./config.ts";
+import type { Semaphore } from "./concurrency.ts";
 import type { FormatRegistry } from "./format.ts";
 import type { Theme } from "./theme.ts";
 import type { ThemeRegistry } from "./theme-registry.ts";
@@ -25,4 +27,21 @@ export interface ServerDependencies {
   readonly themes: ThemeRegistry;
   readonly formats: FormatRegistry;
   readonly themeCaveats: ThemeCaveatProvider;
+}
+
+export interface ConvertRouteDependencies {
+  readonly config: AppConfig;
+  readonly themes: ThemeRegistry;
+  readonly formats: FormatRegistry;
+  readonly semaphore: Semaphore;
+}
+
+export interface ConvertMetadataInput {
+  readonly title?: string | undefined;
+  readonly subtitle?: string | undefined;
+  readonly author?: readonly string[] | undefined;
+  readonly date?: string | undefined;
+  readonly subject?: string | undefined;
+  readonly keywords?: readonly string[] | undefined;
+  readonly language?: string | undefined;
 }

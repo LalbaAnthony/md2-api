@@ -80,8 +80,9 @@ describe("GET /themes/:id", () => {
     app = await startTestServer({ THEMES_DIR: directory });
     const response = await app.inject({ method: "GET", url: "/themes/default" });
     const body: { caveats: Record<string, string[]> } = response.json();
-    expect(Object.keys(body.caveats)).toEqual(["debug-json"]);
+    expect(Object.keys(body.caveats)).toEqual(["docx", "debug-json"]);
     expect(body.caveats["debug-json"]).toEqual([]);
+    expect(body.caveats["docx"]).toEqual([]);
   });
 
   it("answers 404 with the available identifiers for an unknown theme", async () => {

@@ -1,0 +1,3604 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "md2",
+    "description": "Converts a markdown document into a formatted binary document. The visual result is decided entirely by a theme, and the output format is selectable.",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {}
+  },
+  "paths": {
+    "/healthz": {
+      "get": {
+        "summary": "Liveness probe",
+        "tags": [
+          "operations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ok"
+                      ]
+                    },
+                    "uptimeSeconds": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "uptimeSeconds"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/readyz": {
+      "get": {
+        "summary": "Readiness probe",
+        "tags": [
+          "operations"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ready",
+                        "starting"
+                      ]
+                    },
+                    "themesLoaded": {
+                      "type": "boolean"
+                    },
+                    "formatsWarmedUp": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "themesLoaded",
+                    "formatsWarmedUp"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "ready",
+                        "starting"
+                      ]
+                    },
+                    "themesLoaded": {
+                      "type": "boolean"
+                    },
+                    "formatsWarmedUp": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "themesLoaded",
+                    "formatsWarmedUp"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/themes": {
+      "get": {
+        "summary": "List the available themes",
+        "tags": [
+          "themes"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "themes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "version": {
+                            "type": "string"
+                          },
+                          "origin": {
+                            "type": "string",
+                            "enum": [
+                              "builtin",
+                              "directory"
+                            ]
+                          },
+                          "hash": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "label",
+                          "description",
+                          "version",
+                          "origin",
+                          "hash"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "themes"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/themes/{id}": {
+      "get": {
+        "summary": "Read a theme and the caveats of each active output format",
+        "tags": [
+          "themes"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "theme": {
+                      "readOnly": true,
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9][a-z0-9-]{1,31}$"
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "description": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "version": {
+                          "type": "string",
+                          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                        },
+                        "page": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "size": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "width": {},
+                                "height": {}
+                              },
+                              "required": [
+                                "width",
+                                "height"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "orientation": {
+                              "type": "string",
+                              "enum": [
+                                "portrait",
+                                "landscape"
+                              ]
+                            },
+                            "margin": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "top": {},
+                                "right": {},
+                                "bottom": {},
+                                "left": {},
+                                "header": {},
+                                "footer": {},
+                                "gutter": {}
+                              },
+                              "required": [
+                                "top",
+                                "right",
+                                "bottom",
+                                "left",
+                                "header",
+                                "footer",
+                                "gutter"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "columns": {
+                              "anyOf": [
+                                {
+                                  "readOnly": true,
+                                  "type": "object",
+                                  "properties": {
+                                    "count": {
+                                      "type": "integer",
+                                      "minimum": 1,
+                                      "maximum": 4
+                                    },
+                                    "space": {},
+                                    "separator": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "count",
+                                    "space",
+                                    "separator"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "size",
+                            "orientation",
+                            "margin",
+                            "columns"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "type": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "body": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "fallback": {
+                                  "readOnly": true,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "fallback"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "heading": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "fallback": {
+                                  "readOnly": true,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "fallback"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "mono": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "fallback": {
+                                  "readOnly": true,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  }
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "fallback"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "baseSize": {},
+                            "scale": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "leading": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "hyphenation": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "body",
+                            "heading",
+                            "mono",
+                            "baseSize",
+                            "scale",
+                            "leading",
+                            "hyphenation"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "color": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "muted": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "accent": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "link": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "linkVisited": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "rule": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "codeBackground": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "codeForeground": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "codeBorder": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "inlineCodeBackground": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "inlineCodeForeground": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "quoteBar": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "quoteForeground": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "quoteBackground": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "tableHeaderBackground": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "tableHeaderForeground": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "tableStripe": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "tableBorder": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "callout": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "info": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "warning": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "danger": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "success": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "note": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                }
+                              },
+                              "required": [
+                                "info",
+                                "warning",
+                                "danger",
+                                "success",
+                                "note"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "text",
+                            "muted",
+                            "accent",
+                            "link",
+                            "linkVisited",
+                            "rule",
+                            "codeBackground",
+                            "codeForeground",
+                            "codeBorder",
+                            "inlineCodeBackground",
+                            "inlineCodeForeground",
+                            "quoteBar",
+                            "quoteForeground",
+                            "quoteBackground",
+                            "tableHeaderBackground",
+                            "tableHeaderForeground",
+                            "tableStripe",
+                            "tableBorder",
+                            "callout"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "heading": {
+                          "readOnly": true,
+                          "type": "array",
+                          "prefixItems": [
+                            {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "size": {},
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "font": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "fallback": {
+                                          "readOnly": true,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "fallback"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "enum": [
+                                    "none",
+                                    "uppercase",
+                                    "smallcaps"
+                                  ]
+                                },
+                                "letterSpacing": {},
+                                "spaceBefore": {},
+                                "spaceAfter": {},
+                                "lineHeight": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "keepWithNext": {
+                                  "type": "boolean"
+                                },
+                                "keepLinesTogether": {
+                                  "type": "boolean"
+                                },
+                                "pageBreakBefore": {
+                                  "type": "boolean"
+                                },
+                                "outlineLevel": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 8
+                                },
+                                "ruleBelow": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {},
+                                        "color": {
+                                          "type": "string",
+                                          "pattern": "^[0-9A-Fa-f]{6}$"
+                                        },
+                                        "space": {}
+                                      },
+                                      "required": [
+                                        "width",
+                                        "color",
+                                        "space"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "numbered": {
+                                  "type": "boolean"
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "left",
+                                    "center",
+                                    "right",
+                                    "justify"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "size",
+                                "bold",
+                                "italic",
+                                "color",
+                                "font",
+                                "transform",
+                                "letterSpacing",
+                                "spaceBefore",
+                                "spaceAfter",
+                                "lineHeight",
+                                "keepWithNext",
+                                "keepLinesTogether",
+                                "pageBreakBefore",
+                                "outlineLevel",
+                                "ruleBelow",
+                                "numbered",
+                                "align"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "size": {},
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "font": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "fallback": {
+                                          "readOnly": true,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "fallback"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "enum": [
+                                    "none",
+                                    "uppercase",
+                                    "smallcaps"
+                                  ]
+                                },
+                                "letterSpacing": {},
+                                "spaceBefore": {},
+                                "spaceAfter": {},
+                                "lineHeight": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "keepWithNext": {
+                                  "type": "boolean"
+                                },
+                                "keepLinesTogether": {
+                                  "type": "boolean"
+                                },
+                                "pageBreakBefore": {
+                                  "type": "boolean"
+                                },
+                                "outlineLevel": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 8
+                                },
+                                "ruleBelow": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {},
+                                        "color": {
+                                          "type": "string",
+                                          "pattern": "^[0-9A-Fa-f]{6}$"
+                                        },
+                                        "space": {}
+                                      },
+                                      "required": [
+                                        "width",
+                                        "color",
+                                        "space"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "numbered": {
+                                  "type": "boolean"
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "left",
+                                    "center",
+                                    "right",
+                                    "justify"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "size",
+                                "bold",
+                                "italic",
+                                "color",
+                                "font",
+                                "transform",
+                                "letterSpacing",
+                                "spaceBefore",
+                                "spaceAfter",
+                                "lineHeight",
+                                "keepWithNext",
+                                "keepLinesTogether",
+                                "pageBreakBefore",
+                                "outlineLevel",
+                                "ruleBelow",
+                                "numbered",
+                                "align"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "size": {},
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "font": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "fallback": {
+                                          "readOnly": true,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "fallback"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "enum": [
+                                    "none",
+                                    "uppercase",
+                                    "smallcaps"
+                                  ]
+                                },
+                                "letterSpacing": {},
+                                "spaceBefore": {},
+                                "spaceAfter": {},
+                                "lineHeight": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "keepWithNext": {
+                                  "type": "boolean"
+                                },
+                                "keepLinesTogether": {
+                                  "type": "boolean"
+                                },
+                                "pageBreakBefore": {
+                                  "type": "boolean"
+                                },
+                                "outlineLevel": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 8
+                                },
+                                "ruleBelow": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {},
+                                        "color": {
+                                          "type": "string",
+                                          "pattern": "^[0-9A-Fa-f]{6}$"
+                                        },
+                                        "space": {}
+                                      },
+                                      "required": [
+                                        "width",
+                                        "color",
+                                        "space"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "numbered": {
+                                  "type": "boolean"
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "left",
+                                    "center",
+                                    "right",
+                                    "justify"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "size",
+                                "bold",
+                                "italic",
+                                "color",
+                                "font",
+                                "transform",
+                                "letterSpacing",
+                                "spaceBefore",
+                                "spaceAfter",
+                                "lineHeight",
+                                "keepWithNext",
+                                "keepLinesTogether",
+                                "pageBreakBefore",
+                                "outlineLevel",
+                                "ruleBelow",
+                                "numbered",
+                                "align"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "size": {},
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "font": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "fallback": {
+                                          "readOnly": true,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "fallback"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "enum": [
+                                    "none",
+                                    "uppercase",
+                                    "smallcaps"
+                                  ]
+                                },
+                                "letterSpacing": {},
+                                "spaceBefore": {},
+                                "spaceAfter": {},
+                                "lineHeight": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "keepWithNext": {
+                                  "type": "boolean"
+                                },
+                                "keepLinesTogether": {
+                                  "type": "boolean"
+                                },
+                                "pageBreakBefore": {
+                                  "type": "boolean"
+                                },
+                                "outlineLevel": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 8
+                                },
+                                "ruleBelow": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {},
+                                        "color": {
+                                          "type": "string",
+                                          "pattern": "^[0-9A-Fa-f]{6}$"
+                                        },
+                                        "space": {}
+                                      },
+                                      "required": [
+                                        "width",
+                                        "color",
+                                        "space"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "numbered": {
+                                  "type": "boolean"
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "left",
+                                    "center",
+                                    "right",
+                                    "justify"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "size",
+                                "bold",
+                                "italic",
+                                "color",
+                                "font",
+                                "transform",
+                                "letterSpacing",
+                                "spaceBefore",
+                                "spaceAfter",
+                                "lineHeight",
+                                "keepWithNext",
+                                "keepLinesTogether",
+                                "pageBreakBefore",
+                                "outlineLevel",
+                                "ruleBelow",
+                                "numbered",
+                                "align"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "size": {},
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "font": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "fallback": {
+                                          "readOnly": true,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "fallback"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "enum": [
+                                    "none",
+                                    "uppercase",
+                                    "smallcaps"
+                                  ]
+                                },
+                                "letterSpacing": {},
+                                "spaceBefore": {},
+                                "spaceAfter": {},
+                                "lineHeight": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "keepWithNext": {
+                                  "type": "boolean"
+                                },
+                                "keepLinesTogether": {
+                                  "type": "boolean"
+                                },
+                                "pageBreakBefore": {
+                                  "type": "boolean"
+                                },
+                                "outlineLevel": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 8
+                                },
+                                "ruleBelow": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {},
+                                        "color": {
+                                          "type": "string",
+                                          "pattern": "^[0-9A-Fa-f]{6}$"
+                                        },
+                                        "space": {}
+                                      },
+                                      "required": [
+                                        "width",
+                                        "color",
+                                        "space"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "numbered": {
+                                  "type": "boolean"
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "left",
+                                    "center",
+                                    "right",
+                                    "justify"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "size",
+                                "bold",
+                                "italic",
+                                "color",
+                                "font",
+                                "transform",
+                                "letterSpacing",
+                                "spaceBefore",
+                                "spaceAfter",
+                                "lineHeight",
+                                "keepWithNext",
+                                "keepLinesTogether",
+                                "pageBreakBefore",
+                                "outlineLevel",
+                                "ruleBelow",
+                                "numbered",
+                                "align"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "size": {},
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                },
+                                "color": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "font": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "name": {
+                                          "type": "string",
+                                          "minLength": 1
+                                        },
+                                        "fallback": {
+                                          "readOnly": true,
+                                          "type": "array",
+                                          "items": {
+                                            "type": "string",
+                                            "minLength": 1
+                                          }
+                                        }
+                                      },
+                                      "required": [
+                                        "name",
+                                        "fallback"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "transform": {
+                                  "type": "string",
+                                  "enum": [
+                                    "none",
+                                    "uppercase",
+                                    "smallcaps"
+                                  ]
+                                },
+                                "letterSpacing": {},
+                                "spaceBefore": {},
+                                "spaceAfter": {},
+                                "lineHeight": {
+                                  "type": "number",
+                                  "exclusiveMinimum": 0
+                                },
+                                "keepWithNext": {
+                                  "type": "boolean"
+                                },
+                                "keepLinesTogether": {
+                                  "type": "boolean"
+                                },
+                                "pageBreakBefore": {
+                                  "type": "boolean"
+                                },
+                                "outlineLevel": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 8
+                                },
+                                "ruleBelow": {
+                                  "anyOf": [
+                                    {
+                                      "readOnly": true,
+                                      "type": "object",
+                                      "properties": {
+                                        "width": {},
+                                        "color": {
+                                          "type": "string",
+                                          "pattern": "^[0-9A-Fa-f]{6}$"
+                                        },
+                                        "space": {}
+                                      },
+                                      "required": [
+                                        "width",
+                                        "color",
+                                        "space"
+                                      ],
+                                      "additionalProperties": false
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "numbered": {
+                                  "type": "boolean"
+                                },
+                                "align": {
+                                  "type": "string",
+                                  "enum": [
+                                    "left",
+                                    "center",
+                                    "right",
+                                    "justify"
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "size",
+                                "bold",
+                                "italic",
+                                "color",
+                                "font",
+                                "transform",
+                                "letterSpacing",
+                                "spaceBefore",
+                                "spaceAfter",
+                                "lineHeight",
+                                "keepWithNext",
+                                "keepLinesTogether",
+                                "pageBreakBefore",
+                                "outlineLevel",
+                                "ruleBelow",
+                                "numbered",
+                                "align"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ],
+                          "items": false,
+                          "minItems": 6,
+                          "maxItems": 6
+                        },
+                        "paragraph": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "align": {
+                              "type": "string",
+                              "enum": [
+                                "left",
+                                "center",
+                                "right",
+                                "justify"
+                              ]
+                            },
+                            "spaceBefore": {},
+                            "spaceAfter": {},
+                            "lineHeight": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "firstLineIndent": {
+                              "anyOf": [
+                                {},
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "widowControl": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "align",
+                            "spaceBefore",
+                            "spaceAfter",
+                            "lineHeight",
+                            "firstLineIndent",
+                            "widowControl"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "quote": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "indentLeft": {},
+                            "indentRight": {},
+                            "barWidth": {},
+                            "barColor": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "italic": {
+                              "type": "boolean"
+                            },
+                            "fontSize": {},
+                            "spaceBefore": {},
+                            "spaceAfter": {},
+                            "padding": {}
+                          },
+                          "required": [
+                            "indentLeft",
+                            "indentRight",
+                            "barWidth",
+                            "barColor",
+                            "italic",
+                            "fontSize",
+                            "spaceBefore",
+                            "spaceAfter",
+                            "padding"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "code": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "fontSize": {},
+                            "lineHeight": {
+                              "type": "number",
+                              "exclusiveMinimum": 0
+                            },
+                            "padding": {},
+                            "showLineNumbers": {
+                              "type": "boolean"
+                            },
+                            "lineNumberColor": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "showLanguageLabel": {
+                              "type": "boolean"
+                            },
+                            "wrap": {
+                              "type": "boolean"
+                            },
+                            "tabWidth": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 16
+                            }
+                          },
+                          "required": [
+                            "fontSize",
+                            "lineHeight",
+                            "padding",
+                            "showLineNumbers",
+                            "lineNumberColor",
+                            "showLanguageLabel",
+                            "wrap",
+                            "tabWidth"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "list": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "bulletGlyphs": {
+                              "readOnly": true,
+                              "minItems": 3,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "orderedFormats": {
+                              "readOnly": true,
+                              "minItems": 1,
+                              "maxItems": 9,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "decimal",
+                                  "lowerLetter",
+                                  "upperLetter",
+                                  "lowerRoman",
+                                  "upperRoman"
+                                ]
+                              }
+                            },
+                            "orderedSuffix": {
+                              "anyOf": [
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    "."
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ")"
+                                  ]
+                                },
+                                {
+                                  "type": "string",
+                                  "enum": [
+                                    ""
+                                  ]
+                                }
+                              ]
+                            },
+                            "indentStep": {},
+                            "hanging": {},
+                            "spaceBetweenItems": {},
+                            "spaceAfterList": {},
+                            "taskGlyphs": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "checked": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "unchecked": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "checked",
+                                "unchecked"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "bulletGlyphs",
+                            "orderedFormats",
+                            "orderedSuffix",
+                            "indentStep",
+                            "hanging",
+                            "spaceBetweenItems",
+                            "spaceAfterList",
+                            "taskGlyphs"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "table": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "headerBold": {
+                              "type": "boolean"
+                            },
+                            "repeatHeaderRow": {
+                              "type": "boolean"
+                            },
+                            "cellPaddingX": {},
+                            "cellPaddingY": {},
+                            "borderWidth": {},
+                            "borderStyle": {
+                              "type": "string",
+                              "enum": [
+                                "single",
+                                "none",
+                                "dashed",
+                                "dotted"
+                              ]
+                            },
+                            "horizontalRulesOnly": {
+                              "type": "boolean"
+                            },
+                            "stripes": {
+                              "type": "boolean"
+                            },
+                            "fontSize": {},
+                            "align": {
+                              "type": "string",
+                              "enum": [
+                                "left",
+                                "center"
+                              ]
+                            },
+                            "minColumnWidth": {}
+                          },
+                          "required": [
+                            "headerBold",
+                            "repeatHeaderRow",
+                            "cellPaddingX",
+                            "cellPaddingY",
+                            "borderWidth",
+                            "borderStyle",
+                            "horizontalRulesOnly",
+                            "stripes",
+                            "fontSize",
+                            "align",
+                            "minColumnWidth"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "figure": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "align": {
+                              "type": "string",
+                              "enum": [
+                                "left",
+                                "center"
+                              ]
+                            },
+                            "maxWidthRatio": {
+                              "type": "number",
+                              "exclusiveMinimum": 0,
+                              "maximum": 1
+                            },
+                            "spaceBefore": {},
+                            "spaceAfter": {},
+                            "border": {
+                              "anyOf": [
+                                {
+                                  "readOnly": true,
+                                  "type": "object",
+                                  "properties": {
+                                    "width": {},
+                                    "color": {
+                                      "type": "string",
+                                      "pattern": "^[0-9A-Fa-f]{6}$"
+                                    }
+                                  },
+                                  "required": [
+                                    "width",
+                                    "color"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "align",
+                            "maxWidthRatio",
+                            "spaceBefore",
+                            "spaceAfter",
+                            "border"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "caption": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "position": {
+                              "type": "string",
+                              "enum": [
+                                "above",
+                                "below"
+                              ]
+                            },
+                            "figurePrefix": {
+                              "type": "string"
+                            },
+                            "tablePrefix": {
+                              "type": "string"
+                            },
+                            "separator": {
+                              "type": "string"
+                            },
+                            "fontSize": {},
+                            "italic": {
+                              "type": "boolean"
+                            },
+                            "color": {
+                              "type": "string",
+                              "pattern": "^[0-9A-Fa-f]{6}$"
+                            },
+                            "align": {
+                              "type": "string",
+                              "enum": [
+                                "left",
+                                "center",
+                                "right",
+                                "justify"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "position",
+                            "figurePrefix",
+                            "tablePrefix",
+                            "separator",
+                            "fontSize",
+                            "italic",
+                            "color",
+                            "align"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "callout": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "padding": {},
+                            "barWidth": {},
+                            "showLabel": {
+                              "type": "boolean"
+                            },
+                            "labels": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "info": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "warning": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "danger": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "success": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "note": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "info",
+                                "warning",
+                                "danger",
+                                "success",
+                                "note"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "titleBold": {
+                              "type": "boolean"
+                            },
+                            "tintedBackground": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "padding",
+                            "barWidth",
+                            "showLabel",
+                            "labels",
+                            "titleBold",
+                            "tintedBackground"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "footnote": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "fontSize": {},
+                            "separatorWidth": {},
+                            "numberFormat": {
+                              "type": "string",
+                              "enum": [
+                                "decimal",
+                                "lowerRoman",
+                                "symbol"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "fontSize",
+                            "separatorWidth",
+                            "numberFormat"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "tableOfContents": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "depth": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 6
+                            },
+                            "hyperlinks": {
+                              "type": "boolean"
+                            },
+                            "showPageNumbers": {
+                              "type": "boolean"
+                            },
+                            "tabLeader": {
+                              "type": "string",
+                              "enum": [
+                                "dot",
+                                "hyphen",
+                                "none"
+                              ]
+                            },
+                            "pageBreakAfter": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "enabled",
+                            "title",
+                            "depth",
+                            "hyperlinks",
+                            "showPageNumbers",
+                            "tabLeader",
+                            "pageBreakAfter"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "chrome": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "header": {
+                              "anyOf": [
+                                {
+                                  "readOnly": true,
+                                  "type": "object",
+                                  "properties": {
+                                    "enabled": {
+                                      "type": "boolean"
+                                    },
+                                    "slots": {
+                                      "readOnly": true,
+                                      "type": "array",
+                                      "prefixItems": [
+                                        {
+                                          "readOnly": true,
+                                          "oneOf": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "text"
+                                                  ]
+                                                },
+                                                "value": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "value"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "meta"
+                                                  ]
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "title",
+                                                    "author",
+                                                    "date",
+                                                    "subject"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "field"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageNumber"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageCount"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "chapter"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "empty"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "readOnly": true,
+                                          "oneOf": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "text"
+                                                  ]
+                                                },
+                                                "value": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "value"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "meta"
+                                                  ]
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "title",
+                                                    "author",
+                                                    "date",
+                                                    "subject"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "field"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageNumber"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageCount"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "chapter"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "empty"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "readOnly": true,
+                                          "oneOf": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "text"
+                                                  ]
+                                                },
+                                                "value": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "value"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "meta"
+                                                  ]
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "title",
+                                                    "author",
+                                                    "date",
+                                                    "subject"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "field"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageNumber"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageCount"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "chapter"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "empty"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        }
+                                      ],
+                                      "items": false,
+                                      "minItems": 3,
+                                      "maxItems": 3
+                                    },
+                                    "fontSize": {},
+                                    "color": {
+                                      "type": "string",
+                                      "pattern": "^[0-9A-Fa-f]{6}$"
+                                    },
+                                    "rule": {
+                                      "anyOf": [
+                                        {
+                                          "readOnly": true,
+                                          "type": "object",
+                                          "properties": {
+                                            "width": {},
+                                            "color": {
+                                              "type": "string",
+                                              "pattern": "^[0-9A-Fa-f]{6}$"
+                                            }
+                                          },
+                                          "required": [
+                                            "width",
+                                            "color"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "differentFirstPage": {
+                                      "type": "boolean"
+                                    },
+                                    "differentOddEven": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "enabled",
+                                    "slots",
+                                    "fontSize",
+                                    "color",
+                                    "rule",
+                                    "differentFirstPage",
+                                    "differentOddEven"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "footer": {
+                              "anyOf": [
+                                {
+                                  "readOnly": true,
+                                  "type": "object",
+                                  "properties": {
+                                    "enabled": {
+                                      "type": "boolean"
+                                    },
+                                    "slots": {
+                                      "readOnly": true,
+                                      "type": "array",
+                                      "prefixItems": [
+                                        {
+                                          "readOnly": true,
+                                          "oneOf": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "text"
+                                                  ]
+                                                },
+                                                "value": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "value"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "meta"
+                                                  ]
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "title",
+                                                    "author",
+                                                    "date",
+                                                    "subject"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "field"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageNumber"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageCount"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "chapter"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "empty"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "readOnly": true,
+                                          "oneOf": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "text"
+                                                  ]
+                                                },
+                                                "value": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "value"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "meta"
+                                                  ]
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "title",
+                                                    "author",
+                                                    "date",
+                                                    "subject"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "field"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageNumber"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageCount"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "chapter"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "empty"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "readOnly": true,
+                                          "oneOf": [
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "text"
+                                                  ]
+                                                },
+                                                "value": {
+                                                  "type": "string"
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "value"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "meta"
+                                                  ]
+                                                },
+                                                "field": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "title",
+                                                    "author",
+                                                    "date",
+                                                    "subject"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind",
+                                                "field"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageNumber"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "pageCount"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "chapter"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            },
+                                            {
+                                              "type": "object",
+                                              "properties": {
+                                                "kind": {
+                                                  "type": "string",
+                                                  "enum": [
+                                                    "empty"
+                                                  ]
+                                                }
+                                              },
+                                              "required": [
+                                                "kind"
+                                              ],
+                                              "additionalProperties": false
+                                            }
+                                          ]
+                                        }
+                                      ],
+                                      "items": false,
+                                      "minItems": 3,
+                                      "maxItems": 3
+                                    },
+                                    "fontSize": {},
+                                    "color": {
+                                      "type": "string",
+                                      "pattern": "^[0-9A-Fa-f]{6}$"
+                                    },
+                                    "rule": {
+                                      "anyOf": [
+                                        {
+                                          "readOnly": true,
+                                          "type": "object",
+                                          "properties": {
+                                            "width": {},
+                                            "color": {
+                                              "type": "string",
+                                              "pattern": "^[0-9A-Fa-f]{6}$"
+                                            }
+                                          },
+                                          "required": [
+                                            "width",
+                                            "color"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    },
+                                    "differentFirstPage": {
+                                      "type": "boolean"
+                                    },
+                                    "differentOddEven": {
+                                      "type": "boolean"
+                                    }
+                                  },
+                                  "required": [
+                                    "enabled",
+                                    "slots",
+                                    "fontSize",
+                                    "color",
+                                    "rule",
+                                    "differentFirstPage",
+                                    "differentOddEven"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "titlePage": {
+                              "anyOf": [
+                                {
+                                  "readOnly": true,
+                                  "type": "object",
+                                  "properties": {
+                                    "enabled": {
+                                      "type": "boolean"
+                                    },
+                                    "verticalAlign": {
+                                      "type": "string",
+                                      "enum": [
+                                        "top",
+                                        "center"
+                                      ]
+                                    },
+                                    "titleSize": {},
+                                    "subtitleSize": {},
+                                    "showAuthor": {
+                                      "type": "boolean"
+                                    },
+                                    "showDate": {
+                                      "type": "boolean"
+                                    },
+                                    "dateFormat": {
+                                      "type": "string"
+                                    },
+                                    "pageBreakAfter": {
+                                      "type": "boolean"
+                                    },
+                                    "logo": {
+                                      "anyOf": [
+                                        {
+                                          "readOnly": true,
+                                          "type": "object",
+                                          "properties": {
+                                            "path": {
+                                              "type": "string",
+                                              "minLength": 1
+                                            },
+                                            "width": {}
+                                          },
+                                          "required": [
+                                            "path",
+                                            "width"
+                                          ],
+                                          "additionalProperties": false
+                                        },
+                                        {
+                                          "type": "null"
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "enabled",
+                                    "verticalAlign",
+                                    "titleSize",
+                                    "subtitleSize",
+                                    "showAuthor",
+                                    "showDate",
+                                    "dateFormat",
+                                    "pageBreakAfter",
+                                    "logo"
+                                  ],
+                                  "additionalProperties": false
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "header",
+                            "footer",
+                            "titlePage"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "syntax": {
+                          "readOnly": true,
+                          "type": "object",
+                          "properties": {
+                            "keyword": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "string": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "number": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "comment": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "function": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "type": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "variable": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "operator": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "punctuation": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "constant": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "tag": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "attribute": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "plain": {
+                              "readOnly": true,
+                              "type": "object",
+                              "properties": {
+                                "foreground": {
+                                  "type": "string",
+                                  "pattern": "^[0-9A-Fa-f]{6}$"
+                                },
+                                "bold": {
+                                  "type": "boolean"
+                                },
+                                "italic": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "foreground",
+                                "bold",
+                                "italic"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "keyword",
+                            "string",
+                            "number",
+                            "comment",
+                            "function",
+                            "type",
+                            "variable",
+                            "operator",
+                            "punctuation",
+                            "constant",
+                            "tag",
+                            "attribute",
+                            "plain"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "formats": {
+                          "readOnly": true,
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {
+                              "$ref": "#/components/schemas/schema0"
+                            }
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "description",
+                        "version",
+                        "page",
+                        "type",
+                        "color",
+                        "heading",
+                        "paragraph",
+                        "quote",
+                        "code",
+                        "list",
+                        "table",
+                        "figure",
+                        "caption",
+                        "callout",
+                        "footnote",
+                        "tableOfContents",
+                        "chrome",
+                        "syntax",
+                        "formats"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "metrics": {
+                      "type": "object",
+                      "properties": {
+                        "contentWidth": {
+                          "type": "number"
+                        },
+                        "contentHeight": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "contentWidth",
+                        "contentHeight"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "caveats": {
+                      "readOnly": true,
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "readOnly": true,
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "theme",
+                    "metrics",
+                    "caveats"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/formats": {
+      "get": {
+        "summary": "List the active output formats",
+        "tags": [
+          "formats"
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "formats": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "mediaType": {
+                            "type": "string"
+                          },
+                          "fileExtension": {
+                            "type": "string"
+                          },
+                          "productionReady": {
+                            "type": "boolean"
+                          },
+                          "capabilities": {
+                            "type": "object",
+                            "properties": {
+                              "pagination": {
+                                "type": "boolean"
+                              },
+                              "pageChrome": {
+                                "type": "boolean"
+                              },
+                              "titlePage": {
+                                "type": "boolean"
+                              },
+                              "tableOfContents": {
+                                "type": "string",
+                                "enum": [
+                                  "resolved",
+                                  "deferredField",
+                                  "none"
+                                ]
+                              },
+                              "footnotes": {
+                                "type": "string",
+                                "enum": [
+                                  "native",
+                                  "endnotes",
+                                  "inline",
+                                  "none"
+                                ]
+                              },
+                              "math": {
+                                "type": "string",
+                                "enum": [
+                                  "native",
+                                  "raster",
+                                  "source"
+                                ]
+                              },
+                              "syntaxHighlighting": {
+                                "type": "boolean"
+                              },
+                              "columns": {
+                                "type": "boolean"
+                              },
+                              "landscapeSections": {
+                                "type": "boolean"
+                              },
+                              "vectorImages": {
+                                "type": "boolean"
+                              },
+                              "maxListDepth": {
+                                "type": "integer",
+                                "minimum": -9007199254740991,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "pagination",
+                              "pageChrome",
+                              "titlePage",
+                              "tableOfContents",
+                              "footnotes",
+                              "math",
+                              "syntaxHighlighting",
+                              "columns",
+                              "landscapeSections",
+                              "vectorImages",
+                              "maxListDepth"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "caveats": {
+                            "readOnly": true,
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "label",
+                          "mediaType",
+                          "fileExtension",
+                          "productionReady",
+                          "capabilities",
+                          "caveats"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "formats"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/formats/{id}": {
+      "get": {
+        "summary": "Read an output format descriptor and its theme extension schema",
+        "tags": [
+          "formats"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "in": "path",
+            "name": "id",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Default Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "format": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "mediaType": {
+                          "type": "string"
+                        },
+                        "fileExtension": {
+                          "type": "string"
+                        },
+                        "productionReady": {
+                          "type": "boolean"
+                        },
+                        "capabilities": {
+                          "type": "object",
+                          "properties": {
+                            "pagination": {
+                              "type": "boolean"
+                            },
+                            "pageChrome": {
+                              "type": "boolean"
+                            },
+                            "titlePage": {
+                              "type": "boolean"
+                            },
+                            "tableOfContents": {
+                              "type": "string",
+                              "enum": [
+                                "resolved",
+                                "deferredField",
+                                "none"
+                              ]
+                            },
+                            "footnotes": {
+                              "type": "string",
+                              "enum": [
+                                "native",
+                                "endnotes",
+                                "inline",
+                                "none"
+                              ]
+                            },
+                            "math": {
+                              "type": "string",
+                              "enum": [
+                                "native",
+                                "raster",
+                                "source"
+                              ]
+                            },
+                            "syntaxHighlighting": {
+                              "type": "boolean"
+                            },
+                            "columns": {
+                              "type": "boolean"
+                            },
+                            "landscapeSections": {
+                              "type": "boolean"
+                            },
+                            "vectorImages": {
+                              "type": "boolean"
+                            },
+                            "maxListDepth": {
+                              "type": "integer",
+                              "minimum": -9007199254740991,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "pagination",
+                            "pageChrome",
+                            "titlePage",
+                            "tableOfContents",
+                            "footnotes",
+                            "math",
+                            "syntaxHighlighting",
+                            "columns",
+                            "landscapeSections",
+                            "vectorImages",
+                            "maxListDepth"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "caveats": {
+                          "readOnly": true,
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label",
+                        "mediaType",
+                        "fileExtension",
+                        "productionReady",
+                        "capabilities",
+                        "caveats"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "themeExtensionJsonSchema": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/components/schemas/schema0"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "format",
+                    "themeExtensionJsonSchema"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/convert": {
+      "post": {
+        "summary": "Convert a markdown document",
+        "tags": [
+          "conversion"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "markdown": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "theme": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{1,31}$"
+                  },
+                  "format": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9][a-z0-9-]{1,31}$"
+                  },
+                  "filename": {
+                    "type": "string",
+                    "maxLength": 200,
+                    "pattern": "^[\\w\\-. ]+$"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "properties": {
+                      "title": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "subtitle": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "author": {
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 200
+                        }
+                      },
+                      "date": {
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      "subject": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "keywords": {
+                        "maxItems": 50,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 100
+                        }
+                      },
+                      "language": {
+                        "type": "string",
+                        "maxLength": 35
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "options": {
+                    "type": "object",
+                    "properties": {
+                      "tableOfContents": {
+                        "type": "boolean"
+                      },
+                      "titlePage": {
+                        "type": "boolean"
+                      },
+                      "strict": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "markdown"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The converted document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "The converted document"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/convert/{themeId}": {
+      "post": {
+        "summary": "Convert a raw markdown body with an explicit theme",
+        "tags": [
+          "conversion"
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-z0-9][a-z0-9-]{1,31}$"
+            },
+            "in": "query",
+            "name": "format",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "maxLength": 200,
+              "pattern": "^[\\w\\-. ]+$"
+            },
+            "in": "query",
+            "name": "filename",
+            "required": false
+          },
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "in": "path",
+            "name": "themeId",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The converted document",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "The converted document"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "conversion",
+      "description": "Turning markdown into a document"
+    },
+    {
+      "name": "themes",
+      "description": "The themes the service can render with"
+    },
+    {
+      "name": "formats",
+      "description": "The output formats the service can produce"
+    },
+    {
+      "name": "operations",
+      "description": "Liveness and readiness"
+    }
+  ]
+}

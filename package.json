@@ -16,7 +16,7 @@
     "openapi:export": "node tools/export-openapi.mjs",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
-    "test:golden": "vitest run tests/golden --passWithNoTests",
+    "test:golden": "vitest run tests/golden",
     "test:visual": "vitest run tests/visual --passWithNoTests",
     "test:contract": "vitest run tests/contract",
     "test:all": "docker compose -f docker/compose.yaml run --rm test",

@@ -20,3 +20,6 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run test:contract
+      - run: npm run build
+      - name: Verify the committed OpenAPI document
+        run: node tools/export-openapi.mjs --check

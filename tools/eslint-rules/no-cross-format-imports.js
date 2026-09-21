@@ -14,6 +14,9 @@ const importedFormat = (specifier) => {
   return match === null ? null : match[1];
 };
 
+const isFormatTypeDeclaration = (filename, format) =>
+  new RegExp("/src/types/" + format + "-[^/]+[.]ts$").test(toPosixPath(filename));
+
 const importsRawTheme = (specifier) => /types\/theme\.ts$/.test(toPosixPath(specifier));
 
 const rule = {
@@ -36,10 +39,12 @@ const rule = {
     const owner = owningFormat(context.filename);
     const insideRenderer = isRendererFile(context.filename);
 
-    const checkSpecifier = (node, specifier) => {
+    const checkSpecifier = (node, specifier, isTypeOnly) => {
       for (const [format, packageName] of FORMAT_SPECIFIC_PACKAGES) {
         const matchesPackage = specifier === packageName || specifier.startsWith(`${packageName}/`);
-        if (matchesPackage && owner !== format) {
+        const allowedTypeDeclaration =
+          isTypeOnly && isFormatTypeDeclaration(context.filename, format);
+        if (matchesPackage && owner !== format && !allowedTypeDeclaration) {
           context.report({
             node,
             messageId: "packageOutsideBackend",
@@ -60,19 +65,19 @@ const rule = {
 
     return {
       ImportDeclaration(node) {
-        checkSpecifier(node, node.source.value);
+        checkSpecifier(node, node.source.value, node.importKind === "type");
       },
       ExportNamedDeclaration(node) {
         if (node.source !== null && node.source !== undefined) {
-          checkSpecifier(node, node.source.value);
+          checkSpecifier(node, node.source.value, node.exportKind === "type");
         }
       },
       ExportAllDeclaration(node) {
-        checkSpecifier(node, node.source.value);
+        checkSpecifier(node, node.source.value, node.exportKind === "type");
       },
       ImportExpression(node) {
         if (node.source.type === "Literal" && typeof node.source.value === "string") {
-          checkSpecifier(node, node.source.value);
+          checkSpecifier(node, node.source.value, false);
         }
       },
     };

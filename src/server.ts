@@ -10,7 +10,9 @@ import {
 } from "fastify-type-provider-zod";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import {
+  CONVERSION_QUEUE_FACTOR,
   LOG_REDACTION_PATHS,
+  MARKDOWN_CONTENT_TYPES,
   REQUEST_ID_HEADER,
   REQUEST_ID_PATTERN,
   RESPONSE_REQUEST_ID_HEADER,
@@ -29,8 +31,11 @@ import {
   validationError,
 } from "./errors.ts";
 import { createFormatRegistry } from "./formats/registry.ts";
+import { createSemaphore } from "./lib/semaphore.ts";
+import { registerOpenApi } from "./openapi/register.ts";
 import { isJsonObject } from "./lib/json.ts";
 import { createReadinessState } from "./lib/readiness.ts";
+import { convertRoutes } from "./routes/convert.ts";
 import { formatRoutes } from "./routes/formats.ts";
 import { healthRoutes } from "./routes/health.ts";
 import { themeRoutes } from "./routes/themes.ts";
@@ -135,6 +140,14 @@ export const buildServer = async (
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
 
+  app.addContentTypeParser(
+    [...MARKDOWN_CONTENT_TYPES],
+    { parseAs: "string" },
+    (_request, payload, done) => {
+      done(null, payload);
+    },
+  );
+
   await app.register(helmet, { contentSecurityPolicy: config.NODE_ENV === "production" });
 
   if (config.NODE_ENV !== "production") {
@@ -212,9 +225,17 @@ export const buildServer = async (
     }
   });
 
+  await registerOpenApi(app, config, formats);
+
+  const semaphore = createSemaphore({
+    permits: config.MAX_CONCURRENCY,
+    maximumQueueLength: config.MAX_CONCURRENCY * CONVERSION_QUEUE_FACTOR,
+  });
+
   await app.register(healthRoutes(readiness));
   await app.register(themeRoutes(themes, overrides.themeCaveats ?? themeCaveatsFrom(formats)));
   await app.register(formatRoutes(formats));
+  await app.register(convertRoutes({ config, themes, formats, semaphore }));
 
   return app;
 };

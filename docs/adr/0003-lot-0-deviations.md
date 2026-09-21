@@ -38,13 +38,14 @@ still refuses to start. The acceptance criterion is unchanged, only its location
 
 ## 4. `test:golden` and `test:visual` tolerate an empty suite
 
-Both corpora arrive in later lots. Until then the two scripts pass `--passWithNoTests` so that
-`ci.flow.yml` is runnable end to end from Lot 0. The flag is removed when each suite lands.
+The golden suite landed in Lot 3, so `test:golden` no longer needs the flag and it is removed.
+`test:visual` keeps `--passWithNoTests` until Lot 12 supplies the baselines.
 
 ## 5. `contract.inc.yml` does not yet compare `docs/openapi.json`
 
-The OpenAPI document and `tools/export-openapi.mjs` arrive in Lot 3. The comparison step is added
-to the workflow at that point.
+Resolved in Lot 3. `tools/export-openapi.mjs` writes `docs/openapi.json`, the same script run
+with `--check` fails when the committed file differs from the served document, and
+`contract.inc.yml` runs it.
 
 ## 6. Additional modules and packages
 

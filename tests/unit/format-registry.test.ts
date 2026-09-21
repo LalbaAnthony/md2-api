@@ -81,14 +81,30 @@ describe("registration in production", () => {
     }
   });
 
-  it("warns about an enabled format that no backend implements", () => {
+  it("refuses to start when an enabled format has no backend", () => {
+    try {
+      createFormatRegistry({
+        config: configFor("production", ["docx", "pdf"]),
+        logger: createRecordingLogger(),
+        candidates,
+      });
+      expect.unreachable("Expected the registry to refuse to start.");
+    } catch (thrown) {
+      expect(isAppError(thrown)).toBe(true);
+      if (isAppError(thrown)) {
+        expect(JSON.stringify(thrown.details)).toContain("pdf");
+      }
+    }
+  });
+
+  it("only warns about an unimplemented format outside production", () => {
     const logger = createRecordingLogger();
     const registry = createFormatRegistry({
-      config: configFor("production", ["docx", "pdf"]),
+      config: configFor("development", ["docx", "pdf"]),
       logger,
       candidates,
     });
-    expect(registry.ids()).toEqual(["docx"]);
+    expect(registry.ids()).toEqual(["docx", "debug-json"]);
     expect(
       logger.entries.some(
         (entry) => entry.level === "warn" && entry.message.includes("no backend"),
@@ -144,19 +160,28 @@ describe("lifecycle", () => {
 });
 
 describe("the real backend table", () => {
-  it("exposes debug-json outside production and nothing else yet", () => {
+  it("exposes docx and debug-json outside production", () => {
     const registry = createFormatRegistry({
       config: configFor("development", ["docx"]),
       logger: createRecordingLogger(),
     });
-    expect(registry.ids()).toEqual(["debug-json"]);
+    expect(registry.ids()).toEqual(["docx", "debug-json"]);
   });
 
-  it("exposes no backend in production while the docx backend does not exist", () => {
+  it("exposes docx alone in production", () => {
     const registry = createFormatRegistry({
       config: configFor("production", ["docx"]),
       logger: createRecordingLogger(),
     });
-    expect(registry.ids()).toEqual([]);
+    expect(registry.ids()).toEqual(["docx"]);
+    expect(registry.resolve("docx")?.descriptor.productionReady).toBe(true);
+  });
+
+  it("starts on the default configuration in production", () => {
+    const registry = createFormatRegistry({
+      config: { NODE_ENV: "production", ENABLED_FORMATS: ["docx"], DEFAULT_FORMAT: "docx" },
+      logger: createRecordingLogger(),
+    });
+    expect(registry.resolve("docx")).not.toBeNull();
   });
 });

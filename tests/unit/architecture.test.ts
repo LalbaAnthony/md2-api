@@ -88,8 +88,24 @@ describe("format isolation", () => {
   it("imports the docx package under src/formats/docx only", () => {
     const offenders = sourceFiles
       .filter((file) => !file.startsWith("src/formats/docx/"))
-      .filter((file) => /from\s+"docx(?:\/[^"]*)?"/.test(readSource(file)));
+      .filter((file) => /^(?!import type ).*from\s+"docx(?:\/[^"]*)?"/m.test(readSource(file)));
     expect(offenders).toEqual([]);
+  });
+
+  it("allows the docx type declarations to name docx types only", () => {
+    const declarationFiles = sourceFiles.filter((file) => /^src\/types\/docx-/.test(file));
+    expect(declarationFiles.length).toBeGreaterThan(0);
+    for (const file of declarationFiles) {
+      const source = readSource(file);
+      const docxImports = [...source.matchAll(/^(.*)from\s+"docx"/gm)].map(
+        (match) => match[1] ?? "",
+      );
+      for (const prefix of docxImports) {
+        expect(prefix.trim().startsWith("import type"), `${file} imports docx as a value`).toBe(
+          true,
+        );
+      }
+    }
   });
 
   it("keeps renderers free of input and output", () => {
@@ -138,11 +154,10 @@ describe("pipeline independence from formats", () => {
     expect(offenders).toEqual([]);
   });
 
-  it("wires the format registry from the composition root only", () => {
-    const allowedImporters = ["src/server.ts"];
+  it("wires the format layer from the composition root and the routes only", () => {
     const offenders = sourceFiles
       .filter((file) => !file.startsWith("src/formats/"))
-      .filter((file) => !allowedImporters.includes(file))
+      .filter((file) => file !== "src/server.ts" && !file.startsWith("src/routes/"))
       .filter(importsFormats);
     expect(offenders).toEqual([]);
   });
