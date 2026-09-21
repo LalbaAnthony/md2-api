@@ -1,0 +1,22 @@
+name: audit
+
+on:
+  workflow_call:
+    inputs:
+      audit-level:
+        description: Lowest severity that fails the audit.
+        required: false
+        type: string
+        default: high
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=${{ inputs.audit-level }}

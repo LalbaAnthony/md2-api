@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+node tools/check-repository-charset.mjs
+npx eslint . --max-warnings 0

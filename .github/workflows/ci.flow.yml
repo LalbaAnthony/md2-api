@@ -1,0 +1,59 @@
+name: ci
+
+on:
+  workflow_call:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    uses: ./.github/workflows/lint.inc.yml
+    with:
+      node-version: "22"
+
+  typecheck:
+    needs: lint
+    uses: ./.github/workflows/typecheck.inc.yml
+    with:
+      node-version: "22"
+
+  unit:
+    needs: typecheck
+    uses: ./.github/workflows/unit.inc.yml
+    with:
+      node-version: "22"
+
+  contract:
+    needs: unit
+    uses: ./.github/workflows/contract.inc.yml
+    with:
+      node-version: "22"
+
+  golden:
+    needs: contract
+    uses: ./.github/workflows/golden.inc.yml
+    with:
+      node-version: "22"
+
+  visual:
+    needs: golden
+    uses: ./.github/workflows/visual.inc.yml
+    with:
+      compose-file: docker/compose.yaml
+
+  docker-build:
+    needs: visual
+    uses: ./.github/workflows/docker-build.inc.yml
+    with:
+      image-tag: md2:ci
+
+  audit:
+    needs: docker-build
+    uses: ./.github/workflows/audit.inc.yml
+    with:
+      audit-level: high

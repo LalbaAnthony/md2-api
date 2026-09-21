@@ -1,0 +1,3 @@
+#!/bin/sh
+set -e
+node tools/check-repository-charset.mjs --commit-message "$1"

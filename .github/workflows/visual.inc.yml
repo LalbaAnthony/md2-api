@@ -1,0 +1,21 @@
+name: visual
+
+on:
+  workflow_call:
+    inputs:
+      compose-file:
+        description: Compose file holding the test service.
+        required: false
+        type: string
+        default: docker/compose.yaml
+
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build the test image
+        run: docker compose -f ${{ inputs.compose-file }} build test
+      - name: Run the visual regression suite
+        run: docker compose -f ${{ inputs.compose-file }} run --rm test npm run test:visual
