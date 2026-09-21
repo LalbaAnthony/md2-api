@@ -72,6 +72,30 @@ Each theme carries a content hash. A backend caches its compiled form per identi
 editing a theme in development invalidates exactly what it should. `ENABLE_THEME_WATCH` makes the
 registry watch the directory and notify its listeners after a debounce.
 
+## Output formats
+
+A backend owns everything that knows a file format: the compiled form of a theme, the renderer and
+the serialiser. `src/types/format.ts` declares the contract, and it is deliberately not generic:
+the compiled theme never appears in a public signature, which lets the registry hold a homogeneous
+collection of backends with no type assertion and no existential type.
+
+`src/formats/registry.ts` builds the backend table from `NODE_ENV` and `ENABLED_FORMATS`. The
+rules, and why one of them is temporarily permissive, are in
+`docs/adr/0005-format-registration.md`. `src/formats/negotiate.ts` implements the selection
+precedence of section 10.4 and depends on no concrete backend.
+
+A backend declares its capabilities rather than having them inferred. The pipeline degrades
+nothing by itself: the backend decides how to render what it does not support natively, and says
+so in the conversion warnings and in `describeThemeCaveats`, which is what `GET /themes/:id` and
+`GET /formats/:id` report.
+
+`debug-json` exists to prove mechanically that the pipeline has no dependency on DOCX, and to give
+theme and directive authors a diagnostic view. It is never registered in production.
+
+Each backend also validates its own slice of `theme.formats`, and the server passes those
+validators to the theme registry, so an invalid extension is caught when the theme is loaded
+rather than when a conversion is attempted.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

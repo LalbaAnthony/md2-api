@@ -28,14 +28,18 @@ import {
   toErrorResponseBody,
   validationError,
 } from "./errors.ts";
+import { createFormatRegistry } from "./formats/registry.ts";
+import { isJsonObject } from "./lib/json.ts";
 import { createReadinessState } from "./lib/readiness.ts";
+import { formatRoutes } from "./routes/formats.ts";
 import { healthRoutes } from "./routes/health.ts";
 import { themeRoutes } from "./routes/themes.ts";
 import { createThemeRegistry } from "./theme/registry.ts";
 import type { AppConfig } from "./types/config.ts";
 import type { ReadinessState, ServerDependencies, ThemeCaveatProvider } from "./types/api.ts";
-import type { JsonObject } from "./types/json.ts";
-import type { ThemeRegistry } from "./types/theme-registry.ts";
+import type { JsonObject, JsonValue } from "./types/json.ts";
+import type { FormatRegistry } from "./types/format.ts";
+import type { ThemeExtensionValidator, ThemeRegistry } from "./types/theme-registry.ts";
 
 const FASTIFY_BODY_TOO_LARGE_CODE = "FST_ERR_CTP_BODY_TOO_LARGE";
 const UNDER_PRESSURE_CODE = "FST_UNDER_PRESSURE";
@@ -92,7 +96,27 @@ const mapThrownToAppError = (thrown: unknown): AppError => {
   return toAppError(thrown);
 };
 
-const noThemeCaveats: ThemeCaveatProvider = () => ({});
+const asJsonObject = (value: JsonValue): JsonObject => (isJsonObject(value) ? value : {});
+
+const themeCaveatsFrom =
+  (formats: FormatRegistry): ThemeCaveatProvider =>
+  (theme) =>
+    Object.fromEntries(
+      formats
+        .backends()
+        .map((backend) => [backend.descriptor.id, backend.describeThemeCaveats(theme)]),
+    );
+
+const themeExtensionValidatorsFrom = (
+  formats: FormatRegistry,
+): readonly ThemeExtensionValidator[] =>
+  formats.backends().map((backend) => ({
+    formatId: backend.descriptor.id,
+    validate: (_themeId, extension) => {
+      const outcome = backend.validateThemeExtension(asJsonObject(extension));
+      return outcome.ok ? [] : outcome.issues;
+    },
+  }));
 
 export const buildServer = async (
   config: AppConfig,
@@ -100,7 +124,6 @@ export const buildServer = async (
 ): Promise<FastifyInstance> => {
   const exposeDiagnostics = config.NODE_ENV !== "production";
   const readiness: ReadinessState = overrides.readiness ?? createReadinessState();
-  const themeCaveats: ThemeCaveatProvider = overrides.themeCaveats ?? noThemeCaveats;
 
   const app = Fastify({
     logger: buildLoggerOptions(config),
@@ -162,9 +185,26 @@ export const buildServer = async (
     );
   });
 
+  const formats: FormatRegistry =
+    overrides.formats ?? createFormatRegistry({ config, logger: app.log });
+
   const themes: ThemeRegistry =
-    overrides.themes ?? (await createThemeRegistry({ config, logger: app.log }));
+    overrides.themes ??
+    (await createThemeRegistry({
+      config,
+      logger: app.log,
+      extensionValidators: themeExtensionValidatorsFrom(formats),
+    }));
   readiness.themesLoaded = true;
+
+  themes.onReload((report) => {
+    for (const summary of report.loaded) {
+      formats.invalidateThemeCache(summary.id);
+    }
+  });
+
+  await formats.warmUpAll();
+  readiness.formatsWarmedUp = true;
 
   app.addHook("onClose", async () => {
     if (overrides.themes === undefined) {
@@ -173,7 +213,8 @@ export const buildServer = async (
   });
 
   await app.register(healthRoutes(readiness));
-  await app.register(themeRoutes(themes, themeCaveats));
+  await app.register(themeRoutes(themes, overrides.themeCaveats ?? themeCaveatsFrom(formats)));
+  await app.register(formatRoutes(formats));
 
   return app;
 };

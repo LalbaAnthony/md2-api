@@ -73,6 +73,7 @@ Install the hooks once with `npm run prepare`, which points `core.hooksPath` at 
 | `docs/adr/0002-branded-units.md`       | branded units and the assertion boundary               |
 | `docs/adr/0003-lot-0-deviations.md`    | departures from the specification, with reasons        |
 | `docs/adr/0004-theme-schema-mirror.md` | why the theme schema uses readonly wrappers and codecs |
+| `docs/adr/0005-format-registration.md` | how backends are registered, and the scope of Lot 2    |
 
 ## Delivery status
 
@@ -83,5 +84,9 @@ Lot 1 is complete: the theme interface and its proven Zod mirror, the token help
 registry with its production and development behaviours, the `default` theme, and the `/themes`
 and `/themes/:id` routes.
 
-Later lots add the format registry, the conversion pipeline and the DOCX backend. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
+Lot 2 is complete: the backend contract, the format registry, content negotiation, the
+`debug-json` backend and the `/formats` and `/formats/:id` routes. No DOCX code exists yet, which
+is what makes the pipeline independence verifiable rather than merely claimed.
+
+Later lots add the conversion pipeline, `POST /convert` and the DOCX backend. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
 `docs/ooxml-notes.md` and `docs/perf.md` arrive with the lots that make them meaningful.

@@ -76,11 +76,12 @@ describe("GET /themes/:id", () => {
     expect(body.metrics.contentHeight).toBe(13958);
   });
 
-  it("returns an empty caveat map while no backend is registered", async () => {
+  it("returns one caveat entry per active output format", async () => {
     app = await startTestServer({ THEMES_DIR: directory });
     const response = await app.inject({ method: "GET", url: "/themes/default" });
     const body: { caveats: Record<string, string[]> } = response.json();
-    expect(body.caveats).toEqual({});
+    expect(Object.keys(body.caveats)).toEqual(["debug-json"]);
+    expect(body.caveats["debug-json"]).toEqual([]);
   });
 
   it("answers 404 with the available identifiers for an unknown theme", async () => {

@@ -112,3 +112,45 @@ describe("repository charset", () => {
     expect(run()).toContain("passed");
   });
 });
+
+describe("pipeline independence from formats", () => {
+  const importsFormats = (file: string): boolean =>
+    /from\s+"[^"]*\/formats\//.test(readSource(file));
+
+  it("keeps the theme layer free of any format import", () => {
+    const offenders = sourceFiles
+      .filter((file) => file.startsWith("src/theme/"))
+      .filter(importsFormats);
+    expect(offenders).toEqual([]);
+  });
+
+  it("keeps the pipeline free of any format import", () => {
+    const offenders = sourceFiles
+      .filter((file) => file.startsWith("src/pipeline/"))
+      .filter(importsFormats);
+    expect(offenders).toEqual([]);
+  });
+
+  it("keeps the shared library free of any format import", () => {
+    const offenders = sourceFiles
+      .filter((file) => file.startsWith("src/lib/"))
+      .filter(importsFormats);
+    expect(offenders).toEqual([]);
+  });
+
+  it("wires the format registry from the composition root only", () => {
+    const allowedImporters = ["src/server.ts"];
+    const offenders = sourceFiles
+      .filter((file) => !file.startsWith("src/formats/"))
+      .filter((file) => !allowedImporters.includes(file))
+      .filter(importsFormats);
+    expect(offenders).toEqual([]);
+  });
+
+  it("declares the intermediate representation without naming any format", () => {
+    const source = readSource("src/types/ir.ts").toLowerCase();
+    for (const forbidden of ["docx", "ooxml", "omml", "openxml", "wordprocessing"]) {
+      expect(source).not.toContain(forbidden);
+    }
+  });
+});

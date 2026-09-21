@@ -1,3 +1,4 @@
+import type { FormatRegistry } from "./format.ts";
 import type { Theme } from "./theme.ts";
 import type { ThemeRegistry } from "./theme-registry.ts";
 
@@ -22,5 +23,6 @@ export type ThemeCaveatProvider = (theme: Theme) => Readonly<Record<string, read
 export interface ServerDependencies {
   readonly readiness: ReadinessState;
   readonly themes: ThemeRegistry;
+  readonly formats: FormatRegistry;
   readonly themeCaveats: ThemeCaveatProvider;
 }

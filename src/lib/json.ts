@@ -16,6 +16,9 @@ export const jsonObjectSchema: z.ZodType<JsonObject> = z.lazy(() =>
   z.record(z.string(), jsonValueSchema),
 );
 
+export const isJsonObject = (value: JsonValue): value is JsonObject =>
+  typeof value === "object" && value !== null && !Array.isArray(value);
+
 const isUnknownArray = (value: object): value is readonly unknown[] => Array.isArray(value);
 
 const asRecord = (value: object): Readonly<Record<string, unknown>> => ({ ...value });
