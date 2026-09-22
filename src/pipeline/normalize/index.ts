@@ -1,4 +1,5 @@
 import { buildAnchorTable } from "./anchors.ts";
+import { tokenizeCodeBlocks } from "./code.ts";
 import { flattenDocument } from "./flatten.ts";
 import { extractFrontmatter } from "./frontmatter.ts";
 import { resolveLinkReferences } from "./links.ts";
@@ -28,15 +29,16 @@ export const normalizeDocument = async (
 
   const anchors = buildAnchorTable(tree);
 
+  const codeTokens = await tokenizeCodeBlocks(tree, options.tabWidth, sink);
+
   const flattened = flattenDocument({
     tree,
     anchors,
     sink,
     strict: options.strict,
     maxNestingDepth: options.maxNestingDepth,
+    codeTokens,
   });
-
-  await Promise.resolve();
 
   const document: DocumentIr = {
     meta,
@@ -48,7 +50,7 @@ export const normalizeDocument = async (
       headings: flattened.headingCount,
       words: flattened.wordCount,
       images: 0,
-      codeBlocks: 0,
+      codeBlocks: flattened.codeBlockCount,
       tables: 0,
     },
   };

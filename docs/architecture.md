@@ -144,6 +144,28 @@ Nine levels is the limit Word honours. `normalize` never clips: it records the r
 backend clamps to its own `maxListDepth` and emits a conversion warning, because the limit belongs
 to the format and not to the document.
 
+## Code blocks
+
+Tokenisation belongs to `normalize`, not to a backend. Shiki runs once per code node, behind a
+process singleton that loads a grammar the first time a language needs it. Loading the highlighter
+per request costs hundreds of milliseconds, so the server warms it up before `/readyz` answers.
+
+What lands in the intermediate representation is a semantic scope per token, never a colour. The
+projection from TextMate scope names to `SyntaxScope` lives in `src/pipeline/normalize/code.ts`
+and matches on the most specific scope of each token. The backend turns a scope into a colour
+through `theme.syntax`, which is what lets one tokenisation serve every theme and every format.
+
+Tabs are expanded to the next tab stop during normalisation, using `code.tabWidth`. Word reads a
+tab as a tab stop rather than an indent, so a tab that survived to the document would not line up.
+
+An unknown language is never an error. The block falls back to one plain token per line and a
+conversion warning, as section 11.6 requires.
+
+The block itself is a table of one cell with the shading on the cell, not on the paragraphs.
+Paragraph shading leaves white gaps between lines in several renderers and does not rebuild
+cleanly after a page break. Each line stays its own paragraph inside that cell and the row never
+forbids splitting, so a long block breaks across pages with a continuous background.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

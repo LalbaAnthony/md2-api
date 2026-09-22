@@ -1,0 +1,195 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 1,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 7
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A step with code:"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": true,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        },
+        {
+          "caption": null,
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": true,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "code",
+          "language": "json",
+          "lines": [
+            {
+              "number": 1,
+              "tokens": [
+                {
+                  "scope": "punctuation",
+                  "text": "{ "
+                },
+                {
+                  "scope": "punctuation",
+                  "text": "\"key\""
+                },
+                {
+                  "scope": "punctuation",
+                  "text": ": "
+                },
+                {
+                  "scope": "string",
+                  "text": "\"value\""
+                },
+                {
+                  "scope": "punctuation",
+                  "text": " }"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": true,
+            "spread": true,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": true,
+        "spread": true,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A second step."
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": true,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": true,
+            "spread": true,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": true,
+        "spread": true,
+        "start": 1
+      },
+      "kind": "listItem"
+    }
+  ]
+}

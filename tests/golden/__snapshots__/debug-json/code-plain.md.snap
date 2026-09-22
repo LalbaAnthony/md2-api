@@ -1,0 +1,106 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 1,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 10
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A paragraph before the block."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "caption": null,
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "code",
+      "language": null,
+      "lines": [
+        {
+          "number": 1,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "plain text without a language"
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "second line"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A paragraph after the block."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    }
+  ]
+}

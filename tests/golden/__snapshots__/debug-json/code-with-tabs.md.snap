@@ -1,0 +1,81 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 1,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 0
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "caption": null,
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "code",
+      "language": null,
+      "lines": [
+        {
+          "number": 1,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "no indent"
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "    one tab"
+            }
+          ]
+        },
+        {
+          "number": 3,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "        two tabs"
+            }
+          ]
+        },
+        {
+          "number": 4,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "    four spaces"
+            }
+          ]
+        },
+        {
+          "number": 5,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "        tab then spaces"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

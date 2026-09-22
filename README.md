@@ -95,7 +95,9 @@ a minimal DOCX backend with compiled styles and numbering, `POST /convert` and
 Lot 4 is complete: list numbering with one instance per root list, nine levels of nesting, loose
 and tight lists, multi block items and task lists.
 
-Code blocks, tables, images, quotes, callouts, page furniture, footnotes and mathematics arrive
-in Lots 5 to 10. Until then the DOCX backend reports each of them as a conversion warning rather
-than failing. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
+Lot 5 is complete: Shiki tokenisation in the pipeline, semantic scopes projected to theme colours
+by the backend, the single cell table wrapper, line numbers, the language label, tab expansion and
+the plain text fallback for an unknown language.
+
+Tables, images, quotes, callouts, page furniture, footnotes and mathematics arrive in Lots 6 to 10. Until then the DOCX backend reports each of them as a conversion warning rather than failing. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
 `docs/ooxml-notes.md` and `docs/perf.md` arrive with the lots that make them meaningful.

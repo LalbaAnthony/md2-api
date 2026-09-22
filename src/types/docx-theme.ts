@@ -1,5 +1,6 @@
 import type { INumberingOptions, ISectionPropertiesOptions, IStylesOptions } from "docx";
-import type { Dxa } from "./units.ts";
+import type { Dxa, Eighth, Pt } from "./units.ts";
+import type { SyntaxScope } from "./ir.ts";
 import type { JsonObject } from "./json.ts";
 
 export type DocxParagraphStyleKey =
@@ -72,6 +73,24 @@ export interface DocxListSettings {
   readonly taskGlyphs: { readonly checked: string; readonly unchecked: string };
 }
 
+export interface DocxSyntaxRun {
+  readonly color: string;
+  readonly bold: boolean;
+  readonly italics: boolean;
+}
+
+export type DocxSyntaxRuns = Readonly<Record<SyntaxScope, DocxSyntaxRun>>;
+
+export interface DocxCodeSettings {
+  readonly background: string;
+  readonly border: string | null;
+  readonly borderWidth: Eighth;
+  readonly padding: Dxa;
+  readonly showLineNumbers: boolean;
+  readonly showLanguageLabel: boolean;
+  readonly fontSize: Pt;
+}
+
 export interface DocxParagraphBehaviour {
   readonly widowControl: boolean;
   readonly headingPageBreakBefore: readonly [boolean, boolean, boolean, boolean, boolean, boolean];
@@ -90,6 +109,8 @@ export interface DocxCompiledTheme {
   readonly paragraphBehaviour: DocxParagraphBehaviour;
   readonly fonts: DocxFontNames;
   readonly list: DocxListSettings;
+  readonly code: DocxCodeSettings;
+  readonly syntax: DocxSyntaxRuns;
   readonly extension: DocxThemeExtension;
 }
 

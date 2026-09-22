@@ -2,7 +2,7 @@ import { toString as mdastToString } from "mdast-util-to-string";
 import { unsupportedNodeError, validationError } from "../../errors.ts";
 import { anchorKey, resolveInternalAnchor } from "./anchors.ts";
 import { warning } from "./warnings.ts";
-import type { Heading, List, ListItem, Paragraph, PhrasingContent, RootContent } from "mdast";
+import type { Code, Heading, List, ListItem, Paragraph, PhrasingContent, RootContent } from "mdast";
 import type { BlockContext, InlineMarks, IrBlock, IrInline, ListFrame } from "../../types/ir.ts";
 import type { FlattenInput, FlattenOutput } from "../../types/pipeline.ts";
 
@@ -44,6 +44,7 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
   let headingCount = 0;
   let wordCount = 0;
   let listInstance = 0;
+  let codeBlockCount = 0;
 
   const reportUnsupported = (nodeType: string, detail: Record<string, string> = {}): void => {
     if (input.strict) {
@@ -151,6 +152,18 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
     });
   };
 
+  const pushCode = (node: Code, context: BlockContext, target: IrBlock[]): void => {
+    codeBlockCount += 1;
+    target.push({
+      kind: "code",
+      context,
+      language:
+        node.lang === null || node.lang === undefined || node.lang.length === 0 ? null : node.lang,
+      lines: input.codeTokens.get(node) ?? [],
+      caption: null,
+    });
+  };
+
   const pushListItem = (
     item: ListItem,
     frame: ListFrame,
@@ -214,6 +227,9 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
           listInstance += 1;
           pushList(node, context, target, 0, listInstance);
           break;
+        case "code":
+          pushCode(node, context, target);
+          break;
         case "yaml":
         case "definition":
           break;
@@ -229,5 +245,5 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
 
   walk(input.tree.children, ROOT_CONTEXT, blocks);
 
-  return { blocks, headingCount, wordCount };
+  return { blocks, headingCount, wordCount, codeBlockCount };
 };

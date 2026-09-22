@@ -3,9 +3,11 @@ import { computeContentWidth } from "../../../theme/tokens.ts";
 import { parseDocxThemeExtension } from "../theme-extension.ts";
 import { compileNumbering, headingsAreNumbered, numberingReferences } from "./numbering.ts";
 import { compileSection } from "./section.ts";
+import { compileSyntaxRuns } from "./syntax-theme.ts";
 import { buildStyleIds, compileStyles } from "./styles.ts";
 import type { Theme } from "../../../types/theme.ts";
 import type {
+  DocxCodeSettings,
   DocxCompiledTheme,
   DocxFontNames,
   DocxListSettings,
@@ -39,6 +41,16 @@ const listSettingsOf = (theme: Theme): DocxListSettings => ({
   },
 });
 
+const codeSettingsOf = (theme: Theme): DocxCodeSettings => ({
+  background: theme.color.codeBackground,
+  border: theme.color.codeBorder,
+  borderWidth: theme.table.borderWidth,
+  padding: theme.code.padding,
+  showLineNumbers: theme.code.showLineNumbers,
+  showLanguageLabel: theme.code.showLanguageLabel,
+  fontSize: theme.code.fontSize,
+});
+
 export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
   const extension = parseDocxThemeExtension(theme.formats["docx"] ?? {});
   const styleIds = buildStyleIds(extension.styleIdPrefix);
@@ -55,6 +67,8 @@ export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
     paragraphBehaviour: paragraphBehaviourOf(theme),
     fonts: fontNamesOf(theme),
     list: listSettingsOf(theme),
+    code: codeSettingsOf(theme),
+    syntax: compileSyntaxRuns(theme),
     extension,
   };
 };

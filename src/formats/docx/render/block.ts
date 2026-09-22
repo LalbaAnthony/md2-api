@@ -1,6 +1,7 @@
 import { Paragraph } from "docx";
 import { assertNever } from "../../../errors.ts";
 import { unsupportedBlockWarning } from "./context.ts";
+import { renderCode } from "./code.ts";
 import { renderHeading } from "./heading.ts";
 import { renderInline } from "./inline.ts";
 import { renderListItem } from "./list.ts";
@@ -40,6 +41,7 @@ export const renderBlock = (
     case "listItem":
       return renderListItem(block, context, renderBlock);
     case "code":
+      return [renderCode(block, context)];
     case "table":
     case "figure":
     case "pageBreak":

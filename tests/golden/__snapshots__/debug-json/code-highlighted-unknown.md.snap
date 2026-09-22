@@ -1,0 +1,54 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 1,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 0
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "caption": null,
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "code",
+      "language": "notalanguage",
+      "lines": [
+        {
+          "number": 1,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "some text that no grammar knows"
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "another line"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

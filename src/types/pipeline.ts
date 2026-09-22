@@ -1,6 +1,6 @@
-import type { Root } from "mdast";
+import type { Code, Root } from "mdast";
 import type { Dxa } from "./units.ts";
-import type { DocumentIr, DocumentMeta, IrBlock } from "./ir.ts";
+import type { DocumentIr, DocumentMeta, IrBlock, IrCodeLine } from "./ir.ts";
 import type { JsonObject } from "./json.ts";
 
 export interface DocumentWarning {
@@ -24,10 +24,13 @@ export interface DocumentOptions {
   readonly titlePage?: boolean;
 }
 
+export type CodeTokenTable = ReadonlyMap<Code, readonly IrCodeLine[]>;
+
 export interface NormalizeOptions {
   readonly strict: boolean;
   readonly maxNestingDepth: number;
   readonly contentWidth: Dxa;
+  readonly tabWidth: number;
   readonly defaultLanguage: string;
   readonly metadata: MetadataOverrides;
   readonly documentOptions: DocumentOptions;
@@ -74,10 +77,12 @@ export interface FlattenInput {
   readonly sink: WarningSink;
   readonly strict: boolean;
   readonly maxNestingDepth: number;
+  readonly codeTokens: CodeTokenTable;
 }
 
 export interface FlattenOutput {
   readonly blocks: readonly IrBlock[];
   readonly headingCount: number;
   readonly wordCount: number;
+  readonly codeBlockCount: number;
 }

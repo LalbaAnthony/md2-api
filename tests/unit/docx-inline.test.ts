@@ -187,13 +187,6 @@ describe("blocks the backend cannot render yet", () => {
       section: { orientation: "landscape", columnCount: null },
     },
     {
-      kind: "code",
-      context: rootContext,
-      language: "ts",
-      lines: [],
-      caption: null,
-    },
-    {
       kind: "figure",
       context: rootContext,
       asset: sampleAsset("a.png", [1]),

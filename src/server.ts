@@ -32,6 +32,7 @@ import {
 } from "./errors.ts";
 import { createFormatRegistry } from "./formats/registry.ts";
 import { createSemaphore } from "./lib/semaphore.ts";
+import { warmUpHighlighter } from "./pipeline/normalize/code.ts";
 import { registerOpenApi } from "./openapi/register.ts";
 import { isJsonObject } from "./lib/json.ts";
 import { createReadinessState } from "./lib/readiness.ts";
@@ -216,6 +217,7 @@ export const buildServer = async (
     }
   });
 
+  await warmUpHighlighter();
   await formats.warmUpAll();
   readiness.formatsWarmedUp = true;
 

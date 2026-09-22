@@ -1,0 +1,300 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 1,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 0
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "caption": null,
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "code",
+      "language": "typescript",
+      "lines": [
+        {
+          "number": 1,
+          "tokens": [
+            {
+              "scope": "keyword",
+              "text": "const"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "constant",
+              "text": "greeting"
+            },
+            {
+              "scope": "operator",
+              "text": ":"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "type",
+              "text": "string"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "operator",
+              "text": "="
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "string",
+              "text": "\"hello\""
+            },
+            {
+              "scope": "punctuation",
+              "text": ";"
+            }
+          ]
+        },
+        {
+          "number": 2,
+          "tokens": []
+        },
+        {
+          "number": 3,
+          "tokens": [
+            {
+              "scope": "keyword",
+              "text": "function"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "function",
+              "text": "greet"
+            },
+            {
+              "scope": "punctuation",
+              "text": "("
+            },
+            {
+              "scope": "variable",
+              "text": "name"
+            },
+            {
+              "scope": "operator",
+              "text": ":"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "type",
+              "text": "string"
+            },
+            {
+              "scope": "punctuation",
+              "text": ")"
+            },
+            {
+              "scope": "operator",
+              "text": ":"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "type",
+              "text": "string"
+            },
+            {
+              "scope": "punctuation",
+              "text": " {"
+            }
+          ]
+        },
+        {
+          "number": 4,
+          "tokens": [
+            {
+              "scope": "punctuation",
+              "text": "  "
+            },
+            {
+              "scope": "comment",
+              "text": "// Return a greeting for the name."
+            }
+          ]
+        },
+        {
+          "number": 5,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "  "
+            },
+            {
+              "scope": "keyword",
+              "text": "return"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "punctuation",
+              "text": "`${"
+            },
+            {
+              "scope": "variable",
+              "text": "greeting"
+            },
+            {
+              "scope": "punctuation",
+              "text": "}, ${"
+            },
+            {
+              "scope": "variable",
+              "text": "name"
+            },
+            {
+              "scope": "string",
+              "text": "}`"
+            },
+            {
+              "scope": "punctuation",
+              "text": ";"
+            }
+          ]
+        },
+        {
+          "number": 6,
+          "tokens": [
+            {
+              "scope": "punctuation",
+              "text": "}"
+            }
+          ]
+        },
+        {
+          "number": 7,
+          "tokens": []
+        },
+        {
+          "number": 8,
+          "tokens": [
+            {
+              "scope": "keyword",
+              "text": "export"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "type",
+              "text": "class"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "type",
+              "text": "Greeter"
+            },
+            {
+              "scope": "punctuation",
+              "text": " {"
+            }
+          ]
+        },
+        {
+          "number": 9,
+          "tokens": [
+            {
+              "scope": "plain",
+              "text": "  "
+            },
+            {
+              "scope": "keyword",
+              "text": "private"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "keyword",
+              "text": "readonly"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "variable",
+              "text": "count"
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "operator",
+              "text": "="
+            },
+            {
+              "scope": "plain",
+              "text": " "
+            },
+            {
+              "scope": "number",
+              "text": "0"
+            },
+            {
+              "scope": "punctuation",
+              "text": ";"
+            }
+          ]
+        },
+        {
+          "number": 10,
+          "tokens": [
+            {
+              "scope": "punctuation",
+              "text": "}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

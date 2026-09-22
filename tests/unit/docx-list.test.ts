@@ -13,6 +13,7 @@ const convert = async (markdown: string): Promise<ConversionResult> => {
     strict: false,
     maxNestingDepth: 100,
     contentWidth: dxa(9026),
+    tabWidth: 4,
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},
