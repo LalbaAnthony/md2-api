@@ -60,6 +60,18 @@ export interface DocxThemeExtension {
   readonly updateFieldsOnOpen: boolean;
 }
 
+export interface DocxFontNames {
+  readonly body: string;
+  readonly heading: string;
+  readonly mono: string;
+}
+
+export interface DocxListSettings {
+  readonly indentStep: Dxa;
+  readonly hanging: Dxa;
+  readonly taskGlyphs: { readonly checked: string; readonly unchecked: string };
+}
+
 export interface DocxParagraphBehaviour {
   readonly widowControl: boolean;
   readonly headingPageBreakBefore: readonly [boolean, boolean, boolean, boolean, boolean, boolean];
@@ -76,6 +88,8 @@ export interface DocxCompiledTheme {
   readonly numberingReferences: Readonly<Record<DocxNumberingReference, string>>;
   readonly headingsAreNumbered: boolean;
   readonly paragraphBehaviour: DocxParagraphBehaviour;
+  readonly fonts: DocxFontNames;
+  readonly list: DocxListSettings;
   readonly extension: DocxThemeExtension;
 }
 

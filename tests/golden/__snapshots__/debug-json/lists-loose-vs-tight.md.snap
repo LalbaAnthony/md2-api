@@ -1,0 +1,451 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 20
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A tight list follows."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Tight one"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Tight two"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Tight three"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A loose list follows."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Loose one"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 2,
+                "level": 0,
+                "ordered": false,
+                "spread": true,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 2,
+            "level": 0,
+            "ordered": false,
+            "spread": true,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 2,
+        "level": 0,
+        "ordered": false,
+        "spread": true,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Loose two"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 2,
+                "level": 0,
+                "ordered": false,
+                "spread": true,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 2,
+            "level": 0,
+            "ordered": false,
+            "spread": true,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 2,
+        "level": 0,
+        "ordered": false,
+        "spread": true,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Loose three"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 2,
+                "level": 0,
+                "ordered": false,
+                "spread": true,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 2,
+            "level": 0,
+            "ordered": false,
+            "spread": true,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 2,
+        "level": 0,
+        "ordered": false,
+        "spread": true,
+        "start": 1
+      },
+      "kind": "listItem"
+    }
+  ]
+}

@@ -1,0 +1,455 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 14
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "First step"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": true,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Second step"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": true,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Sub step one"
+            }
+          ],
+          "context": {
+            "indentLevel": 2,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              },
+              {
+                "instance": 1,
+                "level": 1,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 2,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          },
+          {
+            "instance": 1,
+            "level": 1,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 1,
+        "ordered": true,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Sub step two"
+            }
+          ],
+          "context": {
+            "indentLevel": 2,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              },
+              {
+                "instance": 1,
+                "level": 1,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 2,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          },
+          {
+            "instance": 1,
+            "level": 1,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 1,
+        "ordered": true,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Deep step"
+            }
+          ],
+          "context": {
+            "indentLevel": 3,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              },
+              {
+                "instance": 1,
+                "level": 1,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              },
+              {
+                "instance": 1,
+                "level": 2,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 3,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          },
+          {
+            "instance": 1,
+            "level": 1,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          },
+          {
+            "instance": 1,
+            "level": 2,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 2,
+        "ordered": true,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Third step"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": true,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": true,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": true,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    }
+  ]
+}

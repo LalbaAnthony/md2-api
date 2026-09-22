@@ -73,6 +73,7 @@ export interface FlattenInput {
   readonly anchors: AnchorTable;
   readonly sink: WarningSink;
   readonly strict: boolean;
+  readonly maxNestingDepth: number;
 }
 
 export interface FlattenOutput {

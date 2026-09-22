@@ -254,12 +254,12 @@ describe("strict mode", () => {
     const response = await app.inject({
       method: "POST",
       url: "/convert",
-      payload: { markdown: "- item\n", format: "debug-json", options: { strict: true } },
+      payload: { markdown: "> quoted\n", format: "debug-json", options: { strict: true } },
     });
     expect(response.statusCode).toBe(422);
     const body: ErrorResponseBody = response.json();
     expect(body.error.code).toBe("UNSUPPORTED_NODE");
-    expect(body.error.details).toMatchObject({ nodeType: "list" });
+    expect(body.error.details).toMatchObject({ nodeType: "blockquote" });
   });
 
   it("warns instead of failing outside strict mode", async () => {
@@ -267,7 +267,7 @@ describe("strict mode", () => {
     const response = await app.inject({
       method: "POST",
       url: "/convert",
-      payload: { markdown: "- item\n", format: "debug-json", options: { strict: false } },
+      payload: { markdown: "> quoted\n", format: "debug-json", options: { strict: false } },
     });
     expect(response.statusCode).toBe(200);
     expect(response.headers["x-conversion-warnings"]).toBe("1");

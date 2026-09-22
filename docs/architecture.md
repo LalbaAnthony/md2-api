@@ -119,6 +119,31 @@ queued without bound.
 The timeout bounds the awaited pipeline. It cannot interrupt a synchronous renderer, which is
 one more reason the renderers stay small and total.
 
+## Lists
+
+A list is flattened, like everything else. Each item becomes one `listItem` block carrying its own
+content blocks, and a nested list becomes further `listItem` blocks that follow it with a deeper
+`level`. Nothing in the intermediate representation nests lists inside lists.
+
+Every root list gets a fresh instance number, shared by all its descendants. That number becomes a
+distinct concrete numbering in the produced document, which is what makes two consecutive ordered
+lists restart at one instead of continuing. This is the regression that section 5.5 calls the
+first one to expect, so `tests/golden/corpus/consecutive-lists.md` exists for it and a unit test
+asserts the instance numbers directly.
+
+An item with several blocks carries the numbering on its first paragraph only. The following
+paragraphs get the matching indentation and no numbering, otherwise the bullet repeats on every
+paragraph of the item.
+
+A task item uses no numbering at all. It is indented explicitly and its first paragraph is
+prefixed by a glyph run followed by a non breaking space, in the monospace font. Word content
+controls would be the alternative, and they are out of proportion and poorly supported outside
+Word itself.
+
+Nine levels is the limit Word honours. `normalize` never clips: it records the real depth, and the
+backend clamps to its own `maxListDepth` and emits a conversion warning, because the limit belongs
+to the format and not to the document.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

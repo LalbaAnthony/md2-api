@@ -194,13 +194,6 @@ describe("blocks the backend cannot render yet", () => {
       caption: null,
     },
     {
-      kind: "listItem",
-      context: rootContext,
-      frame: { ordered: false, level: 0, instance: 1, start: 1, spread: false },
-      checked: null,
-      blocks: [],
-    },
-    {
       kind: "figure",
       context: rootContext,
       asset: sampleAsset("a.png", [1]),

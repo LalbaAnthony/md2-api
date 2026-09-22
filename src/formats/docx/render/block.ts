@@ -3,6 +3,7 @@ import { assertNever } from "../../../errors.ts";
 import { unsupportedBlockWarning } from "./context.ts";
 import { renderHeading } from "./heading.ts";
 import { renderInline } from "./inline.ts";
+import { renderListItem } from "./list.ts";
 import type { AlignmentType } from "docx";
 import type { IrBlock, TextAlign } from "../../../types/ir.ts";
 import type { DocxBlockElement, DocxRenderContext } from "../../../types/docx-render.ts";
@@ -37,6 +38,7 @@ export const renderBlock = (
     case "thematicBreak":
       return [new Paragraph({ style: context.compiled.styleIds.HorizontalRule, children: [] })];
     case "listItem":
+      return renderListItem(block, context, renderBlock);
     case "code":
     case "table":
     case "figure":

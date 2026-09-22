@@ -5,7 +5,12 @@ import { compileNumbering, headingsAreNumbered, numberingReferences } from "./nu
 import { compileSection } from "./section.ts";
 import { buildStyleIds, compileStyles } from "./styles.ts";
 import type { Theme } from "../../../types/theme.ts";
-import type { DocxCompiledTheme, DocxParagraphBehaviour } from "../../../types/docx-theme.ts";
+import type {
+  DocxCompiledTheme,
+  DocxFontNames,
+  DocxListSettings,
+  DocxParagraphBehaviour,
+} from "../../../types/docx-theme.ts";
 
 const paragraphBehaviourOf = (theme: Theme): DocxParagraphBehaviour => ({
   widowControl: theme.paragraph.widowControl,
@@ -17,6 +22,21 @@ const paragraphBehaviourOf = (theme: Theme): DocxParagraphBehaviour => ({
     theme.heading[4].pageBreakBefore,
     theme.heading[5].pageBreakBefore,
   ],
+});
+
+const fontNamesOf = (theme: Theme): DocxFontNames => ({
+  body: theme.type.body.name,
+  heading: theme.type.heading.name,
+  mono: theme.type.mono.name,
+});
+
+const listSettingsOf = (theme: Theme): DocxListSettings => ({
+  indentStep: theme.list.indentStep,
+  hanging: theme.list.hanging,
+  taskGlyphs: {
+    checked: theme.list.taskGlyphs.checked,
+    unchecked: theme.list.taskGlyphs.unchecked,
+  },
 });
 
 export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
@@ -33,6 +53,8 @@ export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
     numberingReferences,
     headingsAreNumbered: headingsAreNumbered(theme),
     paragraphBehaviour: paragraphBehaviourOf(theme),
+    fonts: fontNamesOf(theme),
+    list: listSettingsOf(theme),
     extension,
   };
 };

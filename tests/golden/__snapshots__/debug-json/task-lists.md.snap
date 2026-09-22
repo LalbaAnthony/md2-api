@@ -1,0 +1,516 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 28
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A completed task"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": true,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "An open task"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": false,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Another completed task"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": true,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A nested open task"
+            }
+          ],
+          "context": {
+            "indentLevel": 2,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              },
+              {
+                "instance": 1,
+                "level": 1,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": false,
+      "context": {
+        "indentLevel": 2,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          },
+          {
+            "instance": 1,
+            "level": 1,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 1,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A nested completed task"
+            }
+          ],
+          "context": {
+            "indentLevel": 2,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              },
+              {
+                "instance": 1,
+                "level": 1,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": true,
+      "context": {
+        "indentLevel": 2,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          },
+          {
+            "instance": 1,
+            "level": 1,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 1,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "Mixed with an ordinary list:"
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "An ordinary item"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 2,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 2,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 2,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A task item"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 2,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": false,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 2,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 2,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    }
+  ]
+}

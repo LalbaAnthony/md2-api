@@ -28,7 +28,13 @@ export const normalizeDocument = async (
 
   const anchors = buildAnchorTable(tree);
 
-  const flattened = flattenDocument({ tree, anchors, sink, strict: options.strict });
+  const flattened = flattenDocument({
+    tree,
+    anchors,
+    sink,
+    strict: options.strict,
+    maxNestingDepth: options.maxNestingDepth,
+  });
 
   await Promise.resolve();
 
