@@ -2,9 +2,29 @@ import { toString as mdastToString } from "mdast-util-to-string";
 import { unsupportedNodeError, validationError } from "../../errors.ts";
 import { anchorKey, resolveInternalAnchor } from "./anchors.ts";
 import { warning } from "./warnings.ts";
-import type { Code, Heading, List, ListItem, Paragraph, PhrasingContent, RootContent } from "mdast";
-import type { BlockContext, InlineMarks, IrBlock, IrInline, ListFrame } from "../../types/ir.ts";
+import type {
+  Code,
+  Heading,
+  List,
+  ListItem,
+  Paragraph,
+  PhrasingContent,
+  RootContent,
+  Table,
+  TableCell,
+} from "mdast";
+import type {
+  BlockContext,
+  InlineMarks,
+  IrBlock,
+  IrInline,
+  IrTableCell,
+  IrTableRow,
+  ListFrame,
+  TextAlign,
+} from "../../types/ir.ts";
 import type { FlattenInput, FlattenOutput } from "../../types/pipeline.ts";
+import { computeColumnWidths, measureColumn } from "./tables.ts";
 
 const NO_MARKS: InlineMarks = {
   bold: false,
@@ -39,12 +59,15 @@ const countWords = (value: string): number =>
 
 const isList = (node: RootContent): node is List => node.type === "list";
 
+const emptyCell = (): TableCell => ({ type: "tableCell", children: [] });
+
 export const flattenDocument = (input: FlattenInput): FlattenOutput => {
   const blocks: IrBlock[] = [];
   let headingCount = 0;
   let wordCount = 0;
   let listInstance = 0;
   let codeBlockCount = 0;
+  let tableCount = 0;
 
   const reportUnsupported = (nodeType: string, detail: Record<string, string> = {}): void => {
     if (input.strict) {
@@ -164,6 +187,57 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
     });
   };
 
+  const cellText = (cell: TableCell): string => mdastToString(cell);
+
+  const cellOf = (cell: TableCell, context: BlockContext, align: TextAlign | null): IrTableCell => {
+    const cellContext: BlockContext = { ...context, insideTableCell: true };
+    return {
+      blocks: [
+        { kind: "paragraph", context: cellContext, children: inlineOf(cell.children), align },
+      ],
+      align,
+    };
+  };
+
+  const pushTable = (node: Table, context: BlockContext, target: IrBlock[]): void => {
+    tableCount += 1;
+    const alignments: readonly (TextAlign | null)[] = (node.align ?? []).map(
+      (entry) => entry ?? null,
+    );
+    const columnCount = node.children.reduce(
+      (widest, row) => Math.max(widest, row.children.length),
+      0,
+    );
+    const columnAlign = Array.from(
+      { length: columnCount },
+      (_unused, index) => alignments[index] ?? null,
+    );
+
+    const measures = Array.from({ length: columnCount }, (_unused, index) =>
+      measureColumn(node.children.map((row) => cellText(row.children[index] ?? emptyCell()))),
+    );
+
+    const rowsOf = (rows: readonly Table["children"][number][]): readonly IrTableRow[] =>
+      rows.map((row) => ({
+        cells: Array.from({ length: columnCount }, (_unused, index) =>
+          cellOf(row.children[index] ?? emptyCell(), context, columnAlign[index] ?? null),
+        ),
+      }));
+
+    const [headerRow, ...bodyRows] = node.children;
+
+    target.push({
+      kind: "table",
+      context,
+      header: headerRow === undefined ? null : (rowsOf([headerRow])[0] ?? null),
+      rows: rowsOf(bodyRows),
+      columnWidths: computeColumnWidths(measures, input.contentWidth, input.minimumColumnWidth),
+      columnAlign,
+      caption: null,
+      sequence: tableCount,
+    });
+  };
+
   const pushListItem = (
     item: ListItem,
     frame: ListFrame,
@@ -230,6 +304,9 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
         case "code":
           pushCode(node, context, target);
           break;
+        case "table":
+          pushTable(node, context, target);
+          break;
         case "yaml":
         case "definition":
           break;
@@ -245,5 +322,5 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
 
   walk(input.tree.children, ROOT_CONTEXT, blocks);
 
-  return { blocks, headingCount, wordCount, codeBlockCount };
+  return { blocks, headingCount, wordCount, codeBlockCount, tableCount };
 };

@@ -14,6 +14,7 @@ const convert = async (markdown: string): Promise<ConversionResult> => {
     maxNestingDepth: 100,
     contentWidth: dxa(9026),
     tabWidth: 4,
+    minimumColumnWidth: dxa(680),
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

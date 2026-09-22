@@ -18,6 +18,7 @@ const normalize = async (markdown: string, tabWidth = 4): Promise<NormalizeResul
     maxNestingDepth: 100,
     contentWidth: dxa(9026),
     tabWidth,
+    minimumColumnWidth: dxa(680),
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

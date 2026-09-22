@@ -5,6 +5,7 @@ import { renderCode } from "./code.ts";
 import { renderHeading } from "./heading.ts";
 import { renderInline } from "./inline.ts";
 import { renderListItem } from "./list.ts";
+import { renderTable } from "./table.ts";
 import type { AlignmentType } from "docx";
 import type { IrBlock, TextAlign } from "../../../types/ir.ts";
 import type { DocxBlockElement, DocxRenderContext } from "../../../types/docx-render.ts";
@@ -43,6 +44,7 @@ export const renderBlock = (
     case "code":
       return [renderCode(block, context)];
     case "table":
+      return renderTable(block, context);
     case "figure":
     case "pageBreak":
     case "tableOfContents":

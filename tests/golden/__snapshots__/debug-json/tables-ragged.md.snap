@@ -1,0 +1,395 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 1,
+    "words": 0
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "caption": null,
+      "columnAlign": [
+        null,
+        null,
+        null
+      ],
+      "columnWidths": [
+        3009,
+        3009,
+        3008
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "header": {
+        "cells": [
+          {
+            "align": null,
+            "blocks": [
+              {
+                "align": null,
+                "children": [
+                  {
+                    "kind": "text",
+                    "marks": {
+                      "bold": false,
+                      "code": false,
+                      "italic": false,
+                      "strike": false,
+                      "subscript": false,
+                      "superscript": false
+                    },
+                    "value": "A"
+                  }
+                ],
+                "context": {
+                  "indentLevel": 0,
+                  "insideCallout": null,
+                  "insideFootnote": false,
+                  "insideQuote": false,
+                  "insideTableCell": true,
+                  "listPath": []
+                },
+                "kind": "paragraph"
+              }
+            ]
+          },
+          {
+            "align": null,
+            "blocks": [
+              {
+                "align": null,
+                "children": [
+                  {
+                    "kind": "text",
+                    "marks": {
+                      "bold": false,
+                      "code": false,
+                      "italic": false,
+                      "strike": false,
+                      "subscript": false,
+                      "superscript": false
+                    },
+                    "value": "B"
+                  }
+                ],
+                "context": {
+                  "indentLevel": 0,
+                  "insideCallout": null,
+                  "insideFootnote": false,
+                  "insideQuote": false,
+                  "insideTableCell": true,
+                  "listPath": []
+                },
+                "kind": "paragraph"
+              }
+            ]
+          },
+          {
+            "align": null,
+            "blocks": [
+              {
+                "align": null,
+                "children": [
+                  {
+                    "kind": "text",
+                    "marks": {
+                      "bold": false,
+                      "code": false,
+                      "italic": false,
+                      "strike": false,
+                      "subscript": false,
+                      "superscript": false
+                    },
+                    "value": "C"
+                  }
+                ],
+                "context": {
+                  "indentLevel": 0,
+                  "insideCallout": null,
+                  "insideFootnote": false,
+                  "insideQuote": false,
+                  "insideTableCell": true,
+                  "listPath": []
+                },
+                "kind": "paragraph"
+              }
+            ]
+          }
+        ]
+      },
+      "kind": "table",
+      "rows": [
+        {
+          "cells": [
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "1"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "2"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "3"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "1"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "2"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "1"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sequence": 1
+    }
+  ]
+}

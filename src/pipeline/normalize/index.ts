@@ -38,6 +38,8 @@ export const normalizeDocument = async (
     strict: options.strict,
     maxNestingDepth: options.maxNestingDepth,
     codeTokens,
+    contentWidth: options.contentWidth,
+    minimumColumnWidth: options.minimumColumnWidth,
   });
 
   const document: DocumentIr = {
@@ -51,7 +53,7 @@ export const normalizeDocument = async (
       words: flattened.wordCount,
       images: 0,
       codeBlocks: flattened.codeBlockCount,
-      tables: 0,
+      tables: flattened.tableCount,
     },
   };
 

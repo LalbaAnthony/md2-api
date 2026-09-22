@@ -31,6 +31,7 @@ export interface NormalizeOptions {
   readonly maxNestingDepth: number;
   readonly contentWidth: Dxa;
   readonly tabWidth: number;
+  readonly minimumColumnWidth: Dxa;
   readonly defaultLanguage: string;
   readonly metadata: MetadataOverrides;
   readonly documentOptions: DocumentOptions;
@@ -78,6 +79,8 @@ export interface FlattenInput {
   readonly strict: boolean;
   readonly maxNestingDepth: number;
   readonly codeTokens: CodeTokenTable;
+  readonly contentWidth: Dxa;
+  readonly minimumColumnWidth: Dxa;
 }
 
 export interface FlattenOutput {
@@ -85,4 +88,5 @@ export interface FlattenOutput {
   readonly headingCount: number;
   readonly wordCount: number;
   readonly codeBlockCount: number;
+  readonly tableCount: number;
 }

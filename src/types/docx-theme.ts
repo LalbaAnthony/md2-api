@@ -1,6 +1,6 @@
 import type { INumberingOptions, ISectionPropertiesOptions, IStylesOptions } from "docx";
 import type { Dxa, Eighth, Pt } from "./units.ts";
-import type { SyntaxScope } from "./ir.ts";
+import type { SyntaxScope, TextAlign } from "./ir.ts";
 import type { JsonObject } from "./json.ts";
 
 export type DocxParagraphStyleKey =
@@ -91,6 +91,28 @@ export interface DocxCodeSettings {
   readonly fontSize: Pt;
 }
 
+export interface DocxTableSettings {
+  readonly headerBackground: string;
+  readonly stripeBackground: string;
+  readonly stripes: boolean;
+  readonly repeatHeaderRow: boolean;
+  readonly borderColor: string;
+  readonly borderWidth: Eighth;
+  readonly borderStyle: string;
+  readonly horizontalRulesOnly: boolean;
+  readonly cellPaddingX: Dxa;
+  readonly cellPaddingY: Dxa;
+  readonly align: "left" | "center";
+}
+
+export interface DocxCaptionSettings {
+  readonly position: "above" | "below";
+  readonly figurePrefix: string;
+  readonly tablePrefix: string;
+  readonly separator: string;
+  readonly align: TextAlign;
+}
+
 export interface DocxParagraphBehaviour {
   readonly widowControl: boolean;
   readonly headingPageBreakBefore: readonly [boolean, boolean, boolean, boolean, boolean, boolean];
@@ -111,6 +133,8 @@ export interface DocxCompiledTheme {
   readonly list: DocxListSettings;
   readonly code: DocxCodeSettings;
   readonly syntax: DocxSyntaxRuns;
+  readonly table: DocxTableSettings;
+  readonly caption: DocxCaptionSettings;
   readonly extension: DocxThemeExtension;
 }
 

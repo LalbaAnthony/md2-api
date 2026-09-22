@@ -16,6 +16,7 @@ const documentXmlOf = async (markdown: string, theme: Theme = defaultTheme): Pro
     maxNestingDepth: 100,
     contentWidth: dxa(9026),
     tabWidth: theme.code.tabWidth,
+    minimumColumnWidth: theme.table.minColumnWidth,
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

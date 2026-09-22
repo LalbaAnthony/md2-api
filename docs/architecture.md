@@ -166,6 +166,30 @@ Paragraph shading leaves white gaps between lines in several renderers and does 
 cleanly after a page break. Each line stays its own paragraph inside that cell and the row never
 forbids splitting, so a long block breaks across pages with a continuous background.
 
+## Tables
+
+Word autofit is not deterministic between versions and platforms, so nothing is left to it. The
+layout is fixed, the grid is explicit, and the column widths are decided during normalisation.
+
+`computeColumnWidths` in `src/pipeline/normalize/tables.ts` measures the longest value of each
+column, header included, clips each measure at sixty characters so one verbose cell cannot absorb
+the table, distributes the usable width in proportion, raises any column that falls below
+`table.minColumnWidth` and takes the deficit from the columns in excess, then puts the rounding
+residue on the last column. The sum of the widths equals the usable width exactly, which is
+asserted over fifty generated cases and for every column count up to twenty.
+
+When the floor cannot be honoured at all, because the columns are too many for the page, the
+width is split equally rather than pretending the floor still holds.
+
+A cell never carries bare text: its phrasing content becomes one paragraph, and the column
+alignment is applied to that paragraph rather than to the cell. The header row is marked so Word
+repeats it on each page, and stripes are computed by row index in the renderer rather than stored
+in the intermediate representation.
+
+A caption carries a `SEQ` field so that Word renumbers it when a reader inserts a table. The
+counters in the intermediate representation exist for cross references in text, not for the
+number the reader sees.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

@@ -1,0 +1,434 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 1,
+    "words": 0
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "caption": null,
+      "columnAlign": [
+        null,
+        null,
+        null
+      ],
+      "columnWidths": [
+        1805,
+        2407,
+        4814
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "header": {
+        "cells": [
+          {
+            "align": null,
+            "blocks": [
+              {
+                "align": null,
+                "children": [
+                  {
+                    "kind": "text",
+                    "marks": {
+                      "bold": false,
+                      "code": false,
+                      "italic": false,
+                      "strike": false,
+                      "subscript": false,
+                      "superscript": false
+                    },
+                    "value": "Name"
+                  }
+                ],
+                "context": {
+                  "indentLevel": 0,
+                  "insideCallout": null,
+                  "insideFootnote": false,
+                  "insideQuote": false,
+                  "insideTableCell": true,
+                  "listPath": []
+                },
+                "kind": "paragraph"
+              }
+            ]
+          },
+          {
+            "align": null,
+            "blocks": [
+              {
+                "align": null,
+                "children": [
+                  {
+                    "kind": "text",
+                    "marks": {
+                      "bold": false,
+                      "code": false,
+                      "italic": false,
+                      "strike": false,
+                      "subscript": false,
+                      "superscript": false
+                    },
+                    "value": "Quantity"
+                  }
+                ],
+                "context": {
+                  "indentLevel": 0,
+                  "insideCallout": null,
+                  "insideFootnote": false,
+                  "insideQuote": false,
+                  "insideTableCell": true,
+                  "listPath": []
+                },
+                "kind": "paragraph"
+              }
+            ]
+          },
+          {
+            "align": null,
+            "blocks": [
+              {
+                "align": null,
+                "children": [
+                  {
+                    "kind": "text",
+                    "marks": {
+                      "bold": false,
+                      "code": false,
+                      "italic": false,
+                      "strike": false,
+                      "subscript": false,
+                      "superscript": false
+                    },
+                    "value": "Supplier"
+                  }
+                ],
+                "context": {
+                  "indentLevel": 0,
+                  "insideCallout": null,
+                  "insideFootnote": false,
+                  "insideQuote": false,
+                  "insideTableCell": true,
+                  "listPath": []
+                },
+                "kind": "paragraph"
+              }
+            ]
+          }
+        ]
+      },
+      "kind": "table",
+      "rows": [
+        {
+          "cells": [
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "Bolt"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "12"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "Northern Fixings"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "Nut"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "144"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "Northern Fixings"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "cells": [
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "Washer"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "288"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            },
+            {
+              "align": null,
+              "blocks": [
+                {
+                  "align": null,
+                  "children": [
+                    {
+                      "kind": "text",
+                      "marks": {
+                        "bold": false,
+                        "code": false,
+                        "italic": false,
+                        "strike": false,
+                        "subscript": false,
+                        "superscript": false
+                      },
+                      "value": "Southern Metals"
+                    }
+                  ],
+                  "context": {
+                    "indentLevel": 0,
+                    "insideCallout": null,
+                    "insideFootnote": false,
+                    "insideQuote": false,
+                    "insideTableCell": true,
+                    "listPath": []
+                  },
+                  "kind": "paragraph"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "sequence": 1
+    }
+  ]
+}

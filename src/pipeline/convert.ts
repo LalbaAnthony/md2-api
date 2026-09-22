@@ -44,6 +44,7 @@ const runConversion = async (input: ConvertInput): Promise<ConvertOutcome> => {
     maxNestingDepth: input.maxNestingDepth,
     contentWidth: computeContentWidth(input.theme),
     tabWidth: input.theme.code.tabWidth,
+    minimumColumnWidth: input.theme.table.minColumnWidth,
     defaultLanguage: input.defaultLanguage,
     metadata: input.metadata,
     documentOptions: input.documentOptions,
