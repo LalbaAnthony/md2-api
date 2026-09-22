@@ -7,7 +7,7 @@ on:
         description: Compose file holding the test service.
         required: false
         type: string
-        default: docker/compose.yaml
+        default: docker-compose.yml
 
 jobs:
   visual:

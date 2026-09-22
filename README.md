@@ -1,4 +1,4 @@
-# md2
+# MD2 API
 
 HTTP service converting Markdown into formatted documents. Multi theme, multi output format,
 pure TypeScript, no external binary at runtime.
@@ -41,10 +41,10 @@ curl http://127.0.0.1:3000/readyz
 
 ## Containers
 
-```
-docker compose -f docker/compose.yaml up dev
-docker compose -f docker/compose.yaml run --rm test
-docker compose -f docker/compose.yaml up prod
+```sh
+docker compose up dev
+docker compose run --rm test
+docker compose up prod
 ```
 
 The production service runs read only, with all capabilities dropped, as a non root user.

@@ -19,7 +19,7 @@
     "test:golden": "vitest run tests/golden",
     "test:visual": "vitest run tests/visual",
     "test:contract": "vitest run tests/contract",
-    "test:all": "docker compose -f docker/compose.yaml run --rm test",
+    "test:all": "docker compose run --rm test",
     "perf:load": "node tools/load-test.mjs",
     "perf:soak": "node --expose-gc tools/soak.mjs",
     "test:watch": "vitest",

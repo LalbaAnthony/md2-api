@@ -69,7 +69,7 @@ from a plain `npm ci`. That script also runs during the image build, where git i
 installation is delegated to `tools/install-git-hooks.mjs`, which exits successfully when there
 is no git working tree or no git binary.
 
-The `deps` stage of `docker/Dockerfile` therefore copies that one file before `npm ci`, which is
+The `deps` stage of `Dockerfile` therefore copies that one file before `npm ci`, which is
 the only departure from the Dockerfile given in section 15.1. The alternative, `npm ci
 --ignore-scripts`, would also skip the install scripts of native dependencies.
 
@@ -86,3 +86,17 @@ table, it is covered by the exhaustive mapping test of `tests/unit/errors.test.t
 of `docs/security.md` names it next to the bound it enforces. The alternative, reusing
 `UNSUPPORTED_FEATURE`, would tell a caller that the output format lacks a capability, which is
 false and would send them looking in the wrong place.
+
+## 9. `Dockerfile` and `docker-compose.yml` live at the repository root
+
+The tree of section 3 puts both under `docker/`. They are at the root instead, at the request of
+the project owner.
+
+The root is where every tool looks for them first: `docker compose` with no `-f`, `docker build`
+with no `--file`, Docker Desktop, and the build integration of most editors and hosting providers.
+A build context of `.` also stops the Dockerfile referring to its own parent, which is what the
+`context: ..` of the previous layout required.
+
+Nothing else moves. `.dockerignore` was already at the root, where Docker requires it, and the
+context is the same directory it was before, so the ignore list and every `COPY` path are
+unchanged. `npm run test:all` is now plain `docker compose run --rm test`.

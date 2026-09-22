@@ -3,8 +3,8 @@ name: md2
 services:
   dev:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
       target: dev
     environment:
       NODE_ENV: development
@@ -21,33 +21,33 @@ services:
       - "3000:3000"
       - "9229:9229"
     volumes:
-      - ../src:/app/src:ro
-      - ../themes:/app/themes:ro
-      - ../tests:/app/tests:ro
-      - ../package.json:/app/package.json:ro
-      - ../tsconfig.json:/app/tsconfig.json:ro
+      - ./src:/app/src:ro
+      - ./themes:/app/themes:ro
+      - ./tests:/app/tests:ro
+      - ./package.json:/app/package.json:ro
+      - ./tsconfig.json:/app/tsconfig.json:ro
       - node_modules:/app/node_modules
 
   test:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
       target: test
     environment:
       NODE_ENV: test
       IN_DOCKER: "1"
       LOG_LEVEL: fatal
     volumes:
-      - ../src:/app/src:ro
-      - ../themes:/app/themes:ro
-      - ../tests:/app/tests
-      - ../tools:/app/tools:ro
+      - ./src:/app/src:ro
+      - ./themes:/app/themes:ro
+      - ./tests:/app/tests
+      - ./tools:/app/tools:ro
       - node_modules_test:/app/node_modules
 
   prod:
     build:
-      context: ..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: Dockerfile
       target: prod
     environment:
       NODE_ENV: production

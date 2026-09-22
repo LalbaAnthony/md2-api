@@ -1,10 +1,10 @@
 # Performance
 
 Figures measured on 2026-09-22 against the production image, running read only with two virtual
-processors and one gibibyte, which is the shape of the `prod` service of `docker/compose.yaml`.
+processors and one gibibyte, which is the shape of the `prod` service of `docker-compose.yml`.
 
 ```
-docker compose -f docker/compose.yaml build prod
+docker compose build prod
 docker run -d --name md2-perf --read-only --tmpfs /tmp --cap-drop ALL \
   --security-opt no-new-privileges:true --cpus 2 --memory 1g -p 3100:3000 \
   -e NODE_ENV=production -e HOST=0.0.0.0 -e PORT=3000 -e LOG_LEVEL=warn md2-prod:latest

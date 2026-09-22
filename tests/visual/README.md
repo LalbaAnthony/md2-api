@@ -4,13 +4,13 @@ These tests run inside the Docker test image only. They are skipped when `IN_DOC
 because the pixels depend on the LibreOffice version, on freetype and on the installed fonts.
 
 ```
-docker compose -f docker/compose.yaml run --rm test npm run test:visual
+docker compose run --rm test npm run test:visual
 ```
 
 Regenerate the baselines after a deliberate change of rendering:
 
 ```
-docker compose -f docker/compose.yaml run --rm test npm run test:visual -- --update
+docker compose run --rm test npm run test:visual -- --update
 ```
 
 A regeneration rewrites `baseline/{format}/{theme}/{corpus}-{page}.png` and removes the pages a
