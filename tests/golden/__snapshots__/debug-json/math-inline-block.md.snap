@@ -1,0 +1,206 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 29
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "An inline formula "
+        },
+        {
+          "kind": "mathInline",
+          "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mi>E</mi><mo>=</mo><mi>m</mi><msup><mi>c</mi><mn>2</mn></msup></mrow><annotation encoding=\"application/x-tex\">E = mc^2</annotation></semantics></math>",
+          "source": "E = mc^2"
+        },
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": " inside a sentence."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A display formula follows."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "mathBlock",
+      "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\" display=\"block\"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mi mathvariant=\"normal\">∞</mi></msubsup><msup><mi>e</mi><mrow><mo>−</mo><msup><mi>x</mi><mn>2</mn></msup></mrow></msup><mi>d</mi><mi>x</mi><mo>=</mo><mfrac><msqrt><mi>π</mi></msqrt><mn>2</mn></mfrac></mrow><annotation encoding=\"application/x-tex\">\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}</annotation></semantics></math>",
+      "source": "\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "An inline fraction "
+        },
+        {
+          "kind": "mathInline",
+          "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac></mrow><annotation encoding=\"application/x-tex\">\\frac{a}{b}</annotation></semantics></math>",
+          "source": "\\frac{a}{b}"
+        },
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": " and a sum "
+        },
+        {
+          "kind": "mathInline",
+          "mathml": "<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mi>i</mi></mrow><annotation encoding=\"application/x-tex\">\\sum_{i=1}^{n} i</annotation></semantics></math>",
+          "source": "\\sum_{i=1}^{n} i"
+        },
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A formula that cannot be parsed: "
+        },
+        {
+          "kind": "mathInline",
+          "mathml": null,
+          "source": "\\frac{"
+        },
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    }
+  ]
+}

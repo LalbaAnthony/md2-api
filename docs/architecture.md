@@ -271,6 +271,24 @@ the DOCX capability is `deferredField` and the caveat is reported by `GET /forma
 The effective flags come from the theme and can be overridden per request, which is recorded in
 `docs/adr/0006-lot-3-pipeline-and-docx.md`.
 
+## Footnotes and mathematics
+
+Footnotes are collected during normalisation and numbered in the order of their first reference,
+not the order of their definitions, so a note defined last but referenced first is number one. A
+repeated reference reuses its number. A definition that is never referenced produces a warning and
+no note. The definitions are removed from the flow and passed to the document as a whole, and a
+note keeps every block it contains, including lists.
+
+An unmatched reference never reaches the flattener, because GFM parses `[^missing]` as literal
+text when no definition matches. The guard that warns, or fails in strict mode, is kept for a pass
+that injects references and is covered by a test that builds such a tree directly.
+
+Mathematics goes only half way. `normalize` turns LaTeX into MathML with KaTeX, so the
+intermediate representation carries both the source and the MathML and stays neutral. The DOCX
+backend does not translate MathML to OMML: it renders the source, warns, and declares its
+`math` capability as `source`. The reasoning, and what implementing OMML would cost, is in
+`docs/adr/0007-mathematics-chain.md`.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

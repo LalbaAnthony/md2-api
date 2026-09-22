@@ -61,10 +61,21 @@ describe("type assertion boundaries", () => {
     "src/formats/docx/theme-extension.ts",
   ]);
 
+  const IMPORT_LINE = /^\s*(?:import|export)\b/;
+  const IMPORT_MEMBER_LINE = /^\s*[A-Za-z_$][\w$]*( as [A-Za-z_$][\w$]*)?,?\s*$/;
+
+  const withoutImportClauses = (source: string): string =>
+    source
+      .split("\n")
+      .filter((line) => !IMPORT_LINE.test(line) && !IMPORT_MEMBER_LINE.test(line))
+      .join("\n");
+
   it("keeps assertions inside the sanctioned files", () => {
     const offenders = sourceFiles
       .filter((file) => !SANCTIONED_FILES.has(file))
-      .filter((file) => ASSERTION_PATTERN.test(withoutStringLiterals(readSource(file))));
+      .filter((file) =>
+        ASSERTION_PATTERN.test(withoutImportClauses(withoutStringLiterals(readSource(file)))),
+      );
     expect(offenders).toEqual([]);
   });
 

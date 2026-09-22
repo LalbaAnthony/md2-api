@@ -165,6 +165,30 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
           collected.push({ kind: "image", asset, alternativeText: node.alt ?? "" });
           break;
         }
+        case "inlineMath":
+          collected.push({
+            kind: "mathInline",
+            source: node.value,
+            mathml: input.math.get(node) ?? null,
+          });
+          break;
+        case "footnoteReference": {
+          const id = input.footnotes.numberByIdentifier.get(node.identifier.toLowerCase());
+          if (id === undefined) {
+            if (input.strict) {
+              throw unsupportedNodeError("footnoteReference", { identifier: node.identifier });
+            }
+            input.sink.add(
+              warning("FOOTNOTE_MISSING", "A footnote reference has no definition.", {
+                identifier: node.identifier,
+              }),
+            );
+            collected.push({ kind: "text", value: `[^${node.identifier}]`, marks });
+            break;
+          }
+          collected.push({ kind: "footnoteReference", id });
+          break;
+        }
         case "link": {
           const anchor = resolveInternalAnchor(input.anchors, node.url);
           const children: IrInline[] = [];
@@ -492,6 +516,14 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
         case "code":
           pushCode(node, context, target);
           break;
+        case "math":
+          target.push({
+            kind: "mathBlock",
+            context,
+            source: node.value,
+            mathml: input.math.get(node) ?? null,
+          });
+          break;
         case "table":
           pushTable(node, context, target);
           break;
@@ -519,5 +551,20 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
 
   walk(input.tree.children, ROOT_CONTEXT, blocks);
 
-  return { blocks, headingCount, wordCount, codeBlockCount, tableCount, imageCount };
+  const footnotes = new Map<number, readonly IrBlock[]>();
+  for (const entry of input.footnotes.ordered) {
+    const noteBlocks: IrBlock[] = [];
+    walk(entry.definition.children, { ...ROOT_CONTEXT, insideFootnote: true }, noteBlocks);
+    footnotes.set(entry.id, noteBlocks);
+  }
+
+  return {
+    footnotes,
+    blocks,
+    headingCount,
+    wordCount,
+    codeBlockCount,
+    tableCount,
+    imageCount,
+  };
 };

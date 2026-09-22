@@ -1,6 +1,6 @@
-import { ExternalHyperlink, InternalHyperlink, TextRun } from "docx";
+import { ExternalHyperlink, FootnoteReferenceRun, InternalHyperlink, TextRun } from "docx";
 import { assertNever } from "../../../errors.ts";
-import { unsupportedInlineWarning } from "./context.ts";
+import { mathFallbackWarning } from "./context.ts";
 import { imageRunOf } from "./image.ts";
 import type { ParagraphChild } from "docx";
 import type { InlineMarks, IrInline } from "../../../types/ir.ts";
@@ -54,10 +54,13 @@ export const renderInline = (
         children.push(imageRunOf(node.asset));
         break;
       case "footnoteReference":
-        context.warnings.add(unsupportedInlineWarning(node.kind));
+        children.push(new FootnoteReferenceRun(node.id));
         break;
       case "mathInline":
-        context.warnings.add(unsupportedInlineWarning(node.kind));
+        context.warnings.add(mathFallbackWarning(node.kind));
+        children.push(
+          new TextRun({ text: node.source, style: context.compiled.styleIds.MathInline }),
+        );
         break;
       default:
         return assertNever(node, "renderInline");

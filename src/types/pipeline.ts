@@ -1,4 +1,4 @@
-import type { Code, Root } from "mdast";
+import type { Code, FootnoteDefinition, Root } from "mdast";
 import type { Dxa } from "./units.ts";
 import type {
   CalloutKind,
@@ -35,6 +35,13 @@ export interface DocumentOptions {
 export type CodeTokenTable = ReadonlyMap<Code, readonly IrCodeLine[]>;
 
 export type ImageResolutionTable = ReadonlyMap<object, IrImageAsset>;
+
+export type MathTable = ReadonlyMap<object, string | null>;
+
+export interface FootnoteTable {
+  readonly numberByIdentifier: ReadonlyMap<string, number>;
+  readonly ordered: readonly { readonly id: number; readonly definition: FootnoteDefinition }[];
+}
 
 export interface FigureDirective {
   readonly source: string;
@@ -126,6 +133,8 @@ export interface FlattenInput {
   readonly maxNestingDepth: number;
   readonly codeTokens: CodeTokenTable;
   readonly images: ImageResolutionTable;
+  readonly math: MathTable;
+  readonly footnotes: FootnoteTable;
   readonly contentWidth: Dxa;
   readonly minimumColumnWidth: Dxa;
 }
@@ -137,4 +146,5 @@ export interface FlattenOutput {
   readonly codeBlockCount: number;
   readonly tableCount: number;
   readonly imageCount: number;
+  readonly footnotes: ReadonlyMap<number, readonly IrBlock[]>;
 }

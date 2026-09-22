@@ -1,6 +1,8 @@
 import { buildAnchorTable } from "./anchors.ts";
 import { tokenizeCodeBlocks } from "./code.ts";
 import { resolveDocumentImages } from "./images.ts";
+import { buildFootnoteTable } from "./footnotes.ts";
+import { convertMath } from "./math.ts";
 import { ROOT_CONTEXT, flattenDocument } from "./flatten.ts";
 import { extractFrontmatter } from "./frontmatter.ts";
 import { resolveLinkReferences } from "./links.ts";
@@ -8,8 +10,6 @@ import { createWarningSink } from "./warnings.ts";
 import type { Root } from "mdast";
 import type { DocumentIr, IrBlock, IrImageAsset } from "../../types/ir.ts";
 import type { NormalizeOptions, NormalizeResult } from "../../types/pipeline.ts";
-
-const EMPTY_FOOTNOTES: ReadonlyMap<number, readonly IrBlock[]> = new Map();
 
 const assetsBySourceKey = (
   images: ReadonlyMap<object, IrImageAsset>,
@@ -50,6 +50,10 @@ export const normalizeDocument = async (
 
   const anchors = buildAnchorTable(tree);
 
+  const footnotes = buildFootnoteTable(tree, sink);
+
+  const math = convertMath(tree, sink);
+
   const codeTokens = await tokenizeCodeBlocks(tree, options.tabWidth, sink);
 
   const images = await resolveDocumentImages(tree, {
@@ -68,6 +72,8 @@ export const normalizeDocument = async (
     maxNestingDepth: options.maxNestingDepth,
     codeTokens,
     images,
+    math,
+    footnotes,
     contentWidth: options.contentWidth,
     minimumColumnWidth: options.minimumColumnWidth,
   });
@@ -75,7 +81,7 @@ export const normalizeDocument = async (
   const document: DocumentIr = {
     meta,
     blocks: withTableOfContents(flattened.blocks, options),
-    footnotes: EMPTY_FOOTNOTES,
+    footnotes: flattened.footnotes,
     anchors: anchors.bySlug,
     assets: assetsBySourceKey(images),
     stats: {

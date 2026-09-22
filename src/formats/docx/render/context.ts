@@ -34,8 +34,9 @@ export const unsupportedBlockWarning = (
   detail: { ...detail, kind },
 });
 
-export const unsupportedInlineWarning = (kind: string): ConversionWarning => ({
-  code: "INLINE_NOT_RENDERED",
-  message: `The DOCX backend does not render the inline '${kind}' yet, it was skipped.`,
+export const mathFallbackWarning = (kind: string): ConversionWarning => ({
+  code: "MATH_RENDERED_AS_SOURCE",
+  message:
+    "The DOCX backend renders mathematics as its source, it declares the capability math as source.",
   detail: { kind },
 });

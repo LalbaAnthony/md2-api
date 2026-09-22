@@ -111,83 +111,15 @@ describe("inline kinds", () => {
     expect(xml).toContain('xml:space="preserve">  padded  <');
   });
 
-  it("warns instead of failing on an inline kind it cannot render yet", async () => {
+  it("renders a footnote reference", async () => {
     const result = await docxBackend.convert({
       document: sampleDocument({
         blocks: [paragraphOf([{ kind: "footnoteReference", id: 1 }])],
+        footnotes: new Map([[1, []]]),
       }),
       theme: defaultTheme,
       strict: false,
     });
-    expect(result.warnings.map((warning) => warning.code)).toEqual(["INLINE_NOT_RENDERED"]);
-  });
-});
-
-describe("inline kinds the backend cannot render yet", () => {
-  const noMarks: InlineMarks = {
-    bold: false,
-    italic: false,
-    strike: false,
-    subscript: false,
-    superscript: false,
-    code: false,
-  };
-
-  const warningsFor = async (inline: IrInline): Promise<readonly string[]> => {
-    const result = await docxBackend.convert({
-      document: sampleDocument({ blocks: [paragraphOf([inline])] }),
-      theme: defaultTheme,
-      strict: false,
-    });
-    return result.warnings.map((warning) => warning.code);
-  };
-
-  it("warns on inline mathematics", async () => {
-    expect(await warningsFor({ kind: "mathInline", source: "x^2", mathml: null })).toEqual([
-      "INLINE_NOT_RENDERED",
-    ]);
-  });
-
-  it("renders the children of a link that carries marks", async () => {
-    const xml = await renderToXml([
-      paragraphOf([
-        {
-          kind: "link",
-          url: "https://example.com",
-          internal: false,
-          title: "A title",
-          children: [{ kind: "text", value: "bold link", marks: { ...noMarks, bold: true } }],
-        },
-      ]),
-    ]);
-    expect(xml).toContain("<w:b/>");
-    expect(xml).toContain("w:hyperlink");
-  });
-});
-
-describe("blocks the backend cannot render yet", () => {
-  const blockKinds: readonly IrBlock[] = [
-    { kind: "mathBlock", context: rootContext, source: "x^2", mathml: null },
-  ];
-
-  it("warns once per block and renders nothing for it", async () => {
-    const result = await docxBackend.convert({
-      document: sampleDocument({ blocks: blockKinds }),
-      theme: defaultTheme,
-      strict: false,
-    });
-    expect(result.warnings).toHaveLength(blockKinds.length);
-    expect(new Set(result.warnings.map((warning) => warning.code))).toEqual(
-      new Set(["BLOCK_NOT_RENDERED"]),
-    );
-  });
-
-  it("names the block kind in the warning detail", async () => {
-    const result = await docxBackend.convert({
-      document: sampleDocument({ blocks: blockKinds }),
-      theme: defaultTheme,
-      strict: false,
-    });
-    expect(result.warnings[0]?.detail).toMatchObject({ kind: "mathBlock" });
+    expect(result.warnings).toEqual([]);
   });
 });

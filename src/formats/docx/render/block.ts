@@ -1,6 +1,6 @@
-import { PageBreak, Paragraph, TableOfContents } from "docx";
+import { PageBreak, Paragraph, TableOfContents, TextRun } from "docx";
 import { assertNever } from "../../../errors.ts";
-import { unsupportedBlockWarning } from "./context.ts";
+import { mathFallbackWarning } from "./context.ts";
 import { renderCode } from "./code.ts";
 import { renderHeading } from "./heading.ts";
 import { renderFigure } from "./image.ts";
@@ -54,8 +54,16 @@ export const renderBlock = (
     case "figure":
       return renderFigure(block, context);
     case "mathBlock":
-      context.warnings.add(unsupportedBlockWarning(block.kind));
-      return [];
+      context.warnings.add(mathFallbackWarning(block.kind));
+      return [
+        new Paragraph({
+          style: context.compiled.styleIds.Normal,
+          alignment: "center",
+          children: [
+            new TextRun({ text: block.source, style: context.compiled.styleIds.MathInline }),
+          ],
+        }),
+      ];
     case "callout":
       return [renderCallout(block, context, renderBlocks)];
     case "pageBreak":

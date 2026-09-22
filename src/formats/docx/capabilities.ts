@@ -24,4 +24,5 @@ export const docxCaveats: readonly string[] = [
   "Fonts are referenced by name and never embedded, so the reader must have them installed.",
   "Vector images are rasterised during normalisation, the document carries no SVG.",
   "Word silently truncates list nesting beyond nine levels.",
+  "Mathematics is rendered as its LaTeX source, the capability declares math as source.",
 ];

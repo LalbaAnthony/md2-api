@@ -107,5 +107,7 @@ Lot 8 is complete: nested quotes, every callout variant, the page break, landsca
 
 Lot 9 is complete: headers and footers laid out with tab stops, page numbers and counts, the chapter field, the title page with its own section, and the table of contents field.
 
-Footnotes and mathematics arrive in Lot 10. Until then the DOCX backend reports each of them as a conversion warning rather than failing. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
+Lot 10 is complete: footnotes numbered in order of first reference, multi block notes, and the LaTeX to MathML chain with the documented source fallback for DOCX.
+
+Lots 11 to 13 add the remaining built in themes, visual regression and hardening.
 `docs/ooxml-notes.md` and `docs/perf.md` arrive with the lots that make them meaningful.

@@ -1,11 +1,15 @@
-import { Document, PageOrientation } from "docx";
+import { Document, PageOrientation, Paragraph } from "docx";
 import { createRenderContext } from "./context.ts";
 import { renderBlock } from "./block.ts";
 import { buildFooter, buildHeader, buildTableOfContentsHeading, buildTitlePage } from "./chrome.ts";
 import type { IPropertiesOptions, ISectionOptions, ISectionPropertiesOptions } from "docx";
 import type { DocumentIr, SectionOverride } from "../../../types/ir.ts";
 import type { DocxCompiledTheme } from "../../../types/docx-theme.ts";
-import type { DocxBlockElement, DocxRenderOutput } from "../../../types/docx-render.ts";
+import type {
+  DocxBlockElement,
+  DocxRenderContext,
+  DocxRenderOutput,
+} from "../../../types/docx-render.ts";
 import type { DocumentOptions } from "../../../types/pipeline.ts";
 
 const SINGLE_COLUMN = 1;
@@ -45,10 +49,33 @@ export const sectionPropertiesFor = (
   return { ...oriented, column: { count, space: COLUMN_SPACE, separate: false } };
 };
 
+const footnotesOf = (
+  document: DocumentIr,
+  context: DocxRenderContext,
+): Readonly<Record<string, { readonly children: readonly Paragraph[] }>> => {
+  const entries: [string, { readonly children: readonly Paragraph[] }][] = [];
+  for (const [id, blocks] of document.footnotes) {
+    const paragraphs = blocks
+      .flatMap((block) => renderBlock(block, context))
+      .filter((element): element is Paragraph => element instanceof Paragraph);
+    entries.push([
+      String(id),
+      {
+        children:
+          paragraphs.length === 0
+            ? [new Paragraph({ style: context.compiled.styleIds.FootnoteText, children: [] })]
+            : paragraphs,
+      },
+    ]);
+  }
+  return Object.fromEntries(entries);
+};
+
 const documentProperties = (
   compiled: DocxCompiledTheme,
   document: DocumentIr,
   sections: readonly ISectionOptions[],
+  footnotes: Readonly<Record<string, { readonly children: readonly Paragraph[] }>>,
 ): IPropertiesOptions => ({
   styles: compiled.styles,
   numbering: compiled.numbering,
@@ -59,6 +86,7 @@ const documentProperties = (
   ...(document.meta.authors.length === 0 ? {} : { creator: document.meta.authors.join(", ") }),
   ...(document.meta.keywords.length === 0 ? {} : { keywords: document.meta.keywords.join(", ") }),
   ...(document.meta.subtitle === undefined ? {} : { description: document.meta.subtitle }),
+  ...(Object.keys(footnotes).length === 0 ? {} : { footnotes }),
   sections: [...sections],
 });
 
@@ -132,6 +160,8 @@ export const renderDocument = (
   return {
     elements: allElements,
     warnings: context.warnings.list(),
-    document: new Document(documentProperties(compiled, document, sections)),
+    document: new Document(
+      documentProperties(compiled, document, sections, footnotesOf(document, context)),
+    ),
   };
 };
