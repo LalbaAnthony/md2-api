@@ -45,6 +45,8 @@ const runConversion = async (input: ConvertInput): Promise<ConvertOutcome> => {
     contentWidth: computeContentWidth(input.theme),
     tabWidth: input.theme.code.tabWidth,
     minimumColumnWidth: input.theme.table.minColumnWidth,
+    maxWidthRatio: input.theme.figure.maxWidthRatio,
+    imagePolicy: input.imagePolicy,
     defaultLanguage: input.defaultLanguage,
     metadata: input.metadata,
     documentOptions: input.documentOptions,

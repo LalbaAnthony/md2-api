@@ -3,6 +3,7 @@ import { isAppError } from "../../src/errors.ts";
 import { normalizeDocument } from "../../src/pipeline/normalize/index.ts";
 import { parseMarkdown } from "../../src/pipeline/parse.ts";
 import { dxa } from "../../src/units.ts";
+import { strictImagePolicy } from "../helpers/image-policy.ts";
 import type { DocumentIr, IrBlock, ListFrame } from "../../src/types/ir.ts";
 
 const normalize = async (markdown: string, maxNestingDepth = 100): Promise<DocumentIr> => {
@@ -12,6 +13,8 @@ const normalize = async (markdown: string, maxNestingDepth = 100): Promise<Docum
     contentWidth: dxa(9026),
     tabWidth: 4,
     minimumColumnWidth: dxa(680),
+    maxWidthRatio: 1,
+    imagePolicy: strictImagePolicy(),
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

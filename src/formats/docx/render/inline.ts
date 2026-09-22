@@ -1,6 +1,7 @@
 import { ExternalHyperlink, InternalHyperlink, TextRun } from "docx";
 import { assertNever } from "../../../errors.ts";
 import { unsupportedInlineWarning } from "./context.ts";
+import { imageRunOf } from "./image.ts";
 import type { ParagraphChild } from "docx";
 import type { InlineMarks, IrInline } from "../../../types/ir.ts";
 import type { DocxRenderContext } from "../../../types/docx-render.ts";
@@ -50,7 +51,7 @@ export const renderInline = (
         break;
       }
       case "image":
-        context.warnings.add(unsupportedInlineWarning(node.kind));
+        children.push(imageRunOf(node.asset));
         break;
       case "footnoteReference":
         context.warnings.add(unsupportedInlineWarning(node.kind));

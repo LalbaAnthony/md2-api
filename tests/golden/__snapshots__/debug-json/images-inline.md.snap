@@ -1,0 +1,168 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 2,
+    "tables": 0,
+    "words": 28
+  },
+  "anchors": [],
+  "assets": [
+    {
+      "sourceKey": "diagram.png",
+      "encoding": "png",
+      "byteLength": 1286,
+      "digest": "63e47fc37ef58252d8c0f7f6be6c1c296f673d2ebf7d84fdfe178902364bd1d8",
+      "intrinsic": {
+        "width": 320,
+        "height": 180
+      },
+      "rendered": {
+        "width": 320,
+        "height": 180
+      }
+    },
+    {
+      "sourceKey": "wide.png",
+      "encoding": "png",
+      "byteLength": 1825,
+      "digest": "83bc24840c367ac650a0849b400e3d22d73bd89f490cab0898a5595339baac41",
+      "intrinsic": {
+        "width": 1600,
+        "height": 400
+      },
+      "rendered": {
+        "width": 602,
+        "height": 151
+      }
+    }
+  ],
+  "footnotes": [],
+  "blocks": [
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A paragraph with an inline image "
+        },
+        {
+          "alternativeText": "a diagram",
+          "asset": {
+            "data": {
+              "byteLength": 1286,
+              "digest": "63e47fc37ef58252d8c0f7f6be6c1c296f673d2ebf7d84fdfe178902364bd1d8"
+            },
+            "encoding": "png",
+            "intrinsic": {
+              "height": 180,
+              "width": 320
+            },
+            "rendered": {
+              "height": 180,
+              "width": 320
+            },
+            "sourceKey": "diagram.png"
+          },
+          "kind": "image"
+        },
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": " inside the sentence."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A paragraph with a wide image that must be shrunk to the content box:"
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "alternativeText": "a wide banner",
+          "asset": {
+            "data": {
+              "byteLength": 1825,
+              "digest": "83bc24840c367ac650a0849b400e3d22d73bd89f490cab0898a5595339baac41"
+            },
+            "encoding": "png",
+            "intrinsic": {
+              "height": 400,
+              "width": 1600
+            },
+            "rendered": {
+              "height": 151,
+              "width": 602
+            },
+            "sourceKey": "wide.png"
+          },
+          "kind": "image"
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    }
+  ]
+}

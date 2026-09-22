@@ -8,6 +8,7 @@ import { defaultTheme } from "../../src/theme/builtin/default.theme.ts";
 import { entryOf, readDocxArchive } from "../helpers/docx-archive.ts";
 import { normaliseParts } from "../helpers/docx-normalise.ts";
 import { createRecordingLogger } from "../helpers/theme-fixtures.ts";
+import { strictImagePolicy } from "../helpers/image-policy.ts";
 import type { FormatBackend } from "../../src/types/format.ts";
 
 const CORPUS_DIRECTORY = resolve(import.meta.dirname, "corpus");
@@ -36,6 +37,7 @@ const convert = async (backend: FormatBackend, markdown: string): Promise<Buffer
     maxMarkdownBytes: config.MAX_MARKDOWN_BYTES,
     maxNestingDepth: config.MAX_NESTING_DEPTH,
     timeoutMs: config.CONVERT_TIMEOUT_MS,
+    imagePolicy: strictImagePolicy({ allowLocal: true, assetsDirectory: "tests/fixtures/assets" }),
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

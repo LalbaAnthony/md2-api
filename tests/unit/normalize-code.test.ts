@@ -7,6 +7,7 @@ import {
 import { normalizeDocument } from "../../src/pipeline/normalize/index.ts";
 import { parseMarkdown } from "../../src/pipeline/parse.ts";
 import { dxa } from "../../src/units.ts";
+import { strictImagePolicy } from "../helpers/image-policy.ts";
 import type { DocumentIr, IrBlock, SyntaxScope } from "../../src/types/ir.ts";
 import type { NormalizeResult } from "../../src/types/pipeline.ts";
 
@@ -19,6 +20,8 @@ const normalize = async (markdown: string, tabWidth = 4): Promise<NormalizeResul
     contentWidth: dxa(9026),
     tabWidth,
     minimumColumnWidth: dxa(680),
+    maxWidthRatio: 1,
+    imagePolicy: strictImagePolicy(),
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

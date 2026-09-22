@@ -10,6 +10,7 @@ import type {
   DocxCaptionSettings,
   DocxCodeSettings,
   DocxCompiledTheme,
+  DocxFigureSettings,
   DocxFontNames,
   DocxListSettings,
   DocxParagraphBehaviour,
@@ -75,6 +76,11 @@ const captionSettingsOf = (theme: Theme): DocxCaptionSettings => ({
   align: theme.caption.align,
 });
 
+const figureSettingsOf = (theme: Theme): DocxFigureSettings => ({
+  align: theme.figure.align,
+  maxWidthRatio: theme.figure.maxWidthRatio,
+});
+
 export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
   const extension = parseDocxThemeExtension(theme.formats["docx"] ?? {});
   const styleIds = buildStyleIds(extension.styleIdPrefix);
@@ -95,6 +101,7 @@ export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
     syntax: compileSyntaxRuns(theme),
     table: tableSettingsOf(theme),
     caption: captionSettingsOf(theme),
+    figure: figureSettingsOf(theme),
     extension,
   };
 };

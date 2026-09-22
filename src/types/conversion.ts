@@ -1,5 +1,6 @@
 import type { ConversionResult, ConversionWarning, FormatBackend } from "./format.ts";
 import type { DocumentOptions, MetadataOverrides } from "./pipeline.ts";
+import type { ImageFetchPolicy } from "./images.ts";
 import type { Theme } from "./theme.ts";
 
 export interface ConvertInput {
@@ -10,6 +11,7 @@ export interface ConvertInput {
   readonly maxMarkdownBytes: number;
   readonly maxNestingDepth: number;
   readonly timeoutMs: number;
+  readonly imagePolicy: ImageFetchPolicy;
   readonly defaultLanguage: string;
   readonly metadata: MetadataOverrides;
   readonly documentOptions: DocumentOptions;

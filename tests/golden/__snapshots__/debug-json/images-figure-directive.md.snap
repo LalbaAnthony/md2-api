@@ -1,0 +1,122 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 2,
+    "tables": 0,
+    "words": 4
+  },
+  "anchors": [],
+  "assets": [
+    {
+      "sourceKey": "diagram.png",
+      "encoding": "png",
+      "byteLength": 1258,
+      "digest": "efa4c8c4a6f9f8f5f41cd4b20fb499c4ca68e2c97d9c77125b4b3d7857d8955c",
+      "intrinsic": {
+        "width": 320,
+        "height": 180
+      },
+      "rendered": {
+        "width": 301,
+        "height": 169
+      }
+    }
+  ],
+  "footnotes": [],
+  "blocks": [
+    {
+      "asset": {
+        "data": {
+          "byteLength": 1286,
+          "digest": "63e47fc37ef58252d8c0f7f6be6c1c296f673d2ebf7d84fdfe178902364bd1d8"
+        },
+        "encoding": "png",
+        "intrinsic": {
+          "height": 180,
+          "width": 320
+        },
+        "rendered": {
+          "height": 180,
+          "width": 320
+        },
+        "sourceKey": "diagram.png"
+      },
+      "caption": "The first diagram",
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "figure",
+      "sequence": 1,
+      "widthRatio": 1
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "Text between the figures."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "asset": {
+        "data": {
+          "byteLength": 1258,
+          "digest": "efa4c8c4a6f9f8f5f41cd4b20fb499c4ca68e2c97d9c77125b4b3d7857d8955c"
+        },
+        "encoding": "png",
+        "intrinsic": {
+          "height": 180,
+          "width": 320
+        },
+        "rendered": {
+          "height": 169,
+          "width": 301
+        },
+        "sourceKey": "diagram.png"
+      },
+      "caption": "The second diagram",
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "figure",
+      "sequence": 2,
+      "widthRatio": 0.5
+    }
+  ]
+}

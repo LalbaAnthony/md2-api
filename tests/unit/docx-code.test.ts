@@ -5,6 +5,7 @@ import { normalizeDocument } from "../../src/pipeline/normalize/index.ts";
 import { parseMarkdown } from "../../src/pipeline/parse.ts";
 import { defaultTheme } from "../../src/theme/builtin/default.theme.ts";
 import { dxa } from "../../src/units.ts";
+import { strictImagePolicy } from "../helpers/image-policy.ts";
 import { entryOf, readDocxArchive } from "../helpers/docx-archive.ts";
 import type { Theme } from "../../src/types/theme.ts";
 
@@ -17,6 +18,8 @@ const documentXmlOf = async (markdown: string, theme: Theme = defaultTheme): Pro
     contentWidth: dxa(9026),
     tabWidth: theme.code.tabWidth,
     minimumColumnWidth: theme.table.minColumnWidth,
+    maxWidthRatio: 1,
+    imagePolicy: strictImagePolicy(),
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

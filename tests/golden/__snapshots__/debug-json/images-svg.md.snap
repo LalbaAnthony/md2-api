@@ -1,0 +1,92 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 1,
+    "tables": 0,
+    "words": 10
+  },
+  "anchors": [],
+  "assets": [
+    {
+      "sourceKey": "diagram.svg",
+      "encoding": "png",
+      "byteLength": 11761,
+      "digest": "36ac01db3e26094339bda26a3867252b8aa3b4179cbb00af4c143a1d8828bf41",
+      "intrinsic": {
+        "width": 1000,
+        "height": 500
+      },
+      "rendered": {
+        "width": 602,
+        "height": 301
+      }
+    }
+  ],
+  "footnotes": [],
+  "blocks": [
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A textual SVG is rasterised before it reaches the document."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "asset": {
+        "data": {
+          "byteLength": 11761,
+          "digest": "36ac01db3e26094339bda26a3867252b8aa3b4179cbb00af4c143a1d8828bf41"
+        },
+        "encoding": "png",
+        "intrinsic": {
+          "height": 500,
+          "width": 1000
+        },
+        "rendered": {
+          "height": 301,
+          "width": 602
+        },
+        "sourceKey": "diagram.svg"
+      },
+      "caption": "A rasterised vector diagram",
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "figure",
+      "sequence": 1,
+      "widthRatio": 1
+    }
+  ]
+}

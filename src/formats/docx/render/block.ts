@@ -3,6 +3,7 @@ import { assertNever } from "../../../errors.ts";
 import { unsupportedBlockWarning } from "./context.ts";
 import { renderCode } from "./code.ts";
 import { renderHeading } from "./heading.ts";
+import { renderFigure } from "./image.ts";
 import { renderInline } from "./inline.ts";
 import { renderListItem } from "./list.ts";
 import { renderTable } from "./table.ts";
@@ -46,6 +47,7 @@ export const renderBlock = (
     case "table":
       return renderTable(block, context);
     case "figure":
+      return renderFigure(block, context);
     case "pageBreak":
     case "tableOfContents":
     case "mathBlock":

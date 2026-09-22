@@ -13,6 +13,7 @@ import type {
   Table,
   TableCell,
 } from "mdast";
+import type { LeafDirective } from "mdast-util-directive";
 import type {
   BlockContext,
   InlineMarks,
@@ -25,6 +26,7 @@ import type {
 } from "../../types/ir.ts";
 import type { FlattenInput, FlattenOutput } from "../../types/pipeline.ts";
 import { computeColumnWidths, measureColumn } from "./tables.ts";
+import { isFigureDirective, parseFigureDirective } from "./directives.ts";
 
 const NO_MARKS: InlineMarks = {
   bold: false,
@@ -68,6 +70,8 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
   let listInstance = 0;
   let codeBlockCount = 0;
   let tableCount = 0;
+  let imageCount = 0;
+  let figureCount = 0;
 
   const reportUnsupported = (nodeType: string, detail: Record<string, string> = {}): void => {
     if (input.strict) {
@@ -119,6 +123,16 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
         case "break":
           collected.push({ kind: "lineBreak", hard: true });
           break;
+        case "image": {
+          const asset = input.images.get(node);
+          if (asset === undefined) {
+            collected.push({ kind: "text", value: node.alt ?? "", marks });
+            break;
+          }
+          imageCount += 1;
+          collected.push({ kind: "image", asset, alternativeText: node.alt ?? "" });
+          break;
+        }
         case "link": {
           const anchor = resolveInternalAnchor(input.anchors, node.url);
           const children: IrInline[] = [];
@@ -172,6 +186,32 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
       anchor: input.anchors.byHeading.get(anchorKey(node)) ?? "",
       children: inlineOf(node.children),
       plainText,
+    });
+  };
+
+  const pushFigure = (node: LeafDirective, context: BlockContext, target: IrBlock[]): void => {
+    const directive = parseFigureDirective(node);
+    const asset = input.images.get(node);
+    if (asset === undefined) {
+      if (directive.alternativeText.length > 0) {
+        target.push({
+          kind: "paragraph",
+          context,
+          align: null,
+          children: [{ kind: "text", value: directive.alternativeText, marks: NO_MARKS }],
+        });
+      }
+      return;
+    }
+    imageCount += 1;
+    figureCount += 1;
+    target.push({
+      kind: "figure",
+      context,
+      asset,
+      caption: directive.caption,
+      sequence: figureCount,
+      widthRatio: directive.widthRatio,
     });
   };
 
@@ -307,6 +347,13 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
         case "table":
           pushTable(node, context, target);
           break;
+        case "leafDirective":
+          if (isFigureDirective(node)) {
+            pushFigure(node, context, target);
+            break;
+          }
+          reportUnsupported(`directive:${node.name}`);
+          break;
         case "yaml":
         case "definition":
           break;
@@ -322,5 +369,5 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
 
   walk(input.tree.children, ROOT_CONTEXT, blocks);
 
-  return { blocks, headingCount, wordCount, codeBlockCount, tableCount };
+  return { blocks, headingCount, wordCount, codeBlockCount, tableCount, imageCount };
 };

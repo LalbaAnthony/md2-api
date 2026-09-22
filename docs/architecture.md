@@ -190,6 +190,39 @@ A caption carries a `SEQ` field so that Word renumbers it when a reader inserts 
 counters in the intermediate representation exist for cross references in text, not for the
 number the reader sees.
 
+## Images
+
+This is the most exposed module of the project, and the one with the largest test suite.
+
+Remote fetching is off by default. When it is on, a URL must be https, its host must match the
+allowlist exactly or by domain suffix, and the host is resolved once. Every address the resolver
+returns is checked against the private, loopback, link local, carrier grade, benchmark, multicast
+and reserved ranges, IPv4 and IPv6, including IPv4 mapped IPv6 forms, so that
+`::ffff:169.254.169.254` is refused like `169.254.169.254`. The connection then goes to that
+validated address through a pinned lookup, which is what closes the DNS rebinding window between
+the check and the connection.
+
+Redirects are followed at most twice and each hop repeats every check, so a redirect cannot leave
+the allowlist, drop to plain http, or reach a private address. The response body is read with a
+running byte count and the read stops as soon as the limit is passed, rather than after the fact.
+
+The format is decided by the bytes, never by a declared content type or a file extension. Bytes
+that match no known signature are refused.
+
+A local path is refused unless `ALLOW_LOCAL_IMAGES` is set, must be relative, and is resolved and
+then checked to be inside `ASSETS_DIR`, so a traversal cannot escape it.
+
+Every SVG is rasterised to PNG. The density is derived so that the raster is about twice the
+target render width, capped at 300 dpi, which means a vector drawing stays sharp without producing
+an enormous bitmap. WebP, AVIF and TIFF are converted to PNG for the same reason: a reader cannot
+be assumed to understand them.
+
+Resizing is constrained by the usable width, the theme ratio and the directive ratio, keeps the
+aspect ratio, and never enlarges beyond the intrinsic size. Every failure of the whole chain is an
+`IMAGE_ERROR`, including failures coming out of the imaging library, so a malformed image is a 422
+and never a 500. Outside strict mode an unusable image degrades to its alternative text with a
+warning.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

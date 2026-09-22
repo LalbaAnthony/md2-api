@@ -4,6 +4,7 @@ import { normalizeDocument } from "../../src/pipeline/normalize/index.ts";
 import { parseMarkdown } from "../../src/pipeline/parse.ts";
 import { defaultTheme } from "../../src/theme/builtin/default.theme.ts";
 import { dxa } from "../../src/units.ts";
+import { strictImagePolicy } from "../helpers/image-policy.ts";
 import { entryOf, readDocxArchive } from "../helpers/docx-archive.ts";
 import { rootContext, sampleDocument } from "../helpers/format-fixtures.ts";
 import type { IrBlock, IrTableRow } from "../../src/types/ir.ts";
@@ -26,6 +27,8 @@ const documentXmlOf = async (markdown: string, theme: Theme = defaultTheme): Pro
     contentWidth: CONTENT_WIDTH,
     tabWidth: theme.code.tabWidth,
     minimumColumnWidth: theme.table.minColumnWidth,
+    maxWidthRatio: 1,
+    imagePolicy: strictImagePolicy(),
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

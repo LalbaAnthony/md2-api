@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { docxBackend } from "../../src/formats/docx/backend.ts";
 import { defaultTheme } from "../../src/theme/builtin/default.theme.ts";
 import { entryOf, readDocxArchive } from "../helpers/docx-archive.ts";
-import { rootContext, sampleAsset, sampleDocument } from "../helpers/format-fixtures.ts";
+import { rootContext, sampleDocument } from "../helpers/format-fixtures.ts";
 import type { InlineMarks, IrBlock, IrInline } from "../../src/types/ir.ts";
 
 const MARK_NAMES = ["bold", "italic", "strike", "subscript", "superscript"] as const;
@@ -142,16 +142,6 @@ describe("inline kinds the backend cannot render yet", () => {
     return result.warnings.map((warning) => warning.code);
   };
 
-  it("warns on an inline image", async () => {
-    expect(
-      await warningsFor({
-        kind: "image",
-        alternativeText: "a picture",
-        asset: sampleAsset("a.png", [1, 2]),
-      }),
-    ).toEqual(["INLINE_NOT_RENDERED"]);
-  });
-
   it("warns on inline mathematics", async () => {
     expect(await warningsFor({ kind: "mathInline", source: "x^2", mathml: null })).toEqual([
       "INLINE_NOT_RENDERED",
@@ -185,14 +175,6 @@ describe("blocks the backend cannot render yet", () => {
       kind: "sectionStart",
       context: rootContext,
       section: { orientation: "landscape", columnCount: null },
-    },
-    {
-      kind: "figure",
-      context: rootContext,
-      asset: sampleAsset("a.png", [1]),
-      caption: null,
-      sequence: 1,
-      widthRatio: 1,
     },
   ];
 

@@ -101,5 +101,7 @@ the plain text fallback for an unknown language.
 
 Lot 6 is complete: deterministic column widths that fill the usable width exactly, fixed layout, repeated header row, stripes, column alignment, inline formatting in cells and numbered captions.
 
-Images, quotes, callouts, page furniture, footnotes and mathematics arrive in Lots 7 to 10. Until then the DOCX backend reports each of them as a conversion warning rather than failing. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
+Lot 7 is complete: image resolution from data URIs, local files and guarded remote fetches, SVG rasterisation, resizing, the bounds of section 16, the `::figure` directive and numbered captions.
+
+Quotes, callouts, page furniture, footnotes and mathematics arrive in Lots 8 to 10. Until then the DOCX backend reports each of them as a conversion warning rather than failing. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
 `docs/ooxml-notes.md` and `docs/perf.md` arrive with the lots that make them meaningful.

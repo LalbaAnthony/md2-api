@@ -113,6 +113,11 @@ export interface DocxCaptionSettings {
   readonly align: TextAlign;
 }
 
+export interface DocxFigureSettings {
+  readonly align: "left" | "center";
+  readonly maxWidthRatio: number;
+}
+
 export interface DocxParagraphBehaviour {
   readonly widowControl: boolean;
   readonly headingPageBreakBefore: readonly [boolean, boolean, boolean, boolean, boolean, boolean];
@@ -135,6 +140,7 @@ export interface DocxCompiledTheme {
   readonly syntax: DocxSyntaxRuns;
   readonly table: DocxTableSettings;
   readonly caption: DocxCaptionSettings;
+  readonly figure: DocxFigureSettings;
   readonly extension: DocxThemeExtension;
 }
 

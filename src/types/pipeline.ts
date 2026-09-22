@@ -1,6 +1,7 @@
 import type { Code, Root } from "mdast";
 import type { Dxa } from "./units.ts";
-import type { DocumentIr, DocumentMeta, IrBlock, IrCodeLine } from "./ir.ts";
+import type { DocumentIr, DocumentMeta, IrBlock, IrCodeLine, IrImageAsset } from "./ir.ts";
+import type { ImageFetchPolicy } from "./images.ts";
 import type { JsonObject } from "./json.ts";
 
 export interface DocumentWarning {
@@ -26,12 +27,31 @@ export interface DocumentOptions {
 
 export type CodeTokenTable = ReadonlyMap<Code, readonly IrCodeLine[]>;
 
+export type ImageResolutionTable = ReadonlyMap<object, IrImageAsset>;
+
+export interface FigureDirective {
+  readonly source: string;
+  readonly alternativeText: string;
+  readonly caption: string | null;
+  readonly widthRatio: number;
+}
+
+export interface ImageResolutionOptions {
+  readonly policy: ImageFetchPolicy;
+  readonly contentWidth: Dxa;
+  readonly maxWidthRatio: number;
+  readonly strict: boolean;
+  readonly sink: WarningSink;
+}
+
 export interface NormalizeOptions {
   readonly strict: boolean;
   readonly maxNestingDepth: number;
   readonly contentWidth: Dxa;
   readonly tabWidth: number;
   readonly minimumColumnWidth: Dxa;
+  readonly maxWidthRatio: number;
+  readonly imagePolicy: ImageFetchPolicy;
   readonly defaultLanguage: string;
   readonly metadata: MetadataOverrides;
   readonly documentOptions: DocumentOptions;
@@ -79,6 +99,7 @@ export interface FlattenInput {
   readonly strict: boolean;
   readonly maxNestingDepth: number;
   readonly codeTokens: CodeTokenTable;
+  readonly images: ImageResolutionTable;
   readonly contentWidth: Dxa;
   readonly minimumColumnWidth: Dxa;
 }
@@ -89,4 +110,5 @@ export interface FlattenOutput {
   readonly wordCount: number;
   readonly codeBlockCount: number;
   readonly tableCount: number;
+  readonly imageCount: number;
 }

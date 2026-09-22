@@ -5,6 +5,7 @@ import { normalizeDocument } from "../../src/pipeline/normalize/index.ts";
 import { parseMarkdown } from "../../src/pipeline/parse.ts";
 import { defaultTheme } from "../../src/theme/builtin/default.theme.ts";
 import { dxa } from "../../src/units.ts";
+import { strictImagePolicy } from "../helpers/image-policy.ts";
 import { entryOf, readDocxArchive } from "../helpers/docx-archive.ts";
 import type { ConversionResult } from "../../src/types/format.ts";
 
@@ -15,6 +16,8 @@ const convert = async (markdown: string): Promise<ConversionResult> => {
     contentWidth: dxa(9026),
     tabWidth: 4,
     minimumColumnWidth: dxa(680),
+    maxWidthRatio: 1,
+    imagePolicy: strictImagePolicy(),
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},
