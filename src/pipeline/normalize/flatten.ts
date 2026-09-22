@@ -1,5 +1,5 @@
 import { toString as mdastToString } from "mdast-util-to-string";
-import { unsupportedNodeError, validationError } from "../../errors.ts";
+import { directiveError, unsupportedNodeError, validationError } from "../../errors.ts";
 import { anchorKey, resolveInternalAnchor } from "./anchors.ts";
 import { warning } from "./warnings.ts";
 import type {
@@ -10,23 +10,40 @@ import type {
   Paragraph,
   PhrasingContent,
   RootContent,
+  Blockquote,
   Table,
   TableCell,
 } from "mdast";
-import type { LeafDirective } from "mdast-util-directive";
+import type { ContainerDirective, LeafDirective } from "mdast-util-directive";
 import type {
   BlockContext,
+  CalloutKind,
   InlineMarks,
   IrBlock,
   IrInline,
   IrTableCell,
   IrTableRow,
   ListFrame,
+  SectionOverride,
   TextAlign,
 } from "../../types/ir.ts";
-import type { FlattenInput, FlattenOutput } from "../../types/pipeline.ts";
+import type { DirectiveIssue, FlattenInput, FlattenOutput } from "../../types/pipeline.ts";
 import { computeColumnWidths, measureColumn } from "./tables.ts";
-import { isFigureDirective, parseFigureDirective } from "./directives.ts";
+import {
+  CALLOUT_DIRECTIVE_NAME,
+  COLUMNS_DIRECTIVE_NAME,
+  FIGURE_DIRECTIVE_NAME,
+  KNOWN_CONTAINER_DIRECTIVES,
+  KNOWN_LEAF_DIRECTIVES,
+  LANDSCAPE_DIRECTIVE_NAME,
+  PAGEBREAK_DIRECTIVE_NAME,
+  TOC_DIRECTIVE_NAME,
+  parseBareDirective,
+  isFigureDirective,
+  parseCalloutDirective,
+  parseColumnsDirective,
+  parseFigureDirective,
+} from "./directives.ts";
 
 const NO_MARKS: InlineMarks = {
   bold: false,
@@ -81,6 +98,21 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
       warning("UNSUPPORTED_NODE", `The markdown node '${nodeType}' was skipped.`, {
         nodeType,
         ...detail,
+      }),
+    );
+  };
+
+  const refuseDirective = (name: string, issues: readonly DirectiveIssue[]): void => {
+    if (input.strict) {
+      throw directiveError(`The ${name} directive carries invalid attributes.`, {
+        directive: name,
+        issues: issues.map((issue) => ({ path: [...issue.path], message: issue.message })),
+      });
+    }
+    input.sink.add(
+      warning("DIRECTIVE_INVALID", `The ${name} directive was degraded.`, {
+        directive: name,
+        issues: issues.map((issue) => ({ path: [...issue.path], message: issue.message })),
       }),
     );
   };
@@ -190,7 +222,12 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
   };
 
   const pushFigure = (node: LeafDirective, context: BlockContext, target: IrBlock[]): void => {
-    const directive = parseFigureDirective(node);
+    const outcome = parseFigureDirective(node);
+    if (!outcome.ok) {
+      refuseDirective(FIGURE_DIRECTIVE_NAME, outcome.issues);
+      return;
+    }
+    const directive = outcome.value;
     const asset = input.images.get(node);
     if (asset === undefined) {
       if (directive.alternativeText.length > 0) {
@@ -278,6 +315,57 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
     });
   };
 
+  const pushQuote = (node: Blockquote, context: BlockContext, target: IrBlock[]): void => {
+    const quoteContext: BlockContext = {
+      ...context,
+      insideQuote: true,
+      indentLevel: context.indentLevel + 1,
+    };
+    assertWithinNestingLimit(quoteContext.indentLevel);
+    walk(node.children, quoteContext, target);
+  };
+
+  const pushCallout = (
+    node: ContainerDirective,
+    context: BlockContext,
+    target: IrBlock[],
+  ): void => {
+    const outcome = parseCalloutDirective(node);
+    if (!outcome.ok) {
+      refuseDirective(CALLOUT_DIRECTIVE_NAME, outcome.issues);
+      walk(node.children, context, target);
+      return;
+    }
+    const directive = outcome.value;
+    const variant: CalloutKind = directive.variant;
+    const calloutContext: BlockContext = { ...context, insideCallout: variant };
+    assertWithinNestingLimit(context.indentLevel + 1);
+    const blocks: IrBlock[] = [];
+    walk(node.children, calloutContext, blocks);
+    target.push({
+      kind: "callout",
+      context,
+      variant,
+      title: directive.title,
+      blocks,
+    });
+  };
+
+  const pushSectioned = (
+    node: ContainerDirective,
+    context: BlockContext,
+    target: IrBlock[],
+    section: SectionOverride,
+  ): void => {
+    target.push({ kind: "sectionStart", context, section });
+    walk(node.children, context, target);
+    target.push({
+      kind: "sectionStart",
+      context,
+      section: { orientation: null, columnCount: null },
+    });
+  };
+
   const pushListItem = (
     item: ListItem,
     frame: ListFrame,
@@ -325,6 +413,66 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
     }
   };
 
+  const pushLeafDirective = (
+    node: LeafDirective,
+    context: BlockContext,
+    target: IrBlock[],
+  ): void => {
+    if (!KNOWN_LEAF_DIRECTIVES.has(node.name)) {
+      reportUnsupported(`directive:${node.name}`);
+      return;
+    }
+    if (isFigureDirective(node)) {
+      pushFigure(node, context, target);
+      return;
+    }
+    const name =
+      node.name === PAGEBREAK_DIRECTIVE_NAME ? PAGEBREAK_DIRECTIVE_NAME : TOC_DIRECTIVE_NAME;
+    const outcome = parseBareDirective(node);
+    if (!outcome.ok) {
+      refuseDirective(name, outcome.issues);
+      return;
+    }
+    target.push(
+      name === PAGEBREAK_DIRECTIVE_NAME
+        ? { kind: "pageBreak", context }
+        : { kind: "tableOfContents", context },
+    );
+  };
+
+  const pushContainerDirective = (
+    node: ContainerDirective,
+    context: BlockContext,
+    target: IrBlock[],
+  ): void => {
+    if (!KNOWN_CONTAINER_DIRECTIVES.has(node.name)) {
+      reportUnsupported(`directive:${node.name}`);
+      walk(node.children, context, target);
+      return;
+    }
+    if (node.name === CALLOUT_DIRECTIVE_NAME) {
+      pushCallout(node, context, target);
+      return;
+    }
+    if (node.name === LANDSCAPE_DIRECTIVE_NAME) {
+      const bare = parseBareDirective(node);
+      if (!bare.ok) {
+        refuseDirective(LANDSCAPE_DIRECTIVE_NAME, bare.issues);
+        walk(node.children, context, target);
+        return;
+      }
+      pushSectioned(node, context, target, { orientation: "landscape", columnCount: null });
+      return;
+    }
+    const columns = parseColumnsDirective(node);
+    if (!columns.ok) {
+      refuseDirective(COLUMNS_DIRECTIVE_NAME, columns.issues);
+      walk(node.children, context, target);
+      return;
+    }
+    pushSectioned(node, context, target, { orientation: null, columnCount: columns.value.count });
+  };
+
   function walk(nodes: readonly RootContent[], context: BlockContext, target: IrBlock[]): void {
     for (const node of nodes) {
       switch (node.type) {
@@ -347,12 +495,14 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
         case "table":
           pushTable(node, context, target);
           break;
+        case "blockquote":
+          pushQuote(node, context, target);
+          break;
         case "leafDirective":
-          if (isFigureDirective(node)) {
-            pushFigure(node, context, target);
-            break;
-          }
-          reportUnsupported(`directive:${node.name}`);
+          pushLeafDirective(node, context, target);
+          break;
+        case "containerDirective":
+          pushContainerDirective(node, context, target);
           break;
         case "yaml":
         case "definition":

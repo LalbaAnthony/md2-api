@@ -338,15 +338,14 @@ describe("the figure directive", () => {
     expect(sequences).toEqual([1, 2]);
   });
 
-  it("refuses a directive without a source", async () => {
-    await expect(normalize('::figure{alt="no source"}\n', policyFor())).rejects.toSatisfy(
-      (thrown: unknown) => isAppError(thrown) && thrown.code === "DIRECTIVE_ERROR",
-    );
+  it("degrades a directive without a source", async () => {
+    const result = await normalize('::figure{alt="no source"}' + "\n", policyFor());
+    expect(result.warnings.map((entry) => entry.code)).toEqual(["DIRECTIVE_INVALID"]);
+    expect(result.document.blocks).toEqual([]);
   });
 
-  it("refuses an unknown attribute", async () => {
-    await expect(
-      normalize('::figure{src="a.png" unexpected="x"}\n', policyFor()),
-    ).rejects.toSatisfy((thrown: unknown) => isAppError(thrown));
+  it("degrades an unknown attribute", async () => {
+    const result = await normalize('::figure{src="a.png" unexpected="x"}' + "\n", policyFor());
+    expect(result.warnings.map((entry) => entry.code)).toEqual(["DIRECTIVE_INVALID"]);
   });
 });

@@ -1,11 +1,13 @@
-import { Paragraph } from "docx";
+import { PageBreak, Paragraph, TableOfContents } from "docx";
 import { assertNever } from "../../../errors.ts";
 import { unsupportedBlockWarning } from "./context.ts";
 import { renderCode } from "./code.ts";
 import { renderHeading } from "./heading.ts";
 import { renderFigure } from "./image.ts";
 import { renderInline } from "./inline.ts";
+import { renderCallout } from "./callout.ts";
 import { renderListItem } from "./list.ts";
+import { renderQuotedParagraph } from "./quote.ts";
 import { renderTable } from "./table.ts";
 import type { AlignmentType } from "docx";
 import type { IrBlock, TextAlign } from "../../../types/ir.ts";
@@ -26,6 +28,9 @@ export const renderBlock = (
 ): readonly DocxBlockElement[] => {
   switch (block.kind) {
     case "paragraph": {
+      if (block.context.insideQuote) {
+        return [renderQuotedParagraph(block, context)];
+      }
       const children = renderInline(block.children, context);
       return [
         new Paragraph({
@@ -48,12 +53,26 @@ export const renderBlock = (
       return renderTable(block, context);
     case "figure":
       return renderFigure(block, context);
-    case "pageBreak":
-    case "tableOfContents":
     case "mathBlock":
-    case "callout":
-    case "sectionStart":
       context.warnings.add(unsupportedBlockWarning(block.kind));
+      return [];
+    case "callout":
+      return [renderCallout(block, context, renderBlocks)];
+    case "pageBreak":
+      return [
+        new Paragraph({
+          style: context.compiled.styleIds.Normal,
+          children: [new PageBreak()],
+        }),
+      ];
+    case "tableOfContents":
+      return [
+        new TableOfContents(context.compiled.tableOfContents.title, {
+          hyperlink: context.compiled.tableOfContents.hyperlinks,
+          headingStyleRange: `1-${String(context.compiled.tableOfContents.depth)}`,
+        }),
+      ];
+    case "sectionStart":
       return [];
     default:
       return assertNever(block, "renderBlock");

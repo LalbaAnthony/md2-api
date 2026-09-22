@@ -1,0 +1,73 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 15
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A callout whose type is not a known variant."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "Content of an unknown container directive."
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    }
+  ]
+}

@@ -167,15 +167,7 @@ describe("inline kinds the backend cannot render yet", () => {
 
 describe("blocks the backend cannot render yet", () => {
   const blockKinds: readonly IrBlock[] = [
-    { kind: "pageBreak", context: rootContext },
-    { kind: "tableOfContents", context: rootContext },
     { kind: "mathBlock", context: rootContext, source: "x^2", mathml: null },
-    { kind: "callout", context: rootContext, variant: "info", title: null, blocks: [] },
-    {
-      kind: "sectionStart",
-      context: rootContext,
-      section: { orientation: "landscape", columnCount: null },
-    },
   ];
 
   it("warns once per block and renders nothing for it", async () => {
@@ -192,12 +184,10 @@ describe("blocks the backend cannot render yet", () => {
 
   it("names the block kind in the warning detail", async () => {
     const result = await docxBackend.convert({
-      document: sampleDocument({
-        blocks: [blockKinds[0] ?? { kind: "pageBreak", context: rootContext }],
-      }),
+      document: sampleDocument({ blocks: blockKinds }),
       theme: defaultTheme,
       strict: false,
     });
-    expect(result.warnings[0]?.detail).toMatchObject({ kind: "pageBreak" });
+    expect(result.warnings[0]?.detail).toMatchObject({ kind: "mathBlock" });
   });
 });

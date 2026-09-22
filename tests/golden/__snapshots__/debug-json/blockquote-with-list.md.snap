@@ -1,0 +1,199 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 17
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "A quote that introduces a list:"
+        }
+      ],
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": true,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "First quoted item"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": true,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": true,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "Second quoted item"
+            }
+          ],
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": null,
+            "insideFootnote": false,
+            "insideQuote": true,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "checked": null,
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": true,
+        "insideTableCell": false,
+        "listPath": [
+          {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          }
+        ]
+      },
+      "frame": {
+        "instance": 1,
+        "level": 0,
+        "ordered": false,
+        "spread": false,
+        "start": 1
+      },
+      "kind": "listItem"
+    },
+    {
+      "align": null,
+      "children": [
+        {
+          "kind": "text",
+          "marks": {
+            "bold": false,
+            "code": false,
+            "italic": false,
+            "strike": false,
+            "subscript": false,
+            "superscript": false
+          },
+          "value": "And a closing quoted paragraph."
+        }
+      ],
+      "context": {
+        "indentLevel": 1,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": true,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "paragraph"
+    }
+  ]
+}

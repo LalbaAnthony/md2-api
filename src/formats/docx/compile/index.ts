@@ -1,5 +1,5 @@
 import { hashJson } from "../../../lib/hash.ts";
-import { computeContentWidth } from "../../../theme/tokens.ts";
+import { computeContentWidth, tintForBackground } from "../../../theme/tokens.ts";
 import { parseDocxThemeExtension } from "../theme-extension.ts";
 import { compileNumbering, headingsAreNumbered, numberingReferences } from "./numbering.ts";
 import { compileSection } from "./section.ts";
@@ -10,7 +10,10 @@ import type {
   DocxCaptionSettings,
   DocxCodeSettings,
   DocxCompiledTheme,
+  DocxCalloutSettings,
   DocxFigureSettings,
+  DocxQuoteSettings,
+  DocxTableOfContentsSettings,
   DocxFontNames,
   DocxListSettings,
   DocxParagraphBehaviour,
@@ -81,6 +84,54 @@ const figureSettingsOf = (theme: Theme): DocxFigureSettings => ({
   maxWidthRatio: theme.figure.maxWidthRatio,
 });
 
+const calloutSettingsOf = (theme: Theme): DocxCalloutSettings => ({
+  padding: theme.callout.padding,
+  barWidth: theme.callout.barWidth,
+  showLabel: theme.callout.showLabel,
+  titleBold: theme.callout.titleBold,
+  tintedBackground: theme.callout.tintedBackground,
+  variants: {
+    info: {
+      label: theme.callout.labels.info,
+      color: theme.color.callout.info,
+      tint: tintForBackground(theme.color.callout.info),
+    },
+    warning: {
+      label: theme.callout.labels.warning,
+      color: theme.color.callout.warning,
+      tint: tintForBackground(theme.color.callout.warning),
+    },
+    danger: {
+      label: theme.callout.labels.danger,
+      color: theme.color.callout.danger,
+      tint: tintForBackground(theme.color.callout.danger),
+    },
+    success: {
+      label: theme.callout.labels.success,
+      color: theme.color.callout.success,
+      tint: tintForBackground(theme.color.callout.success),
+    },
+    note: {
+      label: theme.callout.labels.note,
+      color: theme.color.callout.note,
+      tint: tintForBackground(theme.color.callout.note),
+    },
+  },
+});
+
+const quoteSettingsOf = (theme: Theme): DocxQuoteSettings => ({
+  indentLeft: theme.quote.indentLeft,
+  indentRight: theme.quote.indentRight,
+});
+
+const tableOfContentsSettingsOf = (theme: Theme): DocxTableOfContentsSettings => ({
+  enabled: theme.tableOfContents.enabled,
+  title: theme.tableOfContents.title,
+  depth: theme.tableOfContents.depth,
+  hyperlinks: theme.tableOfContents.hyperlinks,
+  pageBreakAfter: theme.tableOfContents.pageBreakAfter,
+});
+
 export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
   const extension = parseDocxThemeExtension(theme.formats["docx"] ?? {});
   const styleIds = buildStyleIds(extension.styleIdPrefix);
@@ -102,6 +153,9 @@ export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
     table: tableSettingsOf(theme),
     caption: captionSettingsOf(theme),
     figure: figureSettingsOf(theme),
+    callout: calloutSettingsOf(theme),
+    quote: quoteSettingsOf(theme),
+    tableOfContents: tableOfContentsSettingsOf(theme),
     extension,
   };
 };

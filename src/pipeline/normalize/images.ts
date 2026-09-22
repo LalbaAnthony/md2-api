@@ -304,17 +304,22 @@ export const resolveDocumentImages = async (
         caption: null,
       },
     })),
-    ...figures.map((node) => {
+    ...figures.flatMap((node) => {
       const parsed = parseFigureDirective(node);
-      return {
-        node,
-        request: {
-          source: parsed.source,
-          alternativeText: parsed.alternativeText,
-          widthRatio: parsed.widthRatio,
-          caption: parsed.caption,
+      if (!parsed.ok) {
+        return [];
+      }
+      return [
+        {
+          node,
+          request: {
+            source: parsed.value.source,
+            alternativeText: parsed.value.alternativeText,
+            widthRatio: parsed.value.widthRatio,
+            caption: parsed.value.caption,
+          },
         },
-      };
+      ];
     }),
   ];
 

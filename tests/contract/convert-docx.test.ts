@@ -184,7 +184,7 @@ describe("degradation", () => {
     const response = await app.inject({
       method: "POST",
       url: "/convert",
-      payload: { markdown: "Body.\n\n> quoted\n", format: "docx", options: { strict: false } },
+      payload: { markdown: "Body.\n\n$$ x^2 $$\n", format: "docx", options: { strict: false } },
     });
     expect(response.statusCode).toBe(200);
     expect(Number(response.headers["x-conversion-warnings"])).toBeGreaterThan(0);

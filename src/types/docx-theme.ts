@@ -1,6 +1,6 @@
 import type { INumberingOptions, ISectionPropertiesOptions, IStylesOptions } from "docx";
 import type { Dxa, Eighth, Pt } from "./units.ts";
-import type { SyntaxScope, TextAlign } from "./ir.ts";
+import type { CalloutKind, SyntaxScope, TextAlign } from "./ir.ts";
 import type { JsonObject } from "./json.ts";
 
 export type DocxParagraphStyleKey =
@@ -118,6 +118,34 @@ export interface DocxFigureSettings {
   readonly maxWidthRatio: number;
 }
 
+export interface DocxCalloutVariant {
+  readonly label: string;
+  readonly color: string;
+  readonly tint: string;
+}
+
+export interface DocxCalloutSettings {
+  readonly padding: Dxa;
+  readonly barWidth: Eighth;
+  readonly showLabel: boolean;
+  readonly titleBold: boolean;
+  readonly tintedBackground: boolean;
+  readonly variants: Readonly<Record<CalloutKind, DocxCalloutVariant>>;
+}
+
+export interface DocxQuoteSettings {
+  readonly indentLeft: Dxa;
+  readonly indentRight: Dxa;
+}
+
+export interface DocxTableOfContentsSettings {
+  readonly enabled: boolean;
+  readonly title: string;
+  readonly depth: number;
+  readonly hyperlinks: boolean;
+  readonly pageBreakAfter: boolean;
+}
+
 export interface DocxParagraphBehaviour {
   readonly widowControl: boolean;
   readonly headingPageBreakBefore: readonly [boolean, boolean, boolean, boolean, boolean, boolean];
@@ -141,6 +169,9 @@ export interface DocxCompiledTheme {
   readonly table: DocxTableSettings;
   readonly caption: DocxCaptionSettings;
   readonly figure: DocxFigureSettings;
+  readonly callout: DocxCalloutSettings;
+  readonly quote: DocxQuoteSettings;
+  readonly tableOfContents: DocxTableOfContentsSettings;
   readonly extension: DocxThemeExtension;
 }
 

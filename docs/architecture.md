@@ -223,6 +223,31 @@ aspect ratio, and never enlarges beyond the intrinsic size. Every failure of the
 and never a 500. Outside strict mode an unusable image degrades to its alternative text with a
 warning.
 
+## Quotes, callouts and directives
+
+A quote is not a container in the intermediate representation. Its paragraphs are flattened with
+`insideQuote` set and an `indentLevel` that grows with the nesting, and the renderer multiplies the
+theme indent by that depth. A quote inside a quote inside a quote indents three times, and a list
+inside a quote keeps its own numbering.
+
+A callout is a table of one cell, like a code block, for the same reason: it is the only OOXML
+construction that gives a continuous background and border across several paragraphs. The left bar
+carries the colour of the variant and the background is that colour mixed at twelve percent on
+white, computed once in `theme/tokens.ts`. The variant label is always textual, never a pictogram,
+which C8 requires.
+
+Every directive validates its attributes against a strict schema. What happens next depends on the
+mode, and this is the rule the specification cares about most: in strict mode an unknown directive
+or an invalid attribute is a 422, and outside strict mode it produces a warning and degrades. A
+container degrades to its own children rendered bare, so no text is ever lost, and a leaf directive
+degrades to nothing.
+
+`:::landscape` and `:::columns` bracket their content with two section markers, one that applies
+the override and one that restores the theme default. The DOCX backend splits the flat element list
+at those markers into several OOXML sections, swapping the page size for a landscape section and
+setting the column count for a column section. This is what makes the `landscapeSections` and
+`columns` capabilities of the backend true rather than decorative.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

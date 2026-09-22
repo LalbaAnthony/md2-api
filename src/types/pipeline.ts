@@ -1,6 +1,13 @@
 import type { Code, Root } from "mdast";
 import type { Dxa } from "./units.ts";
-import type { DocumentIr, DocumentMeta, IrBlock, IrCodeLine, IrImageAsset } from "./ir.ts";
+import type {
+  CalloutKind,
+  DocumentIr,
+  DocumentMeta,
+  IrBlock,
+  IrCodeLine,
+  IrImageAsset,
+} from "./ir.ts";
 import type { ImageFetchPolicy } from "./images.ts";
 import type { JsonObject } from "./json.ts";
 
@@ -34,6 +41,24 @@ export interface FigureDirective {
   readonly alternativeText: string;
   readonly caption: string | null;
   readonly widthRatio: number;
+}
+
+export interface DirectiveIssue {
+  readonly path: readonly string[];
+  readonly message: string;
+}
+
+export type DirectiveOutcome<TValue> =
+  | { readonly ok: true; readonly value: TValue }
+  | { readonly ok: false; readonly issues: readonly DirectiveIssue[] };
+
+export interface CalloutDirective {
+  readonly variant: CalloutKind;
+  readonly title: string | null;
+}
+
+export interface ColumnsDirective {
+  readonly count: number;
 }
 
 export interface ImageResolutionOptions {

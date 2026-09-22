@@ -1,0 +1,376 @@
+{
+  "formatVersion": 1,
+  "meta": {
+    "authors": [],
+    "custom": {},
+    "keywords": [],
+    "language": "en"
+  },
+  "stats": {
+    "codeBlocks": 0,
+    "headings": 0,
+    "images": 0,
+    "tables": 0,
+    "words": 34
+  },
+  "anchors": [],
+  "assets": [],
+  "footnotes": [],
+  "blocks": [
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "An informative callout without a title."
+            }
+          ],
+          "context": {
+            "indentLevel": 0,
+            "insideCallout": "info",
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": []
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "callout",
+      "title": null,
+      "variant": "info"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A warning callout with a title."
+            }
+          ],
+          "context": {
+            "indentLevel": 0,
+            "insideCallout": "warning",
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": []
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "callout",
+      "title": "Mind the gap",
+      "variant": "warning"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A dangerous callout with a title."
+            }
+          ],
+          "context": {
+            "indentLevel": 0,
+            "insideCallout": "danger",
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": []
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "callout",
+      "title": "Do not proceed",
+      "variant": "danger"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A successful callout."
+            }
+          ],
+          "context": {
+            "indentLevel": 0,
+            "insideCallout": "success",
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": []
+          },
+          "kind": "paragraph"
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "callout",
+      "title": null,
+      "variant": "success"
+    },
+    {
+      "blocks": [
+        {
+          "align": null,
+          "children": [
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "A note callout with "
+            },
+            {
+              "kind": "text",
+              "marks": {
+                "bold": true,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": "bold"
+            },
+            {
+              "kind": "text",
+              "marks": {
+                "bold": false,
+                "code": false,
+                "italic": false,
+                "strike": false,
+                "subscript": false,
+                "superscript": false
+              },
+              "value": " text and a list:"
+            }
+          ],
+          "context": {
+            "indentLevel": 0,
+            "insideCallout": "note",
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": []
+          },
+          "kind": "paragraph"
+        },
+        {
+          "blocks": [
+            {
+              "align": null,
+              "children": [
+                {
+                  "kind": "text",
+                  "marks": {
+                    "bold": false,
+                    "code": false,
+                    "italic": false,
+                    "strike": false,
+                    "subscript": false,
+                    "superscript": false
+                  },
+                  "value": "First point"
+                }
+              ],
+              "context": {
+                "indentLevel": 1,
+                "insideCallout": "note",
+                "insideFootnote": false,
+                "insideQuote": false,
+                "insideTableCell": false,
+                "listPath": [
+                  {
+                    "instance": 1,
+                    "level": 0,
+                    "ordered": false,
+                    "spread": false,
+                    "start": 1
+                  }
+                ]
+              },
+              "kind": "paragraph"
+            }
+          ],
+          "checked": null,
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": "note",
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "frame": {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          },
+          "kind": "listItem"
+        },
+        {
+          "blocks": [
+            {
+              "align": null,
+              "children": [
+                {
+                  "kind": "text",
+                  "marks": {
+                    "bold": false,
+                    "code": false,
+                    "italic": false,
+                    "strike": false,
+                    "subscript": false,
+                    "superscript": false
+                  },
+                  "value": "Second point"
+                }
+              ],
+              "context": {
+                "indentLevel": 1,
+                "insideCallout": "note",
+                "insideFootnote": false,
+                "insideQuote": false,
+                "insideTableCell": false,
+                "listPath": [
+                  {
+                    "instance": 1,
+                    "level": 0,
+                    "ordered": false,
+                    "spread": false,
+                    "start": 1
+                  }
+                ]
+              },
+              "kind": "paragraph"
+            }
+          ],
+          "checked": null,
+          "context": {
+            "indentLevel": 1,
+            "insideCallout": "note",
+            "insideFootnote": false,
+            "insideQuote": false,
+            "insideTableCell": false,
+            "listPath": [
+              {
+                "instance": 1,
+                "level": 0,
+                "ordered": false,
+                "spread": false,
+                "start": 1
+              }
+            ]
+          },
+          "frame": {
+            "instance": 1,
+            "level": 0,
+            "ordered": false,
+            "spread": false,
+            "start": 1
+          },
+          "kind": "listItem"
+        }
+      ],
+      "context": {
+        "indentLevel": 0,
+        "insideCallout": null,
+        "insideFootnote": false,
+        "insideQuote": false,
+        "insideTableCell": false,
+        "listPath": []
+      },
+      "kind": "callout",
+      "title": null,
+      "variant": "note"
+    }
+  ]
+}
