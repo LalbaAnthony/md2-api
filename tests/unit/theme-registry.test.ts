@@ -3,6 +3,7 @@ import { loadConfig } from "../../src/config.ts";
 import { isAppError } from "../../src/errors.ts";
 import { createThemeRegistry } from "../../src/theme/registry.ts";
 import {
+  BUILTIN_THEME_IDS,
   createRecordingLogger,
   createThemeDirectory,
   customTheme,
@@ -66,7 +67,7 @@ describe("built in themes", () => {
       config: configFor({ THEMES_DIR: "./does-not-exist" }),
       logger,
     });
-    expect(registry.ids()).toEqual(["default"]);
+    expect(registry.ids()).toEqual(BUILTIN_THEME_IDS);
   });
 });
 
@@ -119,7 +120,7 @@ describe("invalid themes outside production", () => {
     await writeThemeFile(directory, "malformed.json", "{ not json");
     const created = await build();
     expect(created.report().failures).toHaveLength(1);
-    expect(created.ids()).toEqual(["default"]);
+    expect(created.ids()).toEqual(BUILTIN_THEME_IDS);
   });
 
   it("keeps the service usable when every file is invalid", async () => {
@@ -160,7 +161,7 @@ describe("invalid themes in production", () => {
       config: configFor({ NODE_ENV: "production" }),
       logger,
     });
-    expect(registry.ids()).toEqual(["default", "report"]);
+    expect(registry.ids()).toEqual([...BUILTIN_THEME_IDS, "report"]);
   });
 });
 
@@ -185,7 +186,7 @@ describe("reloading", () => {
     await writeThemeFile(directory, "report.json", customTheme("report", "Report"));
     const report = await created.reload();
     expect(created.has("report")).toBe(true);
-    expect(report.loaded.map((summary) => summary.id)).toEqual(["default", "report"]);
+    expect(report.loaded.map((summary) => summary.id)).toEqual([...BUILTIN_THEME_IDS, "report"]);
   });
 
   it("notifies its listeners", async () => {
@@ -195,7 +196,7 @@ describe("reloading", () => {
       seen.push(report.loaded.length);
     });
     await created.reload();
-    expect(seen).toEqual([1]);
+    expect(seen).toEqual([BUILTIN_THEME_IDS.length]);
   });
 
   it("keeps a listener free of failures when a theme becomes invalid", async () => {
@@ -222,7 +223,7 @@ describe("format extension validation", () => {
       logger,
       extensionValidators: [acceptingValidator],
     });
-    expect(registry.ids()).toEqual(["default", "report"]);
+    expect(registry.ids()).toEqual([...BUILTIN_THEME_IDS, "report"]);
   });
 
   it("rejects a directory theme whose extension is invalid", async () => {
@@ -269,7 +270,7 @@ describe("watching the theme directory", () => {
     const created = await build({ ENABLE_THEME_WATCH: "true" });
     const reloaded = waitForReload(created);
     await writeThemeFile(directory, "report.json", customTheme("report", "Report"));
-    expect(await reloaded).toBe(2);
+    expect(await reloaded).toBe(BUILTIN_THEME_IDS.length + 1);
     expect(created.has("report")).toBe(true);
   });
 

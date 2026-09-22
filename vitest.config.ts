@@ -1,8 +1,14 @@
 import { defineConfig } from "vitest/config";
 
+const updatesBaselines =
+  process.argv.includes("--update") ||
+  process.argv.includes("-u") ||
+  process.env["MD2_UPDATE_VISUAL_BASELINES"] === "1";
+
 export default defineConfig({
   test: {
     environment: "node",
+    env: { MD2_UPDATE_VISUAL_BASELINES: updatesBaselines ? "1" : "0" },
     include: ["tests/**/*.test.ts"],
     reporters: ["default"],
     coverage: {

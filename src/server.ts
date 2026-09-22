@@ -39,6 +39,7 @@ import { createReadinessState } from "./lib/readiness.ts";
 import { convertRoutes } from "./routes/convert.ts";
 import { formatRoutes } from "./routes/formats.ts";
 import { healthRoutes } from "./routes/health.ts";
+import { previewRoutes } from "./routes/preview.ts";
 import { themeRoutes } from "./routes/themes.ts";
 import { createThemeRegistry } from "./theme/registry.ts";
 import type { AppConfig } from "./types/config.ts";
@@ -132,7 +133,14 @@ export const buildServer = async (
   const readiness: ReadinessState = overrides.readiness ?? createReadinessState();
 
   const app = Fastify({
-    logger: buildLoggerOptions(config),
+    logger:
+      overrides.logStream === undefined
+        ? buildLoggerOptions(config)
+        : {
+            level: config.LOG_LEVEL,
+            redact: { paths: [...LOG_REDACTION_PATHS], remove: true },
+            stream: overrides.logStream,
+          },
     bodyLimit: config.MAX_MARKDOWN_BYTES,
     genReqId: (request) => readIncomingRequestId(request),
     trustProxy: false,
@@ -238,6 +246,10 @@ export const buildServer = async (
   await app.register(themeRoutes(themes, overrides.themeCaveats ?? themeCaveatsFrom(formats)));
   await app.register(formatRoutes(formats));
   await app.register(convertRoutes({ config, themes, formats, semaphore }));
+
+  if (config.ENABLE_PREVIEW) {
+    await app.register(previewRoutes(themes, formats));
+  }
 
   return app;
 };

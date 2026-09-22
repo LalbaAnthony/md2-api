@@ -1,3 +1,4 @@
+import type { DestinationStream } from "pino";
 import type { AppConfig } from "./config.ts";
 import type { Semaphore } from "./concurrency.ts";
 import type { FormatRegistry } from "./format.ts";
@@ -27,6 +28,7 @@ export interface ServerDependencies {
   readonly themes: ThemeRegistry;
   readonly formats: FormatRegistry;
   readonly themeCaveats: ThemeCaveatProvider;
+  readonly logStream: DestinationStream;
 }
 
 export interface ConvertRouteDependencies {

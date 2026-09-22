@@ -55,3 +55,10 @@ export const customTheme = (id: string, label: string): Record<string, unknown> 
   draft["label"] = label;
   return draft;
 };
+
+export const BUILTIN_THEME_IDS: readonly string[] = [
+  "default",
+  "corporate",
+  "academic",
+  "technical",
+];

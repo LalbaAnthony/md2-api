@@ -3,6 +3,7 @@ import type { JsonObject } from "./json.ts";
 export type ErrorCode =
   | "VALIDATION_ERROR"
   | "PAYLOAD_TOO_LARGE"
+  | "NESTING_TOO_DEEP"
   | "THEME_NOT_FOUND"
   | "FORMAT_NOT_FOUND"
   | "NOT_ACCEPTABLE"

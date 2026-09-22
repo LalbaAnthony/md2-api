@@ -18,8 +18,8 @@
     {
       "sourceKey": "diagram.svg",
       "encoding": "png",
-      "byteLength": 11761,
-      "digest": "36ac01db3e26094339bda26a3867252b8aa3b4179cbb00af4c143a1d8828bf41",
+      "byteLength": 0,
+      "digest": "rasterised-vector-asset",
       "intrinsic": {
         "width": 1000,
         "height": 500
@@ -61,8 +61,8 @@
     {
       "asset": {
         "data": {
-          "byteLength": 11761,
-          "digest": "36ac01db3e26094339bda26a3867252b8aa3b4179cbb00af4c143a1d8828bf41"
+          "byteLength": 0,
+          "digest": "rasterised-vector-asset"
         },
         "encoding": "png",
         "intrinsic": {

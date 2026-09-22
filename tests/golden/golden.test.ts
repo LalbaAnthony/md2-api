@@ -6,6 +6,7 @@ import { createFormatRegistry } from "../../src/formats/registry.ts";
 import { convertMarkdown } from "../../src/pipeline/convert.ts";
 import { defaultTheme } from "../../src/theme/builtin/default.theme.ts";
 import { entryOf, readDocxArchive } from "../helpers/docx-archive.ts";
+import { normaliseDebugJson } from "../helpers/debug-json-normalise.ts";
 import { normaliseParts } from "../helpers/docx-normalise.ts";
 import { createRecordingLogger } from "../helpers/theme-fixtures.ts";
 import { strictImagePolicy } from "../helpers/image-policy.ts";
@@ -50,7 +51,7 @@ const renderSnapshot = async (backend: FormatBackend, body: Buffer): Promise<str
     const archive = await readDocxArchive(body);
     return normaliseParts(DOCX_PARTS.map((part) => [part, entryOf(archive, part)]));
   }
-  return body.toString("utf8");
+  return normaliseDebugJson(body.toString("utf8"));
 };
 
 describe.each(backends.map((backend) => [backend.descriptor.id, backend] as const))(

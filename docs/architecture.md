@@ -55,6 +55,14 @@ theme.
 holds the Zod mirror, proven equal to the interface by a type test, and
 `docs/adr/0004-theme-schema-mirror.md` explains the two mechanisms that keep the mirror exact.
 
+Four themes ship built in. `default` is the neutral reference. `corporate` adds a title page, a
+running header and footer, accented headings with a rule and striped tables. `academic` sets a
+serif face on double leading, justified and indented paragraphs, numbered headings and tables
+ruled horizontally only. `technical` is dense: ten point sans on narrow margins, numbered code
+lines with a language label and tinted callouts. `docs/theming.md` documents every section, and
+`tests/unit/builtin-themes.test.ts` holds each theme to the same bar, which is that it renders
+`tests/golden/corpus/kitchen-sink.md` in strict mode without emitting a warning.
+
 `src/theme/registry.ts` loads the built in themes first, then every `*.json` of `THEMES_DIR`, in
 name order. A theme file must be named after the identifier it declares. A theme from the
 directory overrides a built in theme of the same identifier, with a warning.
@@ -310,6 +318,36 @@ Boolean environment variables are parsed by an explicit accept list rather than 
 `Boolean("false")` is `true` in JavaScript, and a security switch must never fail open. See
 `docs/adr/0003-lot-0-deviations.md`.
 
+## Golden snapshots
+
+`tests/golden` converts every corpus file with every registered backend and compares the result
+with a committed snapshot. DOCX goes through the five normalisation steps of the specification,
+which drop volatile attributes and turn relationship identifiers into ordinals through a
+substitution table.
+
+The `debug-json` backend prints the digest and the byte length of every asset, and a rasterised
+vector image is not reproducible across machines: libvips, its rendering of text and the installed
+fonts all move the bytes. The digest and the length of an asset whose source is an SVG are
+therefore replaced by a fixed marker before the comparison, while every raster asset keeps its
+real digest, because a PNG that crosses the pipeline unchanged has the same bytes everywhere.
+
+## Visual regression
+
+The golden snapshots compare normalised OOXML, which proves structure and not appearance. A wrong
+font size is a two character diff in a snapshot and a visibly wrong document on a page, so the
+matrix of `tests/visual` converts each document to PDF with LibreOffice, rasterises every page
+with `pdftoppm` at 96 dots per inch, and compares against
+`tests/visual/baseline/{format}/{theme}/{corpus}-{page}.png` with `pixelmatch`, a per pixel
+threshold of 0.1 and a page tolerance of 0.1 percent of the pixels.
+
+The matrix is the four built in themes across `kitchen-sink`, `tables-wide-content`,
+`code-highlighted-ts` and `lists-mixed-nested`. It runs in the test image only, where LibreOffice,
+freetype and the fonts are pinned, and is skipped elsewhere. `npm run test:visual -- --update`
+regenerates the baselines, and the diff of that regeneration is reviewed by a human in code
+review, which is the only place a wrong rendering becomes visible.
+
+`docs/adr/0008-visual-regression.md` records the chain, the tolerances and what was rejected.
+
 ## Docker
 
 - `bookworm-slim` rather than Alpine: `sharp` on musl needs either a source build or fragile
@@ -322,6 +360,13 @@ Boolean environment variables are parsed by an explicit accept list rather than 
 - `--enable-source-maps` costs almost nothing next to the cost of unreadable compiled stacks.
 - Production runs read only, with all capabilities dropped, as a non root user. The service never
   writes to disk. Any write attempt is a design defect.
+
+## Security and performance
+
+`docs/security.md` walks the attack surface of section 12.1 row by row, naming the mitigation and
+the test that holds it. `docs/perf.md` carries the measured figures, the phases a conversion
+spends its time in, the behaviour under load and the memory drift over ten thousand conversions,
+along with the commands that produce them.
 
 ## Conformance tooling
 

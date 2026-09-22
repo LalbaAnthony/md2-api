@@ -27,6 +27,7 @@ import type { ErrorCode } from "../../src/types/errors.ts";
 const EXPECTED_STATUS: ReadonlyArray<readonly [ErrorCode, number]> = [
   ["VALIDATION_ERROR", 400],
   ["PAYLOAD_TOO_LARGE", 413],
+  ["NESTING_TOO_DEEP", 422],
   ["THEME_NOT_FOUND", 404],
   ["FORMAT_NOT_FOUND", 404],
   ["NOT_ACCEPTABLE", 406],

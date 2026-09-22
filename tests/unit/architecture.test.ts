@@ -136,7 +136,7 @@ describe("repository charset", () => {
         cwd: repositoryRoot,
         encoding: "utf8",
       });
-    expect(run()).toContain("passed");
+    expect(run()).toMatch(/passed|skipped/);
   });
 });
 

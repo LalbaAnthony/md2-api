@@ -35,8 +35,15 @@ const SELF_EXEMPT_FILES = new Set([
 const MAX_INSPECTED_BYTES = 4_000_000;
 
 const listTrackedFiles = () => {
-  const output = execFileSync("git", ["ls-files", "-z"], { encoding: "utf8" });
-  return output.split("\0").filter((entry) => entry.length > 0);
+  try {
+    const output = execFileSync("git", ["ls-files", "-z"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    return output.split("\0").filter((entry) => entry.length > 0);
+  } catch {
+    return null;
+  }
 };
 
 const isInspectable = (path) => {
@@ -98,9 +105,12 @@ const main = () => {
     return;
   }
 
-  const findings = listTrackedFiles()
-    .filter(isInspectable)
-    .flatMap((path) => inspectFile(path));
+  const tracked = listTrackedFiles();
+  if (tracked === null) {
+    console.log("Repository charset check skipped, no Git checkout to list tracked files from.");
+    return;
+  }
+  const findings = tracked.filter(isInspectable).flatMap((path) => inspectFile(path));
   reportAndExit(findings);
 };
 

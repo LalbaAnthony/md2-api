@@ -1,5 +1,5 @@
 import { toString as mdastToString } from "mdast-util-to-string";
-import { directiveError, unsupportedNodeError, validationError } from "../../errors.ts";
+import { directiveError, nestingTooDeepError, unsupportedNodeError } from "../../errors.ts";
 import { anchorKey, resolveInternalAnchor } from "./anchors.ts";
 import { warning } from "./warnings.ts";
 import type {
@@ -119,10 +119,7 @@ export const flattenDocument = (input: FlattenInput): FlattenOutput => {
 
   const assertWithinNestingLimit = (depth: number): void => {
     if (depth > input.maxNestingDepth) {
-      throw validationError("The document nests blocks beyond the configured limit.", {
-        depth,
-        maximumDepth: input.maxNestingDepth,
-      });
+      throw nestingTooDeepError(depth, input.maxNestingDepth);
     }
   };
 

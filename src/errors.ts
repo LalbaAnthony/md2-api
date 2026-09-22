@@ -9,6 +9,7 @@ import type { JsonObject } from "./types/json.ts";
 const HTTP_STATUS_BY_ERROR_CODE: Readonly<Record<ErrorCode, number>> = {
   VALIDATION_ERROR: 400,
   PAYLOAD_TOO_LARGE: 413,
+  NESTING_TOO_DEEP: 422,
   THEME_NOT_FOUND: 404,
   FORMAT_NOT_FOUND: 404,
   NOT_ACCEPTABLE: 406,
@@ -54,6 +55,11 @@ export const validationError = (message: string, details: JsonObject = {}): AppE
 
 export const payloadTooLargeError = (message: string, details: JsonObject = {}): AppError =>
   new AppError("PAYLOAD_TOO_LARGE", message, { details });
+
+export const nestingTooDeepError = (depth: number, maximumDepth: number): AppError =>
+  new AppError("NESTING_TOO_DEEP", "The document nests blocks beyond the configured limit.", {
+    details: { depth, maximumDepth },
+  });
 
 export const themeNotFoundError = (themeId: string, available: readonly string[]): AppError =>
   new AppError("THEME_NOT_FOUND", `Unknown theme: ${themeId}`, {

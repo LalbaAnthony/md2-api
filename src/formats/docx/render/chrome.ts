@@ -6,11 +6,13 @@ import {
   PageNumber,
   Paragraph,
   SimpleField,
+  Tab,
   TabStopType,
   TextRun,
 } from "docx";
 import { assertNever } from "../../../errors.ts";
 import type { ParagraphChild, TabStopDefinition } from "docx";
+import type { DocxChromeParts, DocxFooterSet, DocxHeaderSet } from "../../../types/docx-render.ts";
 import type { DocumentMeta } from "../../../types/ir.ts";
 import type {
   DocxChromeSlot,
@@ -18,7 +20,7 @@ import type {
   DocxCompiledTheme,
 } from "../../../types/docx-theme.ts";
 
-const TAB_RUN = new TextRun({ children: [] });
+const tabRun = (): TextRun => new TextRun({ children: [new Tab()] });
 const HEADING_ONE_STYLE_NAME = "Heading 1";
 
 const metaValue = (meta: DocumentMeta, field: DocxChromeSlot["field"]): string => {
@@ -75,9 +77,9 @@ export const chromeParagraph = (
   const [left, centre, right] = spec.slots;
   const children: ParagraphChild[] = [
     ...slotChildren(left, meta, HEADING_ONE_STYLE_NAME),
-    TAB_RUN,
+    tabRun(),
     ...slotChildren(centre, meta, HEADING_ONE_STYLE_NAME),
-    TAB_RUN,
+    tabRun(),
     ...slotChildren(right, meta, HEADING_ONE_STYLE_NAME),
   ];
 
@@ -96,9 +98,17 @@ export const chromeParagraph = (
   });
 };
 
+const activeSpec = (spec: DocxChromeSpec | null): DocxChromeSpec | null =>
+  spec === null || !spec.enabled ? null : spec;
+
+const mirrored = (spec: DocxChromeSpec): DocxChromeSpec => ({
+  ...spec,
+  slots: [spec.slots[2], spec.slots[1], spec.slots[0]],
+});
+
 export const buildHeader = (compiled: DocxCompiledTheme, meta: DocumentMeta): Header | null => {
-  const spec = compiled.chrome.header;
-  if (spec === null || !spec.enabled) {
+  const spec = activeSpec(compiled.chrome.header);
+  if (spec === null) {
     return null;
   }
   return new Header({
@@ -107,13 +117,79 @@ export const buildHeader = (compiled: DocxCompiledTheme, meta: DocumentMeta): He
 };
 
 export const buildFooter = (compiled: DocxCompiledTheme, meta: DocumentMeta): Footer | null => {
-  const spec = compiled.chrome.footer;
-  if (spec === null || !spec.enabled) {
+  const spec = activeSpec(compiled.chrome.footer);
+  if (spec === null) {
     return null;
   }
   return new Footer({
     children: [chromeParagraph(spec, meta, compiled, compiled.styleIds.FooterText)],
   });
+};
+
+const headerOf = (spec: DocxChromeSpec, meta: DocumentMeta, compiled: DocxCompiledTheme): Header =>
+  new Header({ children: [chromeParagraph(spec, meta, compiled, compiled.styleIds.HeaderText)] });
+
+const footerOf = (spec: DocxChromeSpec, meta: DocumentMeta, compiled: DocxCompiledTheme): Footer =>
+  new Footer({ children: [chromeParagraph(spec, meta, compiled, compiled.styleIds.FooterText)] });
+
+const headerSetOf = (
+  spec: DocxChromeSpec | null,
+  meta: DocumentMeta,
+  compiled: DocxCompiledTheme,
+  carriesFirstPage: boolean,
+): DocxHeaderSet | null => {
+  if (spec === null) {
+    return null;
+  }
+  return {
+    default: headerOf(spec, meta, compiled),
+    ...(carriesFirstPage
+      ? {
+          first: spec.differentFirstPage
+            ? new Header({ children: [new Paragraph({})] })
+            : headerOf(spec, meta, compiled),
+        }
+      : {}),
+    ...(spec.differentOddEven ? { even: headerOf(mirrored(spec), meta, compiled) } : {}),
+  };
+};
+
+const footerSetOf = (
+  spec: DocxChromeSpec | null,
+  meta: DocumentMeta,
+  compiled: DocxCompiledTheme,
+  carriesFirstPage: boolean,
+): DocxFooterSet | null => {
+  if (spec === null) {
+    return null;
+  }
+  return {
+    default: footerOf(spec, meta, compiled),
+    ...(carriesFirstPage
+      ? {
+          first: spec.differentFirstPage
+            ? new Footer({ children: [new Paragraph({})] })
+            : footerOf(spec, meta, compiled),
+        }
+      : {}),
+    ...(spec.differentOddEven ? { even: footerOf(mirrored(spec), meta, compiled) } : {}),
+  };
+};
+
+export const buildChromeParts = (
+  compiled: DocxCompiledTheme,
+  meta: DocumentMeta,
+): DocxChromeParts => {
+  const header = activeSpec(compiled.chrome.header);
+  const footer = activeSpec(compiled.chrome.footer);
+  const differentFirstPage =
+    header?.differentFirstPage === true || footer?.differentFirstPage === true;
+  return {
+    headers: headerSetOf(header, meta, compiled, differentFirstPage),
+    footers: footerSetOf(footer, meta, compiled, differentFirstPage),
+    differentFirstPage,
+    differentOddEven: header?.differentOddEven === true || footer?.differentOddEven === true,
+  };
 };
 
 export const buildTitlePage = (

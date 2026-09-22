@@ -87,7 +87,7 @@ describe("nesting levels", () => {
       return `${"  ".repeat(level)}- level ${String(level + 1)}`;
     }).join("\n");
     await expect(normalize(markdown, 3)).rejects.toSatisfy(
-      (thrown: unknown) => isAppError(thrown) && thrown.code === "VALIDATION_ERROR",
+      (thrown: unknown) => isAppError(thrown) && thrown.code === "NESTING_TOO_DEEP",
     );
   });
 });

@@ -39,7 +39,10 @@ still refuses to start. The acceptance criterion is unchanged, only its location
 ## 4. `test:golden` and `test:visual` tolerate an empty suite
 
 The golden suite landed in Lot 3, so `test:golden` no longer needs the flag and it is removed.
-`test:visual` keeps `--passWithNoTests` until Lot 12 supplies the baselines.
+Resolved in Lot 12: the visual matrix and its baselines exist, so `test:visual` no longer carries
+`--passWithNoTests` either. Outside the test image the matrix is skipped and the file still asserts
+that the matrix is complete and that every corpus it names exists, so the script has work to do on
+a host as well.
 
 ## 5. `contract.inc.yml` does not yet compare `docs/openapi.json`
 
@@ -69,3 +72,17 @@ is no git working tree or no git binary.
 The `deps` stage of `docker/Dockerfile` therefore copies that one file before `npm ci`, which is
 the only departure from the Dockerfile given in section 15.1. The alternative, `npm ci
 --ignore-scripts`, would also skip the install scripts of native dependencies.
+
+## 8. One error code beyond the table of section 10.3
+
+Added in Lot 13. Sections 12.1 and 16.1 both require a document that nests blocks beyond
+`MAX_NESTING_DEPTH` to answer 422, and the table of section 10.3 carries no code whose meaning
+covers that refusal: the document is well formed, no capability is missing and no directive is
+wrong. It was answering `VALIDATION_ERROR`, which is 400, so the bound was documented one way and
+enforced another.
+
+`NESTING_TOO_DEEP`, mapped to 422, closes that gap. It is the only code outside the published
+table, it is covered by the exhaustive mapping test of `tests/unit/errors.test.ts`, and the table
+of `docs/security.md` names it next to the bound it enforces. The alternative, reusing
+`UNSUPPORTED_FEATURE`, would tell a caller that the output format lacks a capability, which is
+false and would send them looking in the wrong place.

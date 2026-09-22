@@ -155,6 +155,13 @@ describe("the header", () => {
     expect(xml).not.toContain("<w:tbl>");
   });
 
+  it("separates the three slots with a tab character each", async () => {
+    const archive = await archiveOf("# A chapter\n\nBody.\n", theme);
+    const header = namesOf(archive).find((name) => name.startsWith("word/header")) ?? "";
+    const xml = entryOf(archive, header);
+    expect(xml.split("<w:tab/>")).toHaveLength(3);
+  });
+
   it("draws the rule the theme asks for", async () => {
     const archive = await archiveOf("Body.\n", theme);
     const header = namesOf(archive).find((name) => name.startsWith("word/header")) ?? "";
@@ -172,6 +179,49 @@ describe("the header", () => {
       themed({ header: { ...headerSpec, enabled: false } }),
     );
     expect(namesOf(archive).some((name) => name.startsWith("word/header"))).toBe(false);
+  });
+});
+
+describe("a first page that differs", () => {
+  it("suppresses the header on the first page and marks the section", async () => {
+    const theme = themed({ header: { ...headerSpec, differentFirstPage: true } });
+    const archive = await archiveOf("Body.\n", theme);
+    expect(entryOf(archive, "word/document.xml")).toContain("<w:titlePg/>");
+    expect(namesOf(archive).filter((name) => name.startsWith("word/header"))).toHaveLength(2);
+  });
+
+  it("keeps the footer on the first page when only the header differs", async () => {
+    const theme = themed({
+      header: { ...headerSpec, differentFirstPage: true },
+      footer: footerSpec,
+    });
+    const archive = await archiveOf("Body.\n", theme);
+    const footers = namesOf(archive).filter((name) => name.startsWith("word/footer"));
+    expect(footers).toHaveLength(2);
+    for (const footer of footers) {
+      expect(entryOf(archive, footer)).toContain("PAGE");
+    }
+  });
+
+  it("writes no first page part when no slot asks for one", async () => {
+    const archive = await archiveOf("Body.\n", themed({ header: headerSpec }));
+    expect(entryOf(archive, "word/document.xml")).not.toContain("<w:titlePg/>");
+    expect(namesOf(archive).filter((name) => name.startsWith("word/header"))).toHaveLength(1);
+  });
+});
+
+describe("odd and even pages", () => {
+  const theme = themed({ header: { ...headerSpec, differentOddEven: true } });
+
+  it("declares the setting and mirrors the slots", async () => {
+    const archive = await archiveOf("# A chapter\n\nBody.\n", theme);
+    expect(entryOf(archive, "word/settings.xml")).toContain("<w:evenAndOddHeaders/>");
+    expect(namesOf(archive).filter((name) => name.startsWith("word/header"))).toHaveLength(2);
+  });
+
+  it("is absent when the theme does not ask for it", async () => {
+    const archive = await archiveOf("Body.\n", themed({ header: headerSpec }));
+    expect(entryOf(archive, "word/settings.xml")).toContain('<w:evenAndOddHeaders w:val="false"/>');
   });
 });
 
@@ -204,6 +254,19 @@ describe("the title page", () => {
     expect(xml).toContain("Third quarter");
     expect(xml).toContain("Ada Lovelace, Grace Hopper");
     expect(xml).toContain("2026-09-30");
+  });
+
+  it("centres its section vertically when the theme asks for it", async () => {
+    const archive = await archiveOf("Body.\n", theme);
+    const xml = entryOf(archive, "word/document.xml");
+    expect(xml).toContain('<w:vAlign w:val="center"/>');
+    expect(xml.match(/<w:vAlign/g) ?? []).toHaveLength(1);
+  });
+
+  it("leaves its section at the top when the theme asks for it", async () => {
+    const top = themed({ titlePage: { ...titlePageSpec, verticalAlign: "top" } });
+    const archive = await archiveOf("Body.\n", top);
+    expect(entryOf(archive, "word/document.xml")).not.toContain("<w:vAlign");
   });
 
   it("takes its own section when the theme breaks after it", async () => {

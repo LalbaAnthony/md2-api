@@ -65,15 +65,23 @@ Install the hooks once with `npm run prepare`, which points `core.hooksPath` at 
 
 ## Documentation
 
-| File                                   | Contents                                               |
-| -------------------------------------- | ------------------------------------------------------ |
-| `docs/architecture.md`                 | pipeline, layering, error handling, containers         |
-| `docs/units.md`                        | every unit, every conversion, every trap               |
-| `docs/adr/0001-toolchain.md`           | retained versions                                      |
-| `docs/adr/0002-branded-units.md`       | branded units and the assertion boundary               |
-| `docs/adr/0003-lot-0-deviations.md`    | departures from the specification, with reasons        |
-| `docs/adr/0004-theme-schema-mirror.md` | why the theme schema uses readonly wrappers and codecs |
-| `docs/adr/0005-format-registration.md` | how backends are registered, and the scope of Lot 2    |
+| File                                   | Contents                                                  |
+| -------------------------------------- | --------------------------------------------------------- |
+| `docs/architecture.md`                 | pipeline, layering, error handling, containers            |
+| `docs/api.md`                          | routes, request shape, headers and every error code       |
+| `docs/security.md`                     | the attack surface audit, one vector at a time            |
+| `docs/perf.md`                         | measured figures, the load test and the soak              |
+| `docs/ooxml-notes.md`                  | what the DOCX backend had to learn about WordprocessingML |
+| `docs/units.md`                        | every unit, every conversion, every trap                  |
+| `docs/adr/0001-toolchain.md`           | retained versions                                         |
+| `docs/adr/0002-branded-units.md`       | branded units and the assertion boundary                  |
+| `docs/adr/0003-lot-0-deviations.md`    | departures from the specification, with reasons           |
+| `docs/adr/0004-theme-schema-mirror.md` | why the theme schema uses readonly wrappers and codecs    |
+| `docs/adr/0005-format-registration.md` | how backends are registered, and the scope of Lot 2       |
+| `docs/adr/0008-visual-regression.md`   | the pixel comparison chain and its tolerances             |
+| `docs/theming.md`                      | every theme section, its units and its refusals           |
+| `docs/formats.md`                      | the active formats, their capabilities and negotiation    |
+| `docs/adding-a-format.md`              | the six steps that add a backend                          |
 
 ## Delivery status
 
@@ -109,5 +117,25 @@ Lot 9 is complete: headers and footers laid out with tab stops, page numbers and
 
 Lot 10 is complete: footnotes numbered in order of first reference, multi block notes, and the LaTeX to MathML chain with the documented source fallback for DOCX.
 
-Lots 11 to 13 add the remaining built in themes, visual regression and hardening.
-`docs/ooxml-notes.md` and `docs/perf.md` arrive with the lots that make them meaningful.
+Lot 11 is complete: the `corporate`, `academic` and `technical` themes beside `default`, the DOCX
+theme extension and its schema, the `kitchen-sink` corpus that all four themes render without a
+single warning in strict mode, the `/preview` page with its theme and format selectors, and
+`docs/theming.md`, `docs/formats.md` and `docs/adding-a-format.md`.
+
+Lot 12 is complete: the DOCX to PDF to PNG chain in the test image, `pixelmatch` comparison
+against versioned baselines with a per pixel threshold of 0.1 and a page tolerance of 0.1 percent,
+the matrix of four themes across four reference documents, regeneration by
+`npm run test:visual -- --update`, and the CI step that runs it in the container.
+
+Lot 13 is complete: the attack surface of section 12.1 audited row by row in
+`tests/contract/security-surface.test.ts` and `docs/security.md`, the conversion log line held to
+the fields of section 12.3 with a test that proves the markdown never reaches a log, a
+`NESTING_TOO_DEEP` code so that the nesting bound answers 422 as the specification requires, the
+load and soak tooling under `tools/`, and `docs/api.md`, `docs/perf.md`, `docs/security.md` and
+`docs/ooxml-notes.md`.
+
+`under-pressure`, `helmet`, the graceful shutdown and the readiness probes landed with the lots
+that needed them and are covered by the contract suite.
+
+Every lot of section 19 is delivered. What remains open is listed in `docs/adr/` as a deviation
+with its reason, and the extensions of section 19.1 are deliberately out of the V1.

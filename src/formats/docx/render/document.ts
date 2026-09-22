@@ -1,7 +1,7 @@
-import { Document, PageOrientation, Paragraph } from "docx";
+import { Document, PageOrientation, Paragraph, VerticalAlignSection } from "docx";
 import { createRenderContext } from "./context.ts";
 import { renderBlock } from "./block.ts";
-import { buildFooter, buildHeader, buildTableOfContentsHeading, buildTitlePage } from "./chrome.ts";
+import { buildChromeParts, buildTableOfContentsHeading, buildTitlePage } from "./chrome.ts";
 import type { IPropertiesOptions, ISectionOptions, ISectionPropertiesOptions } from "docx";
 import type { DocumentIr, SectionOverride } from "../../../types/ir.ts";
 import type { DocxCompiledTheme } from "../../../types/docx-theme.ts";
@@ -102,12 +102,11 @@ export const renderDocument = (
   options: DocumentOptions = {},
 ): DocxRenderOutput & { readonly document: Document } => {
   const context = createRenderContext(compiled, document, strict);
-  const header = buildHeader(compiled, document.meta);
-  const footer = buildFooter(compiled, document.meta);
+  const parts = buildChromeParts(compiled, document.meta);
 
   const chrome = {
-    ...(header === null ? {} : { headers: { default: header } }),
-    ...(footer === null ? {} : { footers: { default: footer } }),
+    ...(parts.headers === null ? {} : { headers: parts.headers }),
+    ...(parts.footers === null ? {} : { footers: parts.footers }),
   };
 
   const sections: ISectionOptions[] = [];
@@ -122,15 +121,21 @@ export const renderDocument = (
   if (titlePage.length > 0) {
     allElements.push(...titlePage);
   }
+  const titleSectionProperties: ISectionPropertiesOptions =
+    compiled.chrome.titlePage?.verticalAlign === "center"
+      ? { ...compiled.section, verticalAlign: VerticalAlignSection.CENTER }
+      : compiled.section;
+
   if (ownTitleSection) {
-    sections.push({ properties: compiled.section, children: [...titlePage] });
+    sections.push({ properties: titleSectionProperties, children: [...titlePage] });
   }
 
   let current: DocxBlockElement[] = ownTitleSection ? [] : [...titlePage];
-  let properties: ISectionPropertiesOptions =
-    titlePage.length > 0 && !ownTitleSection
-      ? { ...compiled.section, titlePage: true }
-      : compiled.section;
+  const firstPageIsDistinct =
+    !ownTitleSection && (parts.differentFirstPage || titlePage.length > 0);
+  let properties: ISectionPropertiesOptions = firstPageIsDistinct
+    ? { ...compiled.section, titlePage: true }
+    : compiled.section;
 
   const closeSection = (): void => {
     sections.push({ properties, ...chrome, children: [...current] });
@@ -160,8 +165,9 @@ export const renderDocument = (
   return {
     elements: allElements,
     warnings: context.warnings.list(),
-    document: new Document(
-      documentProperties(compiled, document, sections, footnotesOf(document, context)),
-    ),
+    document: new Document({
+      ...documentProperties(compiled, document, sections, footnotesOf(document, context)),
+      ...(parts.differentOddEven ? { evenAndOddHeaderAndFooters: true } : {}),
+    }),
   };
 };

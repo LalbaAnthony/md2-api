@@ -5,7 +5,10 @@ import { themeExtensionError, themeNotFoundError, validationError } from "../err
 import { hashJson } from "../lib/hash.ts";
 import { themeSchema } from "./schema.ts";
 import { THEME_FILE_SUFFIX } from "./constants.ts";
+import { academicTheme } from "./builtin/academic.theme.ts";
+import { corporateTheme } from "./builtin/corporate.theme.ts";
 import { defaultTheme } from "./builtin/default.theme.ts";
+import { technicalTheme } from "./builtin/technical.theme.ts";
 import type { FSWatcher } from "node:fs";
 import type { z } from "zod";
 import type { StructuredLogger } from "../types/logging.ts";
@@ -21,7 +24,12 @@ import type {
   ThemeValidationIssue,
 } from "../types/theme-registry.ts";
 
-const BUILTIN_THEMES: readonly Theme[] = [defaultTheme];
+const BUILTIN_THEMES: readonly Theme[] = [
+  defaultTheme,
+  corporateTheme,
+  academicTheme,
+  technicalTheme,
+];
 const RELOAD_DEBOUNCE_MS = 150;
 
 const toIssues = (error: z.ZodError): readonly ThemeValidationIssue[] =>

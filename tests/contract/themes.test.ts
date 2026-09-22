@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { startTestServer } from "../helpers/build-test-server.ts";
 import {
+  BUILTIN_THEME_IDS,
   createThemeDirectory,
   customTheme,
   removeThemeDirectory,
@@ -30,7 +31,7 @@ describe("GET /themes", () => {
     const response = await app.inject({ method: "GET", url: "/themes" });
     expect(response.statusCode).toBe(200);
     const body: { themes: { id: string; origin: string }[] } = response.json();
-    expect(body.themes.map((summary) => summary.id)).toEqual(["default"]);
+    expect(body.themes.map((summary) => summary.id)).toEqual(BUILTIN_THEME_IDS);
     expect(body.themes[0]?.origin).toBe("builtin");
   });
 
@@ -39,8 +40,8 @@ describe("GET /themes", () => {
     app = await startTestServer({ THEMES_DIR: directory });
     const response = await app.inject({ method: "GET", url: "/themes" });
     const body: { themes: { id: string; label: string }[] } = response.json();
-    expect(body.themes.map((summary) => summary.id)).toEqual(["default", "report"]);
-    expect(body.themes[1]?.label).toBe("Report");
+    expect(body.themes.map((summary) => summary.id)).toEqual([...BUILTIN_THEME_IDS, "report"]);
+    expect(body.themes.at(-1)?.label).toBe("Report");
   });
 
   it("exposes a summary only, never the full theme", async () => {
@@ -91,7 +92,7 @@ describe("GET /themes/:id", () => {
     expect(response.statusCode).toBe(404);
     const body: ErrorResponseBody = response.json();
     expect(body.error.code).toBe("THEME_NOT_FOUND");
-    expect(body.error.details).toEqual({ requested: "ghost", available: ["default"] });
+    expect(body.error.details).toEqual({ requested: "ghost", available: BUILTIN_THEME_IDS });
   });
 
   it("answers 400 for an identifier longer than the schema allows", async () => {
@@ -116,6 +117,6 @@ describe("theme loading at startup", () => {
     app = await startTestServer({ THEMES_DIR: directory });
     const response = await app.inject({ method: "GET", url: "/themes" });
     const body: { themes: { id: string }[] } = response.json();
-    expect(body.themes.map((summary) => summary.id)).toEqual(["default"]);
+    expect(body.themes.map((summary) => summary.id)).toEqual(BUILTIN_THEME_IDS);
   });
 });
