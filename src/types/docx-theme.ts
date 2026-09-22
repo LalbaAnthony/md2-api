@@ -146,6 +146,40 @@ export interface DocxTableOfContentsSettings {
   readonly pageBreakAfter: boolean;
 }
 
+export type DocxChromeSlot =
+  | { readonly kind: "text"; readonly value: string; readonly field?: undefined }
+  | {
+      readonly kind: "meta";
+      readonly field: "title" | "author" | "date" | "subject";
+      readonly value?: undefined;
+    }
+  | { readonly kind: "pageNumber"; readonly field?: undefined; readonly value?: undefined }
+  | { readonly kind: "pageCount"; readonly field?: undefined; readonly value?: undefined }
+  | { readonly kind: "chapter"; readonly field?: undefined; readonly value?: undefined }
+  | { readonly kind: "empty"; readonly field?: undefined; readonly value?: undefined };
+
+export interface DocxChromeSpec {
+  readonly enabled: boolean;
+  readonly slots: readonly [DocxChromeSlot, DocxChromeSlot, DocxChromeSlot];
+  readonly rule: { readonly width: Eighth; readonly color: string } | null;
+  readonly differentFirstPage: boolean;
+  readonly differentOddEven: boolean;
+}
+
+export interface DocxTitlePageSpec {
+  readonly enabled: boolean;
+  readonly showAuthor: boolean;
+  readonly showDate: boolean;
+  readonly pageBreakAfter: boolean;
+  readonly verticalAlign: "top" | "center";
+}
+
+export interface DocxChromeSettings {
+  readonly header: DocxChromeSpec | null;
+  readonly footer: DocxChromeSpec | null;
+  readonly titlePage: DocxTitlePageSpec | null;
+}
+
 export interface DocxParagraphBehaviour {
   readonly widowControl: boolean;
   readonly headingPageBreakBefore: readonly [boolean, boolean, boolean, boolean, boolean, boolean];
@@ -172,6 +206,7 @@ export interface DocxCompiledTheme {
   readonly callout: DocxCalloutSettings;
   readonly quote: DocxQuoteSettings;
   readonly tableOfContents: DocxTableOfContentsSettings;
+  readonly chrome: DocxChromeSettings;
   readonly extension: DocxThemeExtension;
 }
 

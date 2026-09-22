@@ -17,6 +17,7 @@ const normalize = async (markdown: string, strict = false): Promise<NormalizeRes
     minimumColumnWidth: dxa(680),
     maxWidthRatio: 1,
     imagePolicy: strictImagePolicy(),
+    tableOfContentsEnabled: false,
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

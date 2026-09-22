@@ -78,3 +78,18 @@ The end of lot condition asks for a document that opens without a repair prompt 
 LibreOffice. What is verified here is structural: the archive carries the mandatory parts, every
 part is well formed XML, the named styles exist and are referenced, and the output is stable.
 Opening the file in the two readers needs the Docker test image of Lot 12, and is checked there.
+
+## 8. The conversion request carries the document options
+
+Section 7.1 declares `ConversionRequest` as the document, the theme and the strict flag. Section
+10.2 lets a request switch the title page and the table of contents on or off, and both are
+rendering decisions that the theme also carries.
+
+The table of contents is representable in the intermediate representation, so `normalize` resolves
+it: it inserts a `tableOfContents` block when the effective flag is on and the document carries no
+`::toc` directive. The title page has no block in section 5.1, so the backend builds it from the
+metadata and the compiled theme, and needs to know the per request override.
+
+`ConversionRequest` therefore gained an optional `options` field carrying the document options. It
+is optional, so a backend that ignores it stays correct, and the theme remains the default for both
+flags.

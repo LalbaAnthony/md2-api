@@ -1,7 +1,7 @@
 import { buildAnchorTable } from "./anchors.ts";
 import { tokenizeCodeBlocks } from "./code.ts";
 import { resolveDocumentImages } from "./images.ts";
-import { flattenDocument } from "./flatten.ts";
+import { ROOT_CONTEXT, flattenDocument } from "./flatten.ts";
 import { extractFrontmatter } from "./frontmatter.ts";
 import { resolveLinkReferences } from "./links.ts";
 import { createWarningSink } from "./warnings.ts";
@@ -19,6 +19,17 @@ const assetsBySourceKey = (
     assets.set(asset.sourceKey, asset);
   }
   return assets;
+};
+
+const withTableOfContents = (
+  blocks: readonly IrBlock[],
+  options: NormalizeOptions,
+): readonly IrBlock[] => {
+  const wanted = options.documentOptions.tableOfContents ?? options.tableOfContentsEnabled;
+  if (!wanted || blocks.some((block) => block.kind === "tableOfContents")) {
+    return blocks;
+  }
+  return [{ kind: "tableOfContents", context: ROOT_CONTEXT }, ...blocks];
 };
 
 export const normalizeDocument = async (
@@ -63,7 +74,7 @@ export const normalizeDocument = async (
 
   const document: DocumentIr = {
     meta,
-    blocks: flattened.blocks,
+    blocks: withTableOfContents(flattened.blocks, options),
     footnotes: EMPTY_FOOTNOTES,
     anchors: anchors.bySlug,
     assets: assetsBySourceKey(images),

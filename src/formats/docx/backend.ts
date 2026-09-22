@@ -80,7 +80,12 @@ export const docxBackend: FormatBackend = {
     const compileMs = performance.now() - compileStart;
 
     const renderStart = performance.now();
-    const rendered = renderDocument(compiled, request.document, request.strict);
+    const rendered = renderDocument(
+      compiled,
+      request.document,
+      request.strict,
+      request.options ?? {},
+    );
     const renderMs = performance.now() - renderStart;
 
     const packStart = performance.now();

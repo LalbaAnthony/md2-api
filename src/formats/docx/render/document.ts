@@ -1,10 +1,12 @@
 import { Document, PageOrientation } from "docx";
 import { createRenderContext } from "./context.ts";
 import { renderBlock } from "./block.ts";
+import { buildFooter, buildHeader, buildTableOfContentsHeading, buildTitlePage } from "./chrome.ts";
 import type { IPropertiesOptions, ISectionOptions, ISectionPropertiesOptions } from "docx";
 import type { DocumentIr, SectionOverride } from "../../../types/ir.ts";
 import type { DocxCompiledTheme } from "../../../types/docx-theme.ts";
 import type { DocxBlockElement, DocxRenderOutput } from "../../../types/docx-render.ts";
+import type { DocumentOptions } from "../../../types/pipeline.ts";
 
 const SINGLE_COLUMN = 1;
 const COLUMN_SPACE = 708;
@@ -17,11 +19,9 @@ const swapPageSize = (
   if (size === undefined) {
     return section;
   }
-  const width = size.width ?? 0;
-  const height = size.height ?? 0;
   const isLandscape = orientation === "landscape";
-  const longer = Math.max(Number(width), Number(height));
-  const shorter = Math.min(Number(width), Number(height));
+  const longer = Math.max(Number(size.width ?? 0), Number(size.height ?? 0));
+  const shorter = Math.min(Number(size.width ?? 0), Number(size.height ?? 0));
   return {
     ...section,
     page: {
@@ -62,20 +62,50 @@ const documentProperties = (
   sections: [...sections],
 });
 
+export const titlePageIsEnabled = (
+  compiled: DocxCompiledTheme,
+  options: DocumentOptions,
+): boolean => options.titlePage ?? compiled.chrome.titlePage?.enabled ?? false;
+
 export const renderDocument = (
   compiled: DocxCompiledTheme,
   document: DocumentIr,
   strict: boolean,
+  options: DocumentOptions = {},
 ): DocxRenderOutput & { readonly document: Document } => {
   const context = createRenderContext(compiled, document, strict);
+  const header = buildHeader(compiled, document.meta);
+  const footer = buildFooter(compiled, document.meta);
+
+  const chrome = {
+    ...(header === null ? {} : { headers: { default: header } }),
+    ...(footer === null ? {} : { footers: { default: footer } }),
+  };
 
   const sections: ISectionOptions[] = [];
   const allElements: DocxBlockElement[] = [];
-  let current: DocxBlockElement[] = [];
-  let properties: ISectionPropertiesOptions = compiled.section;
+
+  const titlePage = titlePageIsEnabled(compiled, options)
+    ? buildTitlePage(compiled, document.meta)
+    : [];
+  const ownTitleSection =
+    titlePage.length > 0 && compiled.chrome.titlePage?.pageBreakAfter === true;
+
+  if (titlePage.length > 0) {
+    allElements.push(...titlePage);
+  }
+  if (ownTitleSection) {
+    sections.push({ properties: compiled.section, children: [...titlePage] });
+  }
+
+  let current: DocxBlockElement[] = ownTitleSection ? [] : [...titlePage];
+  let properties: ISectionPropertiesOptions =
+    titlePage.length > 0 && !ownTitleSection
+      ? { ...compiled.section, titlePage: true }
+      : compiled.section;
 
   const closeSection = (): void => {
-    sections.push({ properties, children: [...current] });
+    sections.push({ properties, ...chrome, children: [...current] });
     current = [];
   };
 
@@ -86,6 +116,11 @@ export const renderDocument = (
       }
       properties = sectionPropertiesFor(compiled.section, block.section);
       continue;
+    }
+    if (block.kind === "tableOfContents" && compiled.tableOfContents.title.length > 0) {
+      const heading = buildTableOfContentsHeading(compiled);
+      current.push(heading);
+      allElements.push(heading);
     }
     const rendered = renderBlock(block, context);
     current.push(...rendered);

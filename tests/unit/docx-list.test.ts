@@ -18,6 +18,7 @@ const convert = async (markdown: string): Promise<ConversionResult> => {
     minimumColumnWidth: dxa(680),
     maxWidthRatio: 1,
     imagePolicy: strictImagePolicy(),
+    tableOfContentsEnabled: false,
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},

@@ -1,4 +1,5 @@
 import type { DocumentIr } from "./ir.ts";
+import type { DocumentOptions } from "./pipeline.ts";
 import type { Theme } from "./theme.ts";
 import type { JsonObject, JsonValue } from "./json.ts";
 
@@ -32,6 +33,7 @@ export interface ConversionRequest {
   readonly document: DocumentIr;
   readonly theme: Theme;
   readonly strict: boolean;
+  readonly options?: DocumentOptions;
 }
 
 export interface ConversionWarning {

@@ -5,12 +5,16 @@ import { compileNumbering, headingsAreNumbered, numberingReferences } from "./nu
 import { compileSection } from "./section.ts";
 import { compileSyntaxRuns } from "./syntax-theme.ts";
 import { buildStyleIds, compileStyles } from "./styles.ts";
-import type { Theme } from "../../../types/theme.ts";
+import { assertNever } from "../../../errors.ts";
+import type { ChromeSlot, ChromeSpec, Theme } from "../../../types/theme.ts";
 import type {
   DocxCaptionSettings,
   DocxCodeSettings,
   DocxCompiledTheme,
   DocxCalloutSettings,
+  DocxChromeSettings,
+  DocxChromeSlot,
+  DocxChromeSpec,
   DocxFigureSettings,
   DocxQuoteSettings,
   DocxTableOfContentsSettings,
@@ -132,6 +136,51 @@ const tableOfContentsSettingsOf = (theme: Theme): DocxTableOfContentsSettings =>
   pageBreakAfter: theme.tableOfContents.pageBreakAfter,
 });
 
+const slotOf = (slot: ChromeSlot): DocxChromeSlot => {
+  switch (slot.kind) {
+    case "text":
+      return { kind: "text", value: slot.value };
+    case "meta":
+      return { kind: "meta", field: slot.field };
+    case "pageNumber":
+      return { kind: "pageNumber" };
+    case "pageCount":
+      return { kind: "pageCount" };
+    case "chapter":
+      return { kind: "chapter" };
+    case "empty":
+      return { kind: "empty" };
+    default:
+      return assertNever(slot, "chromeSlotOf");
+  }
+};
+
+const chromeSpecOf = (spec: ChromeSpec | null): DocxChromeSpec | null =>
+  spec === null
+    ? null
+    : {
+        enabled: spec.enabled,
+        slots: [slotOf(spec.slots[0]), slotOf(spec.slots[1]), slotOf(spec.slots[2])],
+        rule: spec.rule === null ? null : { width: spec.rule.width, color: spec.rule.color },
+        differentFirstPage: spec.differentFirstPage,
+        differentOddEven: spec.differentOddEven,
+      };
+
+const chromeSettingsOf = (theme: Theme): DocxChromeSettings => ({
+  header: chromeSpecOf(theme.chrome.header),
+  footer: chromeSpecOf(theme.chrome.footer),
+  titlePage:
+    theme.chrome.titlePage === null
+      ? null
+      : {
+          enabled: theme.chrome.titlePage.enabled,
+          showAuthor: theme.chrome.titlePage.showAuthor,
+          showDate: theme.chrome.titlePage.showDate,
+          pageBreakAfter: theme.chrome.titlePage.pageBreakAfter,
+          verticalAlign: theme.chrome.titlePage.verticalAlign,
+        },
+});
+
 export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
   const extension = parseDocxThemeExtension(theme.formats["docx"] ?? {});
   const styleIds = buildStyleIds(extension.styleIdPrefix);
@@ -156,6 +205,7 @@ export const compileThemeForDocx = (theme: Theme): DocxCompiledTheme => {
     callout: calloutSettingsOf(theme),
     quote: quoteSettingsOf(theme),
     tableOfContents: tableOfContentsSettingsOf(theme),
+    chrome: chromeSettingsOf(theme),
     extension,
   };
 };

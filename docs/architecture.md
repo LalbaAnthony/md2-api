@@ -248,6 +248,29 @@ at those markers into several OOXML sections, swapping the page size for a lands
 setting the column count for a column section. This is what makes the `landscapeSections` and
 `columns` capabilities of the backend true rather than decorative.
 
+## Page furniture
+
+A header or a footer is one paragraph with two tab stops, one centred at half the content width and
+one right aligned at the full width. Three slots fill the left, the centre and the right. A table
+would have been the obvious alternative and is the wrong one: a table in a footer complicates
+pagination in several readers.
+
+A slot is literal text, a metadata field, the current page number, the total page count, a chapter
+reference or nothing. The chapter slot is a `STYLEREF` field on the `Heading 1` style, so the
+reader keeps it up to date as the pages turn, rather than a value frozen at generation time.
+
+The title page is built from the document metadata. When the theme breaks after it, it becomes its
+own section, so the body starts on a fresh page with its own furniture. When it does not, the body
+section sets `titlePg`, which is how OOXML expresses a different first page.
+
+The table of contents is a field. It is inserted, never resolved: the document carries a `TOC`
+field and `updateFields`, which LibreOffice applies silently and for which Word prompts on opening.
+A truly pre paginated table of contents would need a full layout engine, which is out of scope, so
+the DOCX capability is `deferredField` and the caveat is reported by `GET /formats/docx`.
+
+The effective flags come from the theme and can be overridden per request, which is recorded in
+`docs/adr/0006-lot-3-pipeline-and-docx.md`.
+
 ## Error handling
 
 `src/errors.ts` owns the single `AppError` hierarchy and the exhaustive code to status mapping.

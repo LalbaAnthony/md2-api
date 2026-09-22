@@ -77,6 +77,7 @@ export interface NormalizeOptions {
   readonly minimumColumnWidth: Dxa;
   readonly maxWidthRatio: number;
   readonly imagePolicy: ImageFetchPolicy;
+  readonly tableOfContentsEnabled: boolean;
   readonly defaultLanguage: string;
   readonly metadata: MetadataOverrides;
   readonly documentOptions: DocumentOptions;

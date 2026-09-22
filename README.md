@@ -105,5 +105,7 @@ Lot 7 is complete: image resolution from data URIs, local files and guarded remo
 
 Lot 8 is complete: nested quotes, every callout variant, the page break, landscape and column directives, strict attribute validation, and degradation with a warning outside strict mode.
 
-Page furniture, footnotes and mathematics arrive in Lots 9 and 10. Until then the DOCX backend reports each of them as a conversion warning rather than failing. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
+Lot 9 is complete: headers and footers laid out with tab stops, page numbers and counts, the chapter field, the title page with its own section, and the table of contents field.
+
+Footnotes and mathematics arrive in Lot 10. Until then the DOCX backend reports each of them as a conversion warning rather than failing. `docs/theming.md`, `docs/formats.md`, `docs/adding-a-format.md`, `docs/api.md`,
 `docs/ooxml-notes.md` and `docs/perf.md` arrive with the lots that make them meaningful.

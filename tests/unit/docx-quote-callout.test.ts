@@ -22,6 +22,7 @@ const documentXmlOf = async (markdown: string, theme: Theme = defaultTheme): Pro
     minimumColumnWidth: dxa(680),
     maxWidthRatio: 1,
     imagePolicy: strictImagePolicy(),
+    tableOfContentsEnabled: false,
     defaultLanguage: "en",
     metadata: {},
     documentOptions: {},
