@@ -36,14 +36,14 @@ describe("GET /openapi.json", () => {
     app = await startTestServer();
     const document = await fetchDocument(app);
     expect(Object.keys(document.paths).sort()).toEqual([
-      "/convert",
-      "/convert/{themeId}",
-      "/formats",
-      "/formats/{id}",
       "/healthz",
       "/readyz",
-      "/themes",
-      "/themes/{id}",
+      "/v1/convert",
+      "/v1/convert/{themeId}",
+      "/v1/formats",
+      "/v1/formats/{id}",
+      "/v1/themes",
+      "/v1/themes/{id}",
     ]);
   });
 
@@ -56,7 +56,7 @@ describe("GET /openapi.json", () => {
   it("describes the conversion request body from the route schema", async () => {
     app = await startTestServer();
     const document = await fetchDocument(app);
-    const post = document.paths["/convert"]?.["post"];
+    const post = document.paths["/v1/convert"]?.["post"];
     expect(JSON.stringify(post)).toContain("markdown");
   });
 

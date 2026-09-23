@@ -68,7 +68,7 @@ describe("the conversion log line", () => {
     const { lines } = await startCapturing();
     const response = await app?.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: MARKDOWN },
     });
     expect(response?.statusCode).toBe(200);
@@ -81,7 +81,7 @@ describe("the conversion log line", () => {
 
   it("never writes the markdown, not even truncated", async () => {
     const { lines } = await startCapturing();
-    await app?.inject({ method: "POST", url: "/convert", payload: { markdown: MARKDOWN } });
+    await app?.inject({ method: "POST", url: "/v1/convert", payload: { markdown: MARKDOWN } });
     expect(lines.join("\n")).not.toContain(SECRET);
     expect(lines.join("\n")).not.toContain("A heading");
   });
@@ -91,7 +91,7 @@ describe("the conversion log line", () => {
     const requestId = "11111111-2222-4333-8444-555555555555";
     await app?.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       headers: { "x-request-id": requestId },
       payload: { markdown: MARKDOWN },
     });
@@ -103,7 +103,7 @@ describe("the conversion log line", () => {
     const { lines } = await startCapturing();
     await app?.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "$$x^2$$\n" },
     });
     const warnings = parsed(lines).filter((entry) => entry["level"] === 40);

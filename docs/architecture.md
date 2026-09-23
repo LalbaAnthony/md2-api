@@ -94,8 +94,8 @@ precedence of section 10.4 and depends on no concrete backend.
 
 A backend declares its capabilities rather than having them inferred. The pipeline degrades
 nothing by itself: the backend decides how to render what it does not support natively, and says
-so in the conversion warnings and in `describeThemeCaveats`, which is what `GET /themes/:id` and
-`GET /formats/:id` report.
+so in the conversion warnings and in `describeThemeCaveats`, which is what `GET /v1/themes/:id` and
+`GET /v1/formats/:id` report.
 
 `debug-json` exists to prove mechanically that the pipeline has no dependency on DOCX, and to give
 theme and directive authors a diagnostic view. It is never registered in production.
@@ -274,7 +274,7 @@ section sets `titlePg`, which is how OOXML expresses a different first page.
 The table of contents is a field. It is inserted, never resolved: the document carries a `TOC`
 field and `updateFields`, which LibreOffice applies silently and for which Word prompts on opening.
 A truly pre paginated table of contents would need a full layout engine, which is out of scope, so
-the DOCX capability is `deferredField` and the caveat is reported by `GET /formats/docx`.
+the DOCX capability is `deferredField` and the caveat is reported by `GET /v1/formats/docx`.
 
 The effective flags come from the theme and can be overridden per request, which is recorded in
 `docs/adr/0006-lot-3-pipeline-and-docx.md`.

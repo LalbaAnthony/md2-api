@@ -81,7 +81,7 @@ const measure = async (label, markdown) => {
   const body = JSON.stringify({ markdown });
   const send = async () => {
     const started = performance.now();
-    const response = await fetch(`${BASE}/convert`, {
+    const response = await fetch(`${BASE}/v1/convert`, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body,

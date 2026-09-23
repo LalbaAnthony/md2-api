@@ -31,7 +31,7 @@ describe("the documented request examples", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: convertRequestExample,
     });
     expect(response.statusCode).toBe(200);
@@ -42,7 +42,7 @@ describe("the documented request examples", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: convertMinimalRequestExample,
     });
     expect(response.statusCode).toBe(200);
@@ -52,7 +52,7 @@ describe("the documented request examples", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: MINIMAL_MARKDOWN_EXAMPLE, format: "docx" },
     });
     const archive = await readDocxArchive(response.rawPayload);
@@ -63,7 +63,7 @@ describe("the documented request examples", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: {
         markdown: FULL_MARKDOWN_EXAMPLE,
         format: "docx",
@@ -80,7 +80,7 @@ describe("the documented error example", () => {
     app = await startTestServer({ NODE_ENV: "production" });
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body.", theme: "ghost" },
     });
     expect(response.statusCode).toBe(404);
@@ -98,7 +98,7 @@ describe("request options", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body.", metadata: { subtitle: "A subtitle", date: "2026-03-31" } },
     });
     expect(response.statusCode).toBe(200);
@@ -108,7 +108,7 @@ describe("request options", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body.", options: { tableOfContents: true, titlePage: true } },
     });
     expect(response.statusCode).toBe(200);
@@ -118,7 +118,7 @@ describe("request options", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body.", unexpected: true },
     });
     expect(response.statusCode).toBe(400);
@@ -128,7 +128,7 @@ describe("request options", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "" },
     });
     expect(response.statusCode).toBe(400);
@@ -138,7 +138,7 @@ describe("request options", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body.", filename: "../escape" },
     });
     expect(response.statusCode).toBe(400);
@@ -148,7 +148,7 @@ describe("request options", () => {
     app = await startTestServer({ MAX_MARKDOWN_BYTES: "64" });
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "x".repeat(2000) },
     });
     expect(response.statusCode).toBe(413);

@@ -38,7 +38,7 @@ const documentOf = (targetBytes) => {
 const run = async () => {
   const markdown = documentOf(TARGET_BYTES);
   const result = await autocannon({
-    url: `${URL}/convert`,
+    url: `${URL}/v1/convert`,
     method: "POST",
     connections: CONNECTIONS,
     duration: DURATION,

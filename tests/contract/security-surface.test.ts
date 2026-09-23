@@ -16,7 +16,7 @@ const convert = async (
   server: FastifyInstance,
   payload: Record<string, unknown>,
 ): Promise<{ readonly statusCode: number; readonly body: ErrorResponseBody }> => {
-  const response = await server.inject({ method: "POST", url: "/convert", payload });
+  const response = await server.inject({ method: "POST", url: "/v1/convert", payload });
   return { statusCode: response.statusCode, body: response.json() };
 };
 
@@ -113,7 +113,7 @@ describe("XML injection", () => {
     const server = await start();
     const response = await server.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: {
         markdown: "A paragraph with `</w:t></w:r><w:r><w:t>injected` and a ]]> sequence.\n",
         options: { strict: false },
@@ -130,7 +130,7 @@ describe("header injection through the file name", () => {
     const server = await start();
     const injected = await server.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: {
         markdown: "Body.\n",
         filename: "report\r\nX-Injected: yes",
@@ -141,7 +141,7 @@ describe("header injection through the file name", () => {
 
     const accepted = await server.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body.\n", filename: "quarterly report.final" },
     });
     expect(accepted.statusCode).toBe(200);
@@ -186,7 +186,7 @@ describe("processor exhaustion", () => {
     const heavy = Array.from({ length: 400 }, (_unused, index) => `## Heading ${String(index)}`);
     const response = await server.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: heavy.join("\n\n") },
     });
     expect([200, 504]).toContain(response.statusCode);
@@ -196,9 +196,9 @@ describe("processor exhaustion", () => {
     const server = await start({ MAX_CONCURRENT_CONVERSIONS: "1", CONVERT_QUEUE_LIMIT: "0" });
     const payload = { markdown: "# One\n\nBody.\n" };
     const responses = await Promise.all([
-      server.inject({ method: "POST", url: "/convert", payload }),
-      server.inject({ method: "POST", url: "/convert", payload }),
-      server.inject({ method: "POST", url: "/convert", payload }),
+      server.inject({ method: "POST", url: "/v1/convert", payload }),
+      server.inject({ method: "POST", url: "/v1/convert", payload }),
+      server.inject({ method: "POST", url: "/v1/convert", payload }),
     ]);
     for (const response of responses.filter((entry) => entry.statusCode === 503)) {
       expect(response.headers["retry-after"]).toBeDefined();
@@ -221,7 +221,7 @@ describe("hostile front matter", () => {
     ].join("\n");
     const response = await server.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: frontMatter, format: "debug-json" },
     });
     expect(response.statusCode).toBe(200);
@@ -234,7 +234,7 @@ describe("hostile front matter", () => {
 describe("an unknown theme", () => {
   it("answers 404 rather than falling back", async () => {
     const server = await start();
-    const response = await server.inject({ method: "GET", url: "/themes/ghost" });
+    const response = await server.inject({ method: "GET", url: "/v1/themes/ghost" });
     expect(response.statusCode).toBe(404);
   });
 });

@@ -100,7 +100,7 @@ colours, so the same tokenisation serves every theme.
 ## Format extensions
 
 `formats` holds one object per output format. Each backend validates its own entry strictly, and
-publishes its JSON Schema at `GET /formats/:id`, so you can see exactly which keys it accepts.
+publishes its JSON Schema at `GET /v1/formats/:id`, so you can see exactly which keys it accepts.
 
 ```json
 {
@@ -136,7 +136,7 @@ cp themes/example.json themes/report.json
 curl http://127.0.0.1:3000/themes/report
 ```
 
-`GET /themes/:id` returns the validated theme, the derived content box, and the caveats each active
+`GET /v1/themes/:id` returns the validated theme, the derived content box, and the caveats each active
 format declares for it, which is where you learn that, for instance, the DOCX backend leaves the
 table of contents to be refreshed by the reader.
 

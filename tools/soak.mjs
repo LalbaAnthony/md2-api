@@ -61,14 +61,14 @@ const run = async () => {
   let failures = 0;
 
   for (let index = 0; index < WARMUP; index += 1) {
-    await app.inject({ method: "POST", url: "/convert", payload });
+    await app.inject({ method: "POST", url: "/v1/convert", payload });
   }
   collectGarbage();
   const rssStart = process.memoryUsage().rss;
 
   for (let index = 0; index < ITERATIONS; index += 1) {
     const started = performance.now();
-    const response = await app.inject({ method: "POST", url: "/convert", payload });
+    const response = await app.inject({ method: "POST", url: "/v1/convert", payload });
     durations.push(performance.now() - started);
     if (response.statusCode !== 200) {
       failures += 1;

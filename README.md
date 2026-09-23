@@ -18,6 +18,7 @@ npm run dev
 ```
 curl http://127.0.0.1:3000/healthz
 curl http://127.0.0.1:3000/readyz
+curl http://127.0.0.1:3000/v1/themes
 ```
 
 ## Scripts
@@ -85,6 +86,7 @@ Install the hooks once with `npm run prepare`, which points `core.hooksPath` at 
 | `docs/adr/0004-theme-schema-mirror.md` | why the theme schema uses readonly wrappers and codecs    |
 | `docs/adr/0005-format-registration.md` | how backends are registered, and the scope of Lot 2       |
 | `docs/adr/0008-visual-regression.md`   | the pixel comparison chain and its tolerances             |
+| `docs/adr/0009-url-versioning.md`      | the `/v1` prefix and which routes stay outside it         |
 | `docs/theming.md`                      | every theme section, its units and its refusals           |
 | `docs/formats.md`                      | the active formats, their capabilities and negotiation    |
 | `docs/adding-a-format.md`              | the six steps that add a backend                          |

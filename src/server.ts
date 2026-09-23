@@ -10,6 +10,7 @@ import {
 } from "fastify-type-provider-zod";
 import type { FastifyInstance, FastifyRequest } from "fastify";
 import {
+  API_VERSION_PREFIX,
   CONVERSION_QUEUE_FACTOR,
   LOG_REDACTION_PATHS,
   MARKDOWN_CONTENT_TYPES,
@@ -243,9 +244,13 @@ export const buildServer = async (
   });
 
   await app.register(healthRoutes(readiness));
-  await app.register(themeRoutes(themes, overrides.themeCaveats ?? themeCaveatsFrom(formats)));
-  await app.register(formatRoutes(formats));
-  await app.register(convertRoutes({ config, themes, formats, semaphore }));
+  await app.register(themeRoutes(themes, overrides.themeCaveats ?? themeCaveatsFrom(formats)), {
+    prefix: API_VERSION_PREFIX,
+  });
+  await app.register(formatRoutes(formats), { prefix: API_VERSION_PREFIX });
+  await app.register(convertRoutes({ config, themes, formats, semaphore }), {
+    prefix: API_VERSION_PREFIX,
+  });
 
   if (config.ENABLE_PREVIEW) {
     await app.register(previewRoutes(themes, formats));

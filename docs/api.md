@@ -6,24 +6,31 @@ Every response carries `X-Request-Id`. An incoming `X-Request-Id` is reused when
 The OpenAPI document is served at `/openapi.json` and committed to `docs/openapi.json`. Swagger UI
 is available at `/docs` when `ENABLE_SWAGGER_UI` is set.
 
+## Versioning
+
+The business routes live under `/v1`, the value of `API_VERSION_PREFIX` in `src/constants.ts`.
+The probes, `/openapi.json`, `/docs` and `/preview` stay at the root: they describe or operate the
+running process, not a version of the contract. An unprefixed business path answers 404. See
+`docs/adr/0009-url-versioning.md`.
+
 ## Routes
 
-| Method | Path              | Answers                                                             |
-| ------ | ----------------- | ------------------------------------------------------------------- |
-| `GET`  | `/healthz`        | liveness, the process is up                                         |
-| `GET`  | `/readyz`         | readiness, themes loaded and formats warmed up                      |
-| `GET`  | `/themes`         | the registered themes, with their origin and content hash           |
-| `GET`  | `/themes/:id`     | one theme, its derived content box and the caveats of each format   |
-| `GET`  | `/formats`        | the active output formats and their capabilities                    |
-| `GET`  | `/formats/:id`    | one format, its capabilities and its caveats                        |
-| `POST` | `/convert`        | the converted document                                              |
-| `POST` | `/convert/:theme` | the same, with the theme in the path                                |
-| `GET`  | `/preview`        | an editor with a theme and format selector, outside production only |
+| Method | Path                 | Answers                                                             |
+| ------ | -------------------- | ------------------------------------------------------------------- |
+| `GET`  | `/healthz`           | liveness, the process is up                                         |
+| `GET`  | `/readyz`            | readiness, themes loaded and formats warmed up                      |
+| `GET`  | `/v1/themes`         | the registered themes, with their origin and content hash           |
+| `GET`  | `/v1/themes/:id`     | one theme, its derived content box and the caveats of each format   |
+| `GET`  | `/v1/formats`        | the active output formats and their capabilities                    |
+| `GET`  | `/v1/formats/:id`    | one format, its capabilities and its caveats                        |
+| `POST` | `/v1/convert`        | the converted document                                              |
+| `POST` | `/v1/convert/:theme` | the same, with the theme in the path                                |
+| `GET`  | `/preview`           | an editor with a theme and format selector, outside production only |
 
 ## Converting
 
 ```
-POST /convert
+POST /v1/convert
 Content-Type: application/json
 
 {
@@ -53,15 +60,15 @@ over the front matter, field by field.
 | `X-Output-Format`       | the format that was used                |
 | `X-Conversion-Warnings` | how many warnings the conversion raised |
 
-A warning count above zero means the document was produced with a degradation. `GET /formats/:id`
+A warning count above zero means the document was produced with a degradation. `GET /v1/formats/:id`
 lists what each format degrades, and strict mode turns every degradation into a refusal.
 
 ## Choosing the format
 
 Precedence, strongest first:
 
-1. `format` in the body of `POST /convert`.
-2. `?format=` on `POST /convert/:theme`.
+1. `format` in the body of `POST /v1/convert`.
+2. `?format=` on `POST /v1/convert/:theme`.
 3. `Accept`, when a value matches the media type of an active backend exactly.
 4. `DEFAULT_FORMAT`.
 

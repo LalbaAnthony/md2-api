@@ -27,7 +27,7 @@ const convertToArchive = async (
 ): Promise<DocxArchive> => {
   const response = await instance.inject({
     method: "POST",
-    url: "/convert",
+    url: "/v1/convert",
     payload: { markdown, format: "docx", ...body },
   });
   expect(response.statusCode).toBe(200);
@@ -62,7 +62,7 @@ describe("the produced archive", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body.", format: "docx", filename: "quarterly report" },
     });
     expect(response.headers["content-type"]).toBe(
@@ -76,7 +76,7 @@ describe("the produced archive", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body." },
     });
     expect(response.headers["x-output-format"]).toBe("docx");
@@ -170,8 +170,8 @@ describe("determinism", () => {
   it("produces byte identical archives for the same request", async () => {
     app = await startTestServer();
     const payload = { markdown: "# Same\n\nSame body.\n", format: "docx" };
-    const first = await app.inject({ method: "POST", url: "/convert", payload });
-    const second = await app.inject({ method: "POST", url: "/convert", payload });
+    const first = await app.inject({ method: "POST", url: "/v1/convert", payload });
+    const second = await app.inject({ method: "POST", url: "/v1/convert", payload });
     const firstDocument = entryOf(await readDocxArchive(first.rawPayload), "word/document.xml");
     const secondDocument = entryOf(await readDocxArchive(second.rawPayload), "word/document.xml");
     expect(firstDocument).toBe(secondDocument);
@@ -183,7 +183,7 @@ describe("degradation", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Body.\n\n::mystery\n", format: "docx", options: { strict: false } },
     });
     expect(response.statusCode).toBe(200);
@@ -196,7 +196,7 @@ describe("raw markdown route", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert/default",
+      url: "/v1/convert/default",
       headers: { "content-type": "text/markdown" },
       payload: "# From Raw Body\n",
     });
@@ -209,7 +209,7 @@ describe("raw markdown route", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert/ghost",
+      url: "/v1/convert/ghost",
       headers: { "content-type": "text/markdown" },
       payload: "Body.",
     });
@@ -222,7 +222,7 @@ describe("raw markdown route", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert/default?format=debug-json",
+      url: "/v1/convert/default?format=debug-json",
       headers: { "content-type": "text/markdown" },
       payload: "Body.",
     });
@@ -235,7 +235,7 @@ describe("content negotiation", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       headers: {
         accept: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       },
@@ -248,7 +248,7 @@ describe("content negotiation", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       headers: { accept: "application/pdf" },
       payload: { markdown: "Body." },
     });

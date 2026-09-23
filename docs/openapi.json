@@ -117,7 +117,7 @@
         }
       }
     },
-    "/themes": {
+    "/v1/themes": {
       "get": {
         "summary": "List the available themes",
         "tags": [
@@ -185,7 +185,7 @@
         }
       }
     },
-    "/themes/{id}": {
+    "/v1/themes/{id}": {
       "get": {
         "summary": "Read a theme and the caveats of each active output format",
         "tags": [
@@ -3127,7 +3127,7 @@
         }
       }
     },
-    "/formats": {
+    "/v1/formats": {
       "get": {
         "summary": "List the active output formats",
         "tags": [
@@ -3263,7 +3263,7 @@
         }
       }
     },
-    "/formats/{id}": {
+    "/v1/formats/{id}": {
       "get": {
         "summary": "Read an output format descriptor and its theme extension schema",
         "tags": [
@@ -3419,7 +3419,7 @@
         }
       }
     },
-    "/convert": {
+    "/v1/convert": {
       "post": {
         "summary": "Convert a markdown document",
         "tags": [
@@ -3530,7 +3530,7 @@
         }
       }
     },
-    "/convert/{themeId}": {
+    "/v1/convert/{themeId}": {
       "post": {
         "summary": "Convert a raw markdown body with an explicit theme",
         "tags": [

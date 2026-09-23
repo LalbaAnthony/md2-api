@@ -9,6 +9,8 @@ export const UNDER_PRESSURE_MAX_HEAP_USED_BYTES = 700 * MEGABYTE;
 export const UNDER_PRESSURE_MAX_RSS_BYTES = 900 * MEGABYTE;
 export const UNDER_PRESSURE_RETRY_AFTER_SECONDS = 5;
 
+export const API_VERSION_PREFIX = "/v1";
+
 export const SERVER_PORT = 3000;
 export const SERVER_HOST = "0.0.0.0";
 

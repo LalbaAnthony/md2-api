@@ -1,3 +1,5 @@
+import { API_VERSION_PREFIX } from "../constants.ts";
+
 export const MINIMAL_MARKDOWN_EXAMPLE = "# Quarterly report\n\nRevenue grew by four percent.\n";
 
 export const FULL_MARKDOWN_EXAMPLE = [
@@ -111,7 +113,7 @@ el("convert").addEventListener("click", async () => {
     options: { strict: el("strict").checked },
   };
   try {
-    const response = await fetch("/convert", {
+    const response = await fetch("${API_VERSION_PREFIX}/convert", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(body),

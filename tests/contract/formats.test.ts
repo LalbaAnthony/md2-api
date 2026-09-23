@@ -16,10 +16,10 @@ interface FormatListBody {
   readonly formats: readonly { readonly id: string; readonly productionReady: boolean }[];
 }
 
-describe("GET /formats outside production", () => {
+describe("GET /v1/formats outside production", () => {
   it("lists the development backend", async () => {
     app = await startTestServer();
-    const response = await app.inject({ method: "GET", url: "/formats" });
+    const response = await app.inject({ method: "GET", url: "/v1/formats" });
     expect(response.statusCode).toBe(200);
     const body: FormatListBody = response.json();
     expect(body.formats.map((format) => format.id)).toEqual(["docx", "debug-json"]);
@@ -27,14 +27,14 @@ describe("GET /formats outside production", () => {
 
   it("lists the development backend after the production one", async () => {
     app = await startTestServer();
-    const response = await app.inject({ method: "GET", url: "/formats" });
+    const response = await app.inject({ method: "GET", url: "/v1/formats" });
     const body: FormatListBody = response.json();
     expect(body.formats.map((format) => format.productionReady)).toEqual([true, false]);
   });
 
   it("describes the capabilities of each format", async () => {
     app = await startTestServer();
-    const response = await app.inject({ method: "GET", url: "/formats" });
+    const response = await app.inject({ method: "GET", url: "/v1/formats" });
     const body: { formats: { capabilities: Record<string, unknown> }[] } = response.json();
     expect(Object.keys(body.formats[0]?.capabilities ?? {}).sort()).toEqual([
       "columns",
@@ -52,17 +52,17 @@ describe("GET /formats outside production", () => {
   });
 });
 
-describe("GET /formats in production", () => {
+describe("GET /v1/formats in production", () => {
   it("never lists a backend that is not production ready", async () => {
     app = await startTestServer({ NODE_ENV: "production" });
-    const response = await app.inject({ method: "GET", url: "/formats" });
+    const response = await app.inject({ method: "GET", url: "/v1/formats" });
     const body: FormatListBody = response.json();
     expect(body.formats.map((format) => format.id)).not.toContain("debug-json");
   });
 
   it("answers 404 on the development backend", async () => {
     app = await startTestServer({ NODE_ENV: "production" });
-    const response = await app.inject({ method: "GET", url: "/formats/debug-json" });
+    const response = await app.inject({ method: "GET", url: "/v1/formats/debug-json" });
     expect(response.statusCode).toBe(404);
     const body: ErrorResponseBody = response.json();
     expect(body.error.code).toBe("FORMAT_NOT_FOUND");
@@ -75,10 +75,10 @@ describe("GET /formats in production", () => {
   });
 });
 
-describe("GET /formats/:id", () => {
+describe("GET /v1/formats/:id", () => {
   it("returns the descriptor and the theme extension schema", async () => {
     app = await startTestServer();
-    const response = await app.inject({ method: "GET", url: "/formats/debug-json" });
+    const response = await app.inject({ method: "GET", url: "/v1/formats/debug-json" });
     expect(response.statusCode).toBe(200);
     const body: {
       format: { id: string; mediaType: string; caveats: string[] };
@@ -92,7 +92,7 @@ describe("GET /formats/:id", () => {
 
   it("answers 404 with the available identifiers for an unknown format", async () => {
     app = await startTestServer();
-    const response = await app.inject({ method: "GET", url: "/formats/pdf" });
+    const response = await app.inject({ method: "GET", url: "/v1/formats/pdf" });
     expect(response.statusCode).toBe(404);
     const body: ErrorResponseBody = response.json();
     expect(body.error.code).toBe("FORMAT_NOT_FOUND");
@@ -103,7 +103,7 @@ describe("GET /formats/:id", () => {
 describe("theme caveats per format", () => {
   it("reports the caveats of every active backend on a theme", async () => {
     app = await startTestServer();
-    const response = await app.inject({ method: "GET", url: "/themes/default" });
+    const response = await app.inject({ method: "GET", url: "/v1/themes/default" });
     const body: { caveats: Record<string, string[]> } = response.json();
     expect(Object.keys(body.caveats)).toEqual(["docx", "debug-json"]);
   });

@@ -34,14 +34,14 @@ const convert = async (
 ): Promise<SerialisedDocumentBody> => {
   const response = await instance.inject({
     method: "POST",
-    url: "/convert",
+    url: "/v1/convert",
     payload: { markdown, format: "debug-json", ...body },
   });
   expect(response.statusCode).toBe(200);
   return JSON.parse(response.body);
 };
 
-describe("POST /convert with debug-json outside production", () => {
+describe("POST /v1/convert with debug-json outside production", () => {
   it("returns the serialised intermediate representation", async () => {
     app = await startTestServer();
     const document = await convert(app, "# Title\n\nA paragraph.\n");
@@ -53,7 +53,7 @@ describe("POST /convert with debug-json outside production", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Text.", format: "debug-json", filename: "report" },
     });
     expect(response.headers["content-type"]).toContain("application/json");
@@ -68,18 +68,18 @@ describe("POST /convert with debug-json outside production", () => {
   it("produces byte identical output for two identical requests", async () => {
     app = await startTestServer();
     const payload = { markdown: "# Same\n\nSame body.\n", format: "debug-json" };
-    const first = await app.inject({ method: "POST", url: "/convert", payload });
-    const second = await app.inject({ method: "POST", url: "/convert", payload });
+    const first = await app.inject({ method: "POST", url: "/v1/convert", payload });
+    const second = await app.inject({ method: "POST", url: "/v1/convert", payload });
     expect(first.body).toBe(second.body);
   });
 });
 
-describe("POST /convert with debug-json in production", () => {
+describe("POST /v1/convert with debug-json in production", () => {
   it("answers 404 because the backend is not registered", async () => {
     app = await startTestServer({ NODE_ENV: "production" });
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "Text.", format: "debug-json" },
     });
     expect(response.statusCode).toBe(404);
@@ -119,7 +119,7 @@ describe("headings and anchors", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "[go](#nowhere)\n", format: "debug-json" },
     });
     expect(response.headers["x-conversion-warnings"]).toBe("1");
@@ -226,7 +226,7 @@ describe("link references", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "See [the site][missing].\n", format: "debug-json" },
     });
     expect(response.statusCode).toBe(200);
@@ -253,7 +253,7 @@ describe("strict mode", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "::mystery\n", format: "debug-json", options: { strict: true } },
     });
     expect(response.statusCode).toBe(422);
@@ -266,7 +266,7 @@ describe("strict mode", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: { markdown: "::mystery\n", format: "debug-json", options: { strict: false } },
     });
     expect(response.statusCode).toBe(200);
@@ -277,7 +277,7 @@ describe("strict mode", () => {
     app = await startTestServer();
     const response = await app.inject({
       method: "POST",
-      url: "/convert",
+      url: "/v1/convert",
       payload: {
         markdown: "<div>raw</div>\n",
         format: "debug-json",

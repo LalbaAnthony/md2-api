@@ -5,7 +5,7 @@ normalisation and theming, is neutral.
 
 ## Active formats
 
-`GET /formats` lists what the running service can produce. The list depends on the environment:
+`GET /v1/formats` lists what the running service can produce. The list depends on the environment:
 production registers only backends that declare themselves production ready, and refuses to start
 if `ENABLED_FORMATS` names one that is not, or one that no backend implements.
 
@@ -16,7 +16,7 @@ if `ENABLED_FORMATS` names one that is not, or one that no backend implements.
 
 ## Capabilities
 
-Each backend declares what it can render natively. A caller reads them from `GET /formats/:id` and
+Each backend declares what it can render natively. A caller reads them from `GET /v1/formats/:id` and
 knows what to expect before sending anything.
 
 | Capability           | `docx`          | `debug-json` |
@@ -50,7 +50,7 @@ In strict mode a construction that needs a capability the format does not have i
 Produces a Word document with named styles only, so a reader can restyle the whole document by
 editing a style rather than hunting through direct formatting.
 
-Known caveats, all reported by `GET /formats/docx`:
+Known caveats, all reported by `GET /v1/formats/docx`:
 
 - The table of contents is a field. It is inserted but not resolved, so what the reader sees before
   the fields are refreshed depends on the reader: Word refreshes on opening, because the backend
@@ -65,13 +65,13 @@ Known caveats, all reported by `GET /formats/docx`:
   baselines, which are rendered by LibreOffice.
 
 Its theme extension accepts `styleIdPrefix`, `compatibilityModeVersion` and `updateFieldsOnOpen`.
-The JSON Schema is published at `GET /formats/docx`.
+The JSON Schema is published at `GET /v1/formats/docx`.
 
 ## The debug-json backend
 
 Serialises the intermediate representation as deterministic JSON. It exists to prove mechanically
 that the pipeline has no dependency on DOCX, and to give theme and directive authors a way to see
-exactly what the pipeline produced. It is never registered in production, and `POST /convert` with
+exactly what the pipeline produced. It is never registered in production, and `POST /v1/convert` with
 `format: "debug-json"` answers 404 there.
 
 Image bytes are replaced by their length and digest, so the output stays small and stable.
@@ -80,8 +80,8 @@ Image bytes are replaced by their length and digest, so the output stays small a
 
 Precedence, strongest first:
 
-1. `format` in the body of `POST /convert`
-2. `?format=` on `POST /convert/:themeId`
+1. `format` in the body of `POST /v1/convert`
+2. `?format=` on `POST /v1/convert/:themeId`
 3. an `Accept` header that exactly matches the media type of an active backend
 4. `DEFAULT_FORMAT`
 

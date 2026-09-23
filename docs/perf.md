@@ -53,7 +53,7 @@ the 500 KiB row above from the other two.
 
 ## Under load
 
-50 KiB document, 30 seconds, `POST /convert`, against the container:
+50 KiB document, 30 seconds, `POST /v1/convert`, against the container:
 
 | Connections | Requests per second | p50 latency | p95 latency | Non 2xx | Errors |
 | ----------- | ------------------- | ----------- | ----------- | ------- | ------ |
