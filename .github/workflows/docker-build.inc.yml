@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: docker/setup-buildx-action@v3
       - name: Build the production image
-        run: docker build --file Dockerfile --target prod --tag ${{ inputs.image-tag }} .
+        run: docker build --file Dockerfile.prod --tag ${{ inputs.image-tag }} .
       - name: Start the production image
         run: >
           docker run --detach --name md2-ci

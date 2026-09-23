@@ -62,15 +62,16 @@ a route. It is a four line module that later lots write into.
 policy required by section 9.2, the second supplies the environment globals to the flat ESLint
 configuration. `@eslint/js` is likewise required by the flat configuration.
 
-## 7. The `prepare` script and the Dockerfile `deps` stage
+## 7. The `prepare` script and the dependency install of the Dockerfiles
 
 Git hook installation runs from the `prepare` lifecycle script, so a fresh clone gets the hooks
 from a plain `npm ci`. That script also runs during the image build, where git is absent, so
 installation is delegated to `tools/install-git-hooks.mjs`, which exits successfully when there
 is no git working tree or no git binary.
 
-The `deps` stage of `Dockerfile` therefore copies that one file before `npm ci`, which is
-the only departure from the Dockerfile given in section 15.1. The alternative, `npm ci
+`Dockerfile.dev`, `Dockerfile.test` and the `build` stage of `Dockerfile.prod` therefore copy
+that one file before `npm ci`, which is the only departure from the Dockerfile given in section
+15.1. The alternative, `npm ci
 --ignore-scripts`, would also skip the install scripts of native dependencies.
 
 ## 8. One error code beyond the table of section 10.3
@@ -96,6 +97,12 @@ The root is where every tool looks for them first: `docker compose` with no `-f`
 with no `--file`, Docker Desktop, and the build integration of most editors and hosting providers.
 A build context of `.` also stops the Dockerfile referring to its own parent, which is what the
 `context: ..` of the previous layout required.
+
+The single multi stage `Dockerfile` was later split into `Dockerfile.dev`, `Dockerfile.test` and
+`Dockerfile.prod`, one per Compose service and profile, at the request of the project owner. Each
+file is self contained and repeats the base image and the dependency install, so any of them
+builds on its own with `docker build --file`. The apt package list and the `npm ci` step must be
+kept in step across the three files by hand.
 
 Nothing else moves. `.dockerignore` was already at the root, where Docker requires it, and the
 context is the same directory it was before, so the ignore list and every `COPY` path are

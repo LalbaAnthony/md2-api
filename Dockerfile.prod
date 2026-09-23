@@ -7,33 +7,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       libvips42 fontconfig fonts-liberation fonts-dejavu-core \
  && rm -rf /var/lib/apt/lists/*
 
-FROM base AS deps
+FROM base AS build
 COPY package.json package-lock.json ./
 COPY tools/install-git-hooks.mjs ./tools/install-git-hooks.mjs
 RUN --mount=type=cache,target=/root/.npm npm ci
-
-FROM deps AS build
 COPY tsconfig.json ./
 COPY src ./src
 RUN npm run build
 RUN npm prune --omit=dev
 
-FROM deps AS dev
-ENV NODE_ENV=development
-COPY . .
-EXPOSE 3000 9229
-CMD ["npx", "tsx", "watch", "--inspect=0.0.0.0:9229", "src/index.ts"]
-
-FROM deps AS test
-ENV NODE_ENV=test IN_DOCKER=1
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      libreoffice-writer poppler-utils fonts-liberation2 fonts-noto-core fonts-noto-cjk \
- && rm -rf /var/lib/apt/lists/* \
- && soffice --headless --terminate_after_init || true
-COPY . .
-CMD ["npm", "run", "test"]
-
-FROM base AS prod
+FROM base
 ENV NODE_ENV=production
 COPY --from=build --chown=node:node /app/node_modules ./node_modules
 COPY --from=build --chown=node:node /app/dist ./dist

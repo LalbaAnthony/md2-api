@@ -38,7 +38,7 @@ assertions, which check that the matrix is complete and that every corpus it nam
 
 **A subprocess is spawned.** Constraint C1 forbids an external binary at production runtime. It
 does not forbid one in a test, and no production code path reaches `tests/visual/helpers`.
-`soffice` and `pdftoppm` exist in the test stage of the image only.
+`soffice` and `pdftoppm` exist in the image built from `Dockerfile.test` only.
 
 **Each conversion gets its own LibreOffice profile**, through `-env:UserInstallation`, pointed at
 a directory of the temporary workspace. A shared profile carries a lock, which makes two
