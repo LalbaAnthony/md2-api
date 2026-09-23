@@ -3,9 +3,6 @@
 HTTP service converting Markdown into formatted documents. Multi theme, multi output format,
 pure TypeScript, no external binary at runtime.
 
-The project is named `md2`, never `md2docx`. No public identifier mentions `docx` outside the
-DOCX backend itself.
-
 ## Requirements
 
 - Node.js 22 LTS or newer
