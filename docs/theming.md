@@ -113,6 +113,20 @@ publishes its JSON Schema at `GET /formats/:id`, so you can see exactly which ke
 Nothing in the core of a theme is format specific. If a setting matters to two formats it belongs
 in the core; if it matters to one, it belongs in that format's extension.
 
+## The example theme
+
+`themes/example.json` ships in the theme directory as a starting point. It is a complete theme with
+every section filled and every optional feature switched on at once: a title page, a running header
+and footer using all six slot kinds, a table of contents, numbered headings with a rule under the
+first two levels, an uppercase level one and a small capitals level two, justified paragraphs with a
+first line indent, a tinted quote background, numbered code lines with a language label, striped
+tables, a border around figures, a bordered code block, and one ordered format per list level.
+
+It is a catalogue rather than a recommendation: a real theme picks a few of these. Read it next to
+this page to see what a key does, copy it, and switch off what you do not want.
+`tests/unit/example-theme.test.ts` holds it to the same bar as the built in themes, which is that it
+renders the whole of `tests/golden/corpus/kitchen-sink.md` in strict mode without a warning.
+
 ## Writing one
 
 Start from a built in theme, change what you need, and check the result:

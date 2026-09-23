@@ -51,7 +51,7 @@ describe("GET /preview", () => {
 
 describe("the themes over HTTP", () => {
   it("lists the four built in themes", async () => {
-    app = await startTestServer();
+    app = await startTestServer({ THEMES_DIR: "./does-not-exist" });
     const response = await app.inject({ method: "GET", url: "/themes" });
     const body: { themes: { id: string }[] } = response.json();
     expect(body.themes.map((theme) => theme.id)).toEqual([
@@ -60,6 +60,24 @@ describe("the themes over HTTP", () => {
       "academic",
       "technical",
     ]);
+  });
+
+  it("adds the example theme shipped in the theme directory", async () => {
+    app = await startTestServer();
+    const response = await app.inject({ method: "GET", url: "/themes" });
+    const body: { themes: { id: string; origin: string }[] } = response.json();
+    const example = body.themes.find((theme) => theme.id === "example");
+    expect(example?.origin).toBe("directory");
+  });
+
+  it("converts with the example theme", async () => {
+    app = await startTestServer();
+    const response = await app.inject({
+      method: "POST",
+      url: "/convert",
+      payload: { markdown: "# Title\n\nBody.\n", theme: "example" },
+    });
+    expect(response.statusCode).toBe(200);
   });
 
   it("converts with each of them", async () => {
