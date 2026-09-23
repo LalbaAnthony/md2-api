@@ -1,4 +1,4 @@
-import { SHUTDOWN_GRACE_PERIOD_MS } from "./constants.ts";
+import { SERVER_HOST, SERVER_PORT, SHUTDOWN_GRACE_PERIOD_MS } from "./constants.ts";
 import { loadConfig } from "./config.ts";
 import { createReadinessState } from "./lib/readiness.ts";
 import { buildServer } from "./server.ts";
@@ -40,7 +40,7 @@ const start = async (): Promise<void> => {
     process.on(signal, shutdown);
   }
 
-  await app.listen({ port: config.PORT, host: config.HOST });
+  await app.listen({ port: SERVER_PORT, host: SERVER_HOST });
 };
 
 start().catch((reason: unknown) => {

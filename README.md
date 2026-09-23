@@ -42,10 +42,19 @@ curl http://127.0.0.1:3000/readyz
 ## Containers
 
 ```sh
-docker compose up dev
+cp .env.example .env
+docker compose --profile dev up dev
 docker compose run --rm test
-docker compose up prod
+
+cp .env.prod.example .env.prod
+docker compose --env-file .env.prod --profile prod up prod
 ```
+
+The server always listens on port 3000 inside its container. `PORT` and `DEBUG_PORT` are the
+host ports Compose publishes it on, and both are required. `dev` reads its configuration from
+`.env`, `prod` from `.env.prod`, and `prod` must be started with `--env-file .env.prod` so that
+its `PORT` comes from that file. Run outside Docker, the server listens on 3000 and reads no env
+file.
 
 The production service runs read only, with all capabilities dropped, as a non root user.
 

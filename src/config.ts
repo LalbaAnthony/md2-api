@@ -43,8 +43,6 @@ const positiveInteger = (defaultValue: number, minimum = 1) =>
 
 const configSchema = z.object({
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-  PORT: z.coerce.number().int().min(1).max(65535).default(3000),
-  HOST: z.string().default("0.0.0.0"),
   LOG_LEVEL: z.enum(["trace", "debug", "info", "warn", "error", "fatal"]).optional(),
 
   THEMES_DIR: z.string().default("./themes"),
@@ -110,8 +108,6 @@ export const loadConfig = (source: EnvironmentSource = process.env): AppConfig =
 
   const config: AppConfig = {
     NODE_ENV: parsedConfig.NODE_ENV,
-    PORT: parsedConfig.PORT,
-    HOST: parsedConfig.HOST,
     LOG_LEVEL:
       parsedConfig.LOG_LEVEL ?? (isProduction ? PRODUCTION_LOG_LEVEL : DEVELOPMENT_LOG_LEVEL),
 

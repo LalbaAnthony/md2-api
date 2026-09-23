@@ -7,7 +7,7 @@ processors and one gibibyte, which is the shape of the `prod` service of `docker
 docker compose build prod
 docker run -d --name md2-perf --read-only --tmpfs /tmp --cap-drop ALL \
   --security-opt no-new-privileges:true --cpus 2 --memory 1g -p 3100:3000 \
-  -e NODE_ENV=production -e HOST=0.0.0.0 -e PORT=3000 -e LOG_LEVEL=warn md2-prod:latest
+  -e NODE_ENV=production -e LOG_LEVEL=warn md2-prod:latest
 node tools/perf-profile.mjs --url=http://127.0.0.1:3100
 node tools/load-test.mjs --url=http://127.0.0.1:3100 --duration=30 --connections=8
 node --expose-gc tools/soak.mjs --iterations=10000

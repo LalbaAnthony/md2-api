@@ -4,3 +4,5 @@ dist
 tests/visual/baseline
 coverage
 *.log
+.env
+.env.*

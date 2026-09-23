@@ -4,8 +4,6 @@ export type LogLevel = "trace" | "debug" | "info" | "warn" | "error" | "fatal";
 
 export interface AppConfig {
   readonly NODE_ENV: RuntimeEnvironment;
-  readonly PORT: number;
-  readonly HOST: string;
   readonly LOG_LEVEL: LogLevel;
 
   readonly THEMES_DIR: string;

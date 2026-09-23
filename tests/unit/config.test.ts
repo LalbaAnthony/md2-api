@@ -19,7 +19,6 @@ describe("defaults", () => {
   it("applies documented defaults in development", () => {
     const config = loadConfig({});
     expect(config.NODE_ENV).toBe("development");
-    expect(config.PORT).toBe(3000);
     expect(config.LOG_LEVEL).toBe("debug");
     expect(config.STRICT).toBe(true);
     expect(config.ENABLE_SWAGGER_UI).toBe(true);
@@ -128,10 +127,6 @@ describe("locked switches", () => {
 });
 
 describe("numeric bounds", () => {
-  it("rejects a port outside the valid range", () => {
-    expectValidationFailure(() => loadConfig({ PORT: "70000" }), "PORT");
-  });
-
   it("rejects a non numeric limit", () => {
     expectValidationFailure(() => loadConfig({ MAX_CONCURRENCY: "many" }), "MAX_CONCURRENCY");
   });

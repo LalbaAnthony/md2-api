@@ -9,6 +9,9 @@ export const UNDER_PRESSURE_MAX_HEAP_USED_BYTES = 700 * MEGABYTE;
 export const UNDER_PRESSURE_MAX_RSS_BYTES = 900 * MEGABYTE;
 export const UNDER_PRESSURE_RETRY_AFTER_SECONDS = 5;
 
+export const SERVER_PORT = 3000;
+export const SERVER_HOST = "0.0.0.0";
+
 export const SHUTDOWN_GRACE_PERIOD_MS = 10_000;
 
 export const LOG_REDACTION_PATHS: readonly string[] = [
