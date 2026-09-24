@@ -205,8 +205,8 @@ production host reached over SSH, Apache2 reverse proxy in front.
   `/` to `http://127.0.0.1:4345/`. The production `.env.prod` (`ENV_PROD` secret) must therefore set
   `PORT=4345`. Keep both in sync when changing either.
   Required modules: `http2 ssl rewrite proxy proxy_http headers`.
-- Compose publishes `${PORT}:3000` on all host interfaces, not only loopback; the Apache proxy is not
-  the only path to the container unless the host firewall blocks the port.
+- The `prod` service publishes on `127.0.0.1:${PORT}` only, so Apache is the single public entry
+  point. Keep the loopback bind: Docker's published ports bypass host firewalls such as ufw.
 - Compose interpolates every service regardless of profile: `PORT` and `DEBUG_PORT` must be set
   (via `.env` or the shell) even for `docker compose run --rm test` and for `prod`.
 - `prod` must be started with `--env-file .env.prod`, otherwise `PORT` is read from `.env`.

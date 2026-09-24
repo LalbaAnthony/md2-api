@@ -44,7 +44,7 @@ services:
     environment:
       NODE_ENV: production
     ports:
-      - "${PORT:?PORT must be set in the env file}:3000"
+      - "127.0.0.1:${PORT:?PORT must be set in the env file}:3000"
     read_only: true
     tmpfs:
       - /tmp
