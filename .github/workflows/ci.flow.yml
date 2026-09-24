@@ -2,8 +2,12 @@ name: ci
 
 on:
   workflow_call:
-  push:
-    branches: [main]
+    inputs:
+      push:
+        description: Push the smoke tested production image to the registry.
+        required: false
+        type: boolean
+        default: false
   pull_request:
     branches: [main]
 
@@ -43,16 +47,17 @@ jobs:
   visual:
     needs: golden
     uses: ./.github/workflows/visual.inc.yml
-    with:
-
-  docker-build:
-    needs: visual
-    uses: ./.github/workflows/docker-build.inc.yml
-    with:
-      image-tag: md2:ci
 
   audit:
-    needs: docker-build
+    needs: visual
     uses: ./.github/workflows/audit.inc.yml
     with:
       audit-level: high
+
+  docker-build:
+    needs: audit
+    uses: ./.github/workflows/docker-build.inc.yml
+    secrets: inherit
+    with:
+      image-tag: md2:ci
+      push: ${{ inputs.push == true }}

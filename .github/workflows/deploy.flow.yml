@@ -1,0 +1,79 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 3 2 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.flow.yml
+    secrets: inherit
+    with:
+      push: true
+
+  deploy:
+    needs: ci
+    runs-on: ubuntu-latest
+    env:
+      REMOTE_DIR: md2-api
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${SSH_PRIVATE_KEY}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          cat > ~/.ssh/config <<EOF
+          Host production
+            HostName ${SSH_HOST}
+            Port ${SSH_PORT}
+            User ${SSH_USER}
+            IdentityFile ~/.ssh/deploy_key
+            IdentitiesOnly yes
+            StrictHostKeyChecking accept-new
+          EOF
+          chmod 600 ~/.ssh/config
+      - name: Write the production env file
+        env:
+          ENV_PROD: ${{ secrets.ENV_PROD }}
+        run: |
+          if [ -z "${ENV_PROD}" ]; then
+            echo "::error::The ENV_PROD secret is empty."
+            exit 1
+          fi
+          printf '%s\n' "${ENV_PROD}" > .env.prod
+      - name: Copy the deployment files
+        run: |
+          ssh production "mkdir -p ${REMOTE_DIR}"
+          scp docker-compose.yml .env.prod "production:${REMOTE_DIR}/"
+          ssh production "chmod 600 ${REMOTE_DIR}/.env.prod"
+      - name: Pull and restart the production service
+        run: |
+          ssh production "bash -s -- ${REMOTE_DIR}" <<'EOF'
+          set -euo pipefail
+          cd "$1"
+          compose() {
+            docker compose --project-name md2-api --env-file .env.prod --profile prod "$@"
+          }
+          compose pull prod
+          compose up --detach --wait --wait-timeout 120 --remove-orphans prod
+          docker image prune --force
+          EOF
+      - name: Remove the SSH material
+        if: always()
+        run: rm -f ~/.ssh/deploy_key ~/.ssh/config .env.prod

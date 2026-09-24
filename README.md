@@ -56,6 +56,50 @@ file.
 
 The production service runs read only, with all capabilities dropped, as a non root user.
 
+## Deployment
+
+There is a single environment, production. The `deploy` workflow runs on every push to `main`,
+on the second day of each month at 03:00 UTC to pick up base image patches, and on demand.
+
+1. The whole CI runs, audit included.
+2. The production image is built, started and probed on `/readyz`, then that exact image is
+   pushed to `docker.io/lalbaanthony/md2-api` as `latest` and `sha-<commit>`, the first seven
+   characters of the commit.
+3. `docker-compose.yml` and the generated `.env.prod` are copied to `~/md2-api` on the server,
+   which pulls `latest` and recreates the `prod` service. The job fails if the container does not
+   report healthy within 120 seconds.
+
+Pushing a `v*` tag runs the `release` workflow, which points `:<tag>` at the `sha-<commit>` image
+already built from `main`. It builds nothing and fails if that commit was never deployed. Push the
+tag once the deploy of its commit has finished.
+
+A monthly rebuild of an unchanged commit overwrites its `sha-<commit>` tag with the rebuilt image.
+
+Repository secrets:
+
+| Secret               | Contents                                                                |
+| -------------------- | ----------------------------------------------------------------------- |
+| `DOCKERHUB_USERNAME` | Docker Hub account                                                      |
+| `DOCKERHUB_TOKEN`    | Docker Hub access token with write access to `md2-api`                  |
+| `SSH_HOST`           | production host                                                         |
+| `SSH_PORT`           | SSH port                                                                |
+| `SSH_USER`           | deploy user, member of the `docker` group                               |
+| `SSH_PRIVATE_KEY`    | private key authorised for that user                                    |
+| `ENV_PROD`           | the full `.env.prod`, shaped like `.env.prod.example`, `DEBUG_PORT` too |
+
+`DEBUG_PORT` must be present even though `prod` does not publish it: Compose interpolates every
+service of the file, whatever the active profile.
+
+To roll back, on the server:
+
+```sh
+cd ~/md2-api
+MD2_IMAGE=docker.io/lalbaanthony/md2-api:sha-<commit> \
+  docker compose --project-name md2-api --env-file .env.prod --profile prod up --detach prod
+```
+
+The next deploy returns to `latest`.
+
 ## Repository conventions
 
 These are enforced mechanically, not by review.
