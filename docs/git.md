@@ -4,10 +4,10 @@
 
 We use a Git workflow based on two main branches:
 
-| Branch    | Purpose                                                                                                         |
-| --------- | --------------------------------------------------------------------------------------------------------------- |
-| `main`    | Production-ready code. All hotfixes and critical patches land here.                                             |
-| `develop` | A development branch for ongoing work.  |
+| Branch    | Purpose                                                             |
+| --------- | ------------------------------------------------------------------- |
+| `main`    | Production-ready code. All hotfixes and critical patches land here. |
+| `develop` | A development branch for ongoing work.                              |
 
 For non-main branches, use prefixes to clarify the purpose:
 
@@ -33,6 +33,7 @@ For non-main branches, use prefixes to clarify the purpose:
 In any case, make sure you're up to date with the remote repo before starting any work using `git fetch`/`git pull`.
 
 Working on a new feature or bugfix? Here's the standard workflow:
+
 ```sh
 git fetch
 
@@ -67,13 +68,14 @@ git checkout develop
 ```
 
 Update `main` using `develop`:
+
 ```sh
 git fetch
 
 # Keep main up to date with develop
 git checkout develop
 git pull --rebase
-git pull origin main 
+git pull origin main
 git push
 
 git checkout main

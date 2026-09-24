@@ -9,10 +9,10 @@ for development and tests.
 
 MD2 is made of three sibling repositories, always side by side in the same parent directory:
 
-| Repository    | Role                                                                                      |
-| ------------- | ----------------------------------------------------------------------------------------- |
-| `md2-api`     | this repository, the API                                                                  |
-| `md2-front`   | the frontend                                                                              |
+| Repository    | Role                                                                                           |
+| ------------- | ---------------------------------------------------------------------------------------------- |
+| `md2-api`     | this repository, the API                                                                       |
+| `md2-front`   | the frontend                                                                                   |
 | `md2-project` | project configuration and management; `api/specifications.md` is the binding API spec (French) |
 
 ## Tech stack
@@ -27,30 +27,30 @@ MD2 is made of three sibling repositories, always side by side in the same paren
 
 ## Structure
 
-| Path                     | Role                                                                            |
-| ------------------------ | ------------------------------------------------------------------------------- |
-| `src/index.ts`           | process entry: config, server, graceful shutdown, listens on `0.0.0.0:3000`     |
-| `src/server.ts`          | `buildServer()`: plugins, error handler, route registration                     |
-| `src/config.ts`          | env validation (Zod), refuses to start on any violation                         |
-| `src/constants.ts`       | `SERVER_PORT`, `API_VERSION_PREFIX` (`/v1`), limits, redaction paths            |
-| `src/errors.ts`          | single `AppError` hierarchy and code to status mapping                          |
-| `src/routes/`            | `health`, `themes`, `formats`, `convert`, `preview`                             |
-| `src/pipeline/`          | `parse.ts`, `normalize/*` (passes producing the DocIR), `convert.ts` orchestrator |
-| `src/formats/`           | `registry.ts`, `negotiate.ts`, one directory per backend (`docx/`, `debug-json/`) |
-| `src/theme/`             | theme registry, Zod schema, tokens, `builtin/` (default, corporate, academic, technical) |
-| `src/types/`             | every `type` / `interface` of the project, declarations only                    |
-| `src/lib/`               | shared helpers (cache, semaphore, hash, readiness, ...)                         |
-| `src/openapi/`           | OpenAPI document and examples                                                   |
-| `tests/unit/`            | unit and architecture tests                                                     |
-| `tests/contract/`        | HTTP contract tests via `app.inject()`                                          |
-| `tests/golden/`          | `corpus/*.md` and `__snapshots__/{debug-json,docx}/`                            |
-| `tests/visual/`          | pixel regression, `baseline/{format}/{theme}/{corpus}-{page}.png`               |
-| `tests/helpers/`         | test server builder, normalisers, fixtures                                      |
-| `themes/`                | runtime theme directory (`THEMES_DIR`), `example.json`                          |
-| `tools/`                 | charset check, OpenAPI export, hook installer, perf tools, local ESLint rules   |
-| `docs/`                  | architecture, API, security, perf, theming, formats, `adr/`, `openapi.json`     |
-| `apache.conf`            | Apache2 reverse proxy reference for production (see Gotchas)                    |
-| `Dockerfile.{dev,test,prod}`, `docker-compose.yml` | containers, profiles `dev`, `test`, `prod`            |
+| Path                                               | Role                                                                                     |
+| -------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| `src/index.ts`                                     | process entry: config, server, graceful shutdown, listens on `0.0.0.0:3000`              |
+| `src/server.ts`                                    | `buildServer()`: plugins, error handler, route registration                              |
+| `src/config.ts`                                    | env validation (Zod), refuses to start on any violation                                  |
+| `src/constants.ts`                                 | `SERVER_PORT`, `API_VERSION_PREFIX` (`/v1`), limits, redaction paths                     |
+| `src/errors.ts`                                    | single `AppError` hierarchy and code to status mapping                                   |
+| `src/routes/`                                      | `health`, `themes`, `formats`, `convert`, `preview`                                      |
+| `src/pipeline/`                                    | `parse.ts`, `normalize/*` (passes producing the DocIR), `convert.ts` orchestrator        |
+| `src/formats/`                                     | `registry.ts`, `negotiate.ts`, one directory per backend (`docx/`, `debug-json/`)        |
+| `src/theme/`                                       | theme registry, Zod schema, tokens, `builtin/` (default, corporate, academic, technical) |
+| `src/types/`                                       | every `type` / `interface` of the project, declarations only                             |
+| `src/lib/`                                         | shared helpers (cache, semaphore, hash, readiness, ...)                                  |
+| `src/openapi/`                                     | OpenAPI document and examples                                                            |
+| `tests/unit/`                                      | unit and architecture tests                                                              |
+| `tests/contract/`                                  | HTTP contract tests via `app.inject()`                                                   |
+| `tests/golden/`                                    | `corpus/*.md` and `__snapshots__/{debug-json,docx}/`                                     |
+| `tests/visual/`                                    | pixel regression, `baseline/{format}/{theme}/{corpus}-{page}.png`                        |
+| `tests/helpers/`                                   | test server builder, normalisers, fixtures                                               |
+| `themes/`                                          | runtime theme directory (`THEMES_DIR`), `example.json`                                   |
+| `tools/`                                           | charset check, OpenAPI export, hook installer, perf tools, local ESLint rules            |
+| `docs/`                                            | architecture, API, security, perf, theming, formats, `adr/`, `openapi.json`              |
+| `apache.conf`                                      | Apache2 reverse proxy reference for production (see Gotchas)                             |
+| `Dockerfile.{dev,test,prod}`, `docker-compose.yml` | containers, profiles `dev`, `test`, `prod`                                               |
 
 ## Commands
 
@@ -177,22 +177,22 @@ Enforced by ESLint, `tests/unit/architecture.test.ts`, and git hooks:
 
 Source: `.env.example` (dev), `.env.prod.example` (prod). All validated in `src/config.ts`.
 
-| Variable                                                          | Notes                                                    |
-| ----------------------------------------------------------------- | -------------------------------------------------------- |
-| `NODE_ENV`                                                        | `development` / `test` / `production`                    |
-| `PORT`, `DEBUG_PORT`                                              | host ports for Compose only; app always listens on 3000  |
-| `LOG_LEVEL`                                                       | defaults `debug` (dev) / `info` (prod)                   |
-| `THEMES_DIR`, `ASSETS_DIR`, `DEFAULT_THEME`                       | `./themes`, `./assets`, `default`                        |
-| `DEFAULT_FORMAT`, `ENABLED_FORMATS`                               | default must be in the enabled list                      |
-| `MAX_MARKDOWN_BYTES`, `MAX_CONCURRENCY`, `CONVERT_TIMEOUT_MS`, `MAX_NESTING_DEPTH` | limits                                  |
-| `ALLOW_REMOTE_IMAGES`, `IMAGE_ALLOWLIST`, `ALLOW_LOCAL_IMAGES`    | image sources, off by default                            |
-| `MAX_IMAGE_BYTES`, `MAX_IMAGE_PIXELS`, `MAX_IMAGES_PER_DOCUMENT`, `IMAGE_FETCH_TIMEOUT_MS` | image limits                    |
-| `STRICT`                                                          | defaults to `!production`; strict turns warnings into 422 |
-| `ALLOW_RAW_HTML`                                                  | must be `false`, startup fails otherwise                 |
-| `ENABLE_PREVIEW`, `ENABLE_THEME_WATCH`, `ENABLE_SWAGGER_UI`       | preview and watch forbidden in production                |
-| `CORS_ORIGINS`                                                    | comma separated                                          |
-| `MD2_IMAGE`                                                       | Compose `prod` image override (rollback)                 |
-| `MD2_UPDATE_VISUAL_BASELINES`                                     | `1` = regenerate visual baselines                        |
+| Variable                                                                                   | Notes                                                     |
+| ------------------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| `NODE_ENV`                                                                                 | `development` / `test` / `production`                     |
+| `PORT`, `DEBUG_PORT`                                                                       | host ports for Compose only; app always listens on 3000   |
+| `LOG_LEVEL`                                                                                | defaults `debug` (dev) / `info` (prod)                    |
+| `THEMES_DIR`, `ASSETS_DIR`, `DEFAULT_THEME`                                                | `./themes`, `./assets`, `default`                         |
+| `DEFAULT_FORMAT`, `ENABLED_FORMATS`                                                        | default must be in the enabled list                       |
+| `MAX_MARKDOWN_BYTES`, `MAX_CONCURRENCY`, `CONVERT_TIMEOUT_MS`, `MAX_NESTING_DEPTH`         | limits                                                    |
+| `ALLOW_REMOTE_IMAGES`, `IMAGE_ALLOWLIST`, `ALLOW_LOCAL_IMAGES`                             | image sources, off by default                             |
+| `MAX_IMAGE_BYTES`, `MAX_IMAGE_PIXELS`, `MAX_IMAGES_PER_DOCUMENT`, `IMAGE_FETCH_TIMEOUT_MS` | image limits                                              |
+| `STRICT`                                                                                   | defaults to `!production`; strict turns warnings into 422 |
+| `ALLOW_RAW_HTML`                                                                           | must be `false`, startup fails otherwise                  |
+| `ENABLE_PREVIEW`, `ENABLE_THEME_WATCH`, `ENABLE_SWAGGER_UI`                                | preview and watch forbidden in production                 |
+| `CORS_ORIGINS`                                                                             | comma separated                                           |
+| `MD2_IMAGE`                                                                                | Compose `prod` image override (rollback)                  |
+| `MD2_UPDATE_VISUAL_BASELINES`                                                              | `1` = regenerate visual baselines                         |
 
 External: no runtime service dependency. Docker Hub image `docker.io/lalbaanthony/md2-api`,
 production host reached over SSH, Apache2 reverse proxy in front.
