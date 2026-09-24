@@ -1,7 +1,11 @@
 # MD2 API
 
-HTTP service converting Markdown into formatted documents. Multi theme, multi output format,
-pure TypeScript, no external binary at runtime.
+This repository contains the HTTP service converting Markdown into formatted documents for the MD2 application, which consists of three main components:
+
+The MD2 application consists of three main components:
+- `md2-api`: the API service
+- `md2-front`: the frontend application
+- `md2-project`: this repository, for configuration and project management
 
 ## Requirements
 
