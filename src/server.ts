@@ -32,6 +32,7 @@ import {
   validationError,
 } from "./errors.ts";
 import { createFormatRegistry } from "./formats/registry.ts";
+import { registerRateLimit } from "./lib/rate-limit.ts";
 import { createSemaphore } from "./lib/semaphore.ts";
 import { warmUpHighlighter } from "./pipeline/normalize/code.ts";
 import { registerOpenApi } from "./openapi/register.ts";
@@ -47,6 +48,7 @@ import type { AppConfig } from "./types/config.ts";
 import type { ReadinessState, ServerDependencies, ThemeCaveatProvider } from "./types/api.ts";
 import type { JsonObject, JsonValue } from "./types/json.ts";
 import type { FormatRegistry } from "./types/format.ts";
+import type { RateLimitPolicy } from "./types/rate-limit.ts";
 import type { ThemeExtensionValidator, ThemeRegistry } from "./types/theme-registry.ts";
 
 const FASTIFY_BODY_TOO_LARGE_CODE = "FST_ERR_CTP_BODY_TOO_LARGE";
@@ -104,6 +106,19 @@ const mapThrownToAppError = (thrown: unknown): AppError => {
   return toAppError(thrown);
 };
 
+const retryAfterHeaderOf = (appError: AppError): string | null => {
+  if (appError.code !== "OVERLOADED" && appError.code !== "RATE_LIMITED") {
+    return null;
+  }
+  const retryAfterSeconds = appError.details["retryAfterSeconds"];
+  return typeof retryAfterSeconds === "number"
+    ? String(retryAfterSeconds)
+    : String(UNDER_PRESSURE_RETRY_AFTER_SECONDS);
+};
+
+const rateLimitPolicyOf = (config: AppConfig, max: number): RateLimitPolicy | null =>
+  config.RATE_LIMIT_ENABLED ? { max, windowMs: config.RATE_LIMIT_WINDOW_MS } : null;
+
 const asJsonObject = (value: JsonValue): JsonObject => (isJsonObject(value) ? value : {});
 
 const themeCaveatsFrom =
@@ -144,7 +159,7 @@ export const buildServer = async (
           },
     bodyLimit: config.MAX_MARKDOWN_BYTES,
     genReqId: (request) => readIncomingRequestId(request),
-    trustProxy: false,
+    trustProxy: config.TRUST_PROXY.length === 0 ? false : [...config.TRUST_PROXY],
   });
 
   app.setValidatorCompiler(validatorCompiler);
@@ -190,8 +205,9 @@ export const buildServer = async (
     } else {
       request.log.warn({ code: appError.code, details: appError.details }, appError.message);
     }
-    if (appError.code === "OVERLOADED") {
-      void reply.header("Retry-After", String(UNDER_PRESSURE_RETRY_AFTER_SECONDS));
+    const retryAfter = retryAfterHeaderOf(appError);
+    if (retryAfter !== null) {
+      void reply.header("Retry-After", retryAfter);
     }
     return reply.code(appError.statusCode).send(body);
   });
@@ -243,14 +259,31 @@ export const buildServer = async (
     maximumQueueLength: config.MAX_CONCURRENCY * CONVERSION_QUEUE_FACTOR,
   });
 
+  const catalogueRateLimit = rateLimitPolicyOf(config, config.RATE_LIMIT_MAX);
+  const conversionRateLimit = rateLimitPolicyOf(config, config.RATE_LIMIT_CONVERT_MAX);
+
   await app.register(healthRoutes(readiness));
-  await app.register(themeRoutes(themes, overrides.themeCaveats ?? themeCaveatsFrom(formats)), {
-    prefix: API_VERSION_PREFIX,
-  });
-  await app.register(formatRoutes(formats), { prefix: API_VERSION_PREFIX });
-  await app.register(convertRoutes({ config, themes, formats, semaphore }), {
-    prefix: API_VERSION_PREFIX,
-  });
+  await app.register(
+    async (catalogue) => {
+      if (catalogueRateLimit !== null) {
+        await registerRateLimit(catalogue, catalogueRateLimit);
+      }
+      await catalogue.register(
+        themeRoutes(themes, overrides.themeCaveats ?? themeCaveatsFrom(formats)),
+      );
+      await catalogue.register(formatRoutes(formats));
+    },
+    { prefix: API_VERSION_PREFIX },
+  );
+  await app.register(
+    async (conversion) => {
+      if (conversionRateLimit !== null) {
+        await registerRateLimit(conversion, conversionRateLimit);
+      }
+      await conversion.register(convertRoutes({ config, themes, formats, semaphore }));
+    },
+    { prefix: API_VERSION_PREFIX },
+  );
 
   if (config.ENABLE_PREVIEW) {
     await app.register(previewRoutes(themes, formats));

@@ -14,6 +14,7 @@ import {
   notAcceptableError,
   overloadedError,
   payloadTooLargeError,
+  rateLimitedError,
   themeExtensionError,
   themeNotFoundError,
   toAppError,
@@ -37,6 +38,7 @@ const EXPECTED_STATUS: ReadonlyArray<readonly [ErrorCode, number]> = [
   ["IMAGE_ERROR", 422],
   ["THEME_EXTENSION_ERROR", 422],
   ["CONVERSION_TIMEOUT", 504],
+  ["RATE_LIMITED", 429],
   ["OVERLOADED", 503],
   ["INTERNAL", 500],
 ];
@@ -73,6 +75,8 @@ describe("factories", () => {
     expect(themeExtensionError("unknown key").statusCode).toBe(422);
     expect(conversionTimeoutError(30_000).details).toEqual({ timeoutMs: 30_000 });
     expect(overloadedError(5).details).toEqual({ retryAfterSeconds: 5 });
+    expect(rateLimitedError(12).statusCode).toBe(429);
+    expect(rateLimitedError(12).details).toEqual({ retryAfterSeconds: 12 });
     expect(internalError("boom").statusCode).toBe(500);
   });
 

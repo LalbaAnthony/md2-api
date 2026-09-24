@@ -13,6 +13,7 @@ export type ErrorCode =
   | "IMAGE_ERROR"
   | "THEME_EXTENSION_ERROR"
   | "CONVERSION_TIMEOUT"
+  | "RATE_LIMITED"
   | "OVERLOADED"
   | "INTERNAL";
 

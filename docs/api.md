@@ -104,11 +104,30 @@ Every error uses one body:
 | `IMAGE_ERROR`           | 422  | image unreachable, outside the allowlist, or outside the bounds   |
 | `THEME_EXTENSION_ERROR` | 422  | `theme.formats[format]` is invalid for that backend               |
 | `CONVERSION_TIMEOUT`    | 504  | beyond `CONVERT_TIMEOUT_MS`                                       |
+| `RATE_LIMITED`          | 429  | the client spent its budget for the window, `Retry-After`         |
 | `OVERLOADED`            | 503  | the queue is full or the process is under pressure, `Retry-After` |
 | `INTERNAL`              | 500  | unexpected, logged with its stack, never returned in production   |
 
-`NESTING_TOO_DEEP` is the one code beyond the table of the specification. See
-`docs/adr/0003-lot-0-deviations.md`.
+`NESTING_TOO_DEEP` and `RATE_LIMITED` are the two codes beyond the table of the specification. See
+`docs/adr/0003-lot-0-deviations.md` and `docs/adr/0010-rate-limiting.md`.
+
+## Rate limiting
+
+Active by default in production only (`RATE_LIMIT_ENABLED`). Each client address has two budgets
+per window of `RATE_LIMIT_WINDOW_MS`:
+
+| Budget                   | Default | Routes                                  |
+| ------------------------ | ------- | --------------------------------------- |
+| `RATE_LIMIT_CONVERT_MAX` | 30      | both `POST /v1/convert` routes together |
+| `RATE_LIMIT_MAX`         | 300     | `/v1/themes*` and `/v1/formats*`        |
+
+The probes, `/openapi.json`, `/docs` and `/preview` are never limited. Every response of a limited
+route carries `RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset` (seconds). Beyond the
+budget the answer is `429 RATE_LIMITED` with `Retry-After`, sent before the body is read.
+
+Behind a reverse proxy, `TRUST_PROXY` names the proxy addresses whose `X-Forwarded-For` is
+believed; without it every request behind the proxy shares one budget. See
+`docs/adr/0010-rate-limiting.md`.
 
 ## Strict mode
 

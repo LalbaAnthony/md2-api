@@ -19,6 +19,7 @@ const HTTP_STATUS_BY_ERROR_CODE: Readonly<Record<ErrorCode, number>> = {
   IMAGE_ERROR: 422,
   THEME_EXTENSION_ERROR: 422,
   CONVERSION_TIMEOUT: 504,
+  RATE_LIMITED: 429,
   OVERLOADED: 503,
   INTERNAL: 500,
 };
@@ -104,6 +105,11 @@ export const conversionTimeoutError = (timeoutMs: number): AppError =>
 
 export const overloadedError = (retryAfterSeconds: number): AppError =>
   new AppError("OVERLOADED", "The service is overloaded, retry later.", {
+    details: { retryAfterSeconds },
+  });
+
+export const rateLimitedError = (retryAfterSeconds: number): AppError =>
+  new AppError("RATE_LIMITED", "Too many requests, retry later.", {
     details: { retryAfterSeconds },
   });
 

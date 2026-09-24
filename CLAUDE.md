@@ -39,7 +39,7 @@ MD2 is made of three sibling repositories, always side by side in the same paren
 | `src/formats/`                                     | `registry.ts`, `negotiate.ts`, one directory per backend (`docx/`, `debug-json/`)        |
 | `src/theme/`                                       | theme registry, Zod schema, tokens, `builtin/` (default, corporate, academic, technical) |
 | `src/types/`                                       | every `type` / `interface` of the project, declarations only                             |
-| `src/lib/`                                         | shared helpers (cache, semaphore, hash, readiness, ...)                                  |
+| `src/lib/`                                         | shared helpers (cache, semaphore, rate limit, hash, readiness, ...)                      |
 | `src/openapi/`                                     | OpenAPI document and examples                                                            |
 | `tests/unit/`                                      | unit and architecture tests                                                              |
 | `tests/contract/`                                  | HTTP contract tests via `app.inject()`                                                   |
@@ -191,6 +191,8 @@ Source: `.env.example` (dev), `.env.prod.example` (prod). All validated in `src/
 | `ALLOW_RAW_HTML`                                                                           | must be `false`, startup fails otherwise                  |
 | `ENABLE_PREVIEW`, `ENABLE_THEME_WATCH`, `ENABLE_SWAGGER_UI`                                | preview and watch forbidden in production                 |
 | `CORS_ORIGINS`                                                                             | comma separated                                           |
+| `TRUST_PROXY`                                                                              | proxy IPs/CIDRs/presets for `X-Forwarded-For`, empty=none |
+| `RATE_LIMIT_ENABLED`, `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX`, `RATE_LIMIT_CONVERT_MAX`   | per client, on by default in production only (ADR 0010)   |
 | `MD2_IMAGE`                                                                                | Compose `prod` image override (rollback)                  |
 | `MD2_UPDATE_VISUAL_BASELINES`                                                              | `1` = regenerate visual baselines                         |
 
@@ -205,6 +207,9 @@ production host reached over SSH, Apache2 reverse proxy in front.
   `/` to `http://127.0.0.1:4345/`. The production `.env.prod` (`ENV_PROD` secret) must therefore set
   `PORT=4345`. Keep both in sync when changing either.
   Required modules: `http2 ssl rewrite proxy proxy_http headers`.
+- The process sees the Docker bridge gateway as the socket address of every production request:
+  `.env.prod` must set `TRUST_PROXY=loopback,uniquelocal`, or the rate limiter keys every client
+  on the same address. Never widen it to `true`.
 - The `prod` service publishes on `127.0.0.1:${PORT}` only, so Apache is the single public entry
   point. Keep the loopback bind: Docker's published ports bypass host firewalls such as ufw.
 - Compose interpolates every service regardless of profile: `PORT` and `DEBUG_PORT` must be set

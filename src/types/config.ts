@@ -32,6 +32,12 @@ export interface AppConfig {
   readonly ENABLE_THEME_WATCH: boolean;
   readonly ENABLE_SWAGGER_UI: boolean;
   readonly CORS_ORIGINS: readonly string[];
+
+  readonly TRUST_PROXY: readonly string[];
+  readonly RATE_LIMIT_ENABLED: boolean;
+  readonly RATE_LIMIT_WINDOW_MS: number;
+  readonly RATE_LIMIT_MAX: number;
+  readonly RATE_LIMIT_CONVERT_MAX: number;
 }
 
 export type EnvironmentSource = Readonly<Record<string, string | undefined>>;

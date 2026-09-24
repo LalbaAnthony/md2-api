@@ -32,6 +32,21 @@ describe("defaults", () => {
     expect(config.LOG_LEVEL).toBe("info");
     expect(config.STRICT).toBe(false);
     expect(config.ENABLE_SWAGGER_UI).toBe(false);
+    expect(config.RATE_LIMIT_ENABLED).toBe(true);
+  });
+
+  it("leaves rate limiting off and trusts no proxy outside production", () => {
+    const config = loadConfig({});
+    expect(config.RATE_LIMIT_ENABLED).toBe(false);
+    expect(config.RATE_LIMIT_WINDOW_MS).toBe(60_000);
+    expect(config.RATE_LIMIT_MAX).toBe(300);
+    expect(config.RATE_LIMIT_CONVERT_MAX).toBe(30);
+    expect(config.TRUST_PROXY).toEqual([]);
+  });
+
+  it("lets rate limiting be switched off in production", () => {
+    const config = loadConfig({ NODE_ENV: "production", RATE_LIMIT_ENABLED: "false" });
+    expect(config.RATE_LIMIT_ENABLED).toBe(false);
   });
 });
 
@@ -130,4 +145,40 @@ describe("numeric bounds", () => {
   it("rejects a non numeric limit", () => {
     expectValidationFailure(() => loadConfig({ MAX_CONCURRENCY: "many" }), "MAX_CONCURRENCY");
   });
+
+  it("rejects a rate limit budget below one", () => {
+    expectValidationFailure(() => loadConfig({ RATE_LIMIT_MAX: "0" }), "RATE_LIMIT_MAX");
+    expectValidationFailure(
+      () => loadConfig({ RATE_LIMIT_CONVERT_MAX: "-1" }),
+      "RATE_LIMIT_CONVERT_MAX",
+    );
+    expectValidationFailure(
+      () => loadConfig({ RATE_LIMIT_WINDOW_MS: "0" }),
+      "RATE_LIMIT_WINDOW_MS",
+    );
+  });
+});
+
+describe("trusted proxies", () => {
+  it("accepts presets, addresses and ranges", () => {
+    const config = loadConfig({
+      TRUST_PROXY: "loopback, uniquelocal,linklocal,127.0.0.1,172.16.0.0/12,::1,fd00::/8",
+    });
+    expect(config.TRUST_PROXY).toEqual([
+      "loopback",
+      "uniquelocal",
+      "linklocal",
+      "127.0.0.1",
+      "172.16.0.0/12",
+      "::1",
+      "fd00::/8",
+    ]);
+  });
+
+  it.each(["true", "1", "*", "localhost", "10.0.0.0/33", "::1/129", "10.0.0.0/", "10.0.0.0/8/8"])(
+    "rejects %s",
+    (entry) => {
+      expectValidationFailure(() => loadConfig({ TRUST_PROXY: entry }), "TRUST_PROXY");
+    },
+  );
 });

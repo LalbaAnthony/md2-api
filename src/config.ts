@@ -1,3 +1,4 @@
+import { isIP } from "node:net";
 import { z } from "zod";
 import { validationError } from "./errors.ts";
 import type { AppConfig, EnvironmentSource } from "./types/config.ts";
@@ -37,6 +38,42 @@ const commaSeparatedList = z
       .map((entry) => entry.trim())
       .filter((entry) => entry.length > 0),
   );
+
+const TRUSTED_PROXY_PRESETS: ReadonlySet<string> = new Set([
+  "loopback",
+  "linklocal",
+  "uniquelocal",
+]);
+const IPV4_PREFIX_BITS = 32;
+const IPV6_PREFIX_BITS = 128;
+
+const isTrustedProxyEntry = (entry: string): boolean => {
+  if (TRUSTED_PROXY_PRESETS.has(entry)) {
+    return true;
+  }
+  const [address = "", prefix, ...rest] = entry.split("/");
+  const family = isIP(address);
+  if (family === 0 || rest.length > 0) {
+    return false;
+  }
+  if (prefix === undefined) {
+    return true;
+  }
+  const bits = Number(prefix);
+  const maximumBits = family === 4 ? IPV4_PREFIX_BITS : IPV6_PREFIX_BITS;
+  return /^\d{1,3}$/.test(prefix) && bits <= maximumBits;
+};
+
+const trustedProxyList = commaSeparatedList.superRefine((entries, context) => {
+  for (const entry of entries) {
+    if (!isTrustedProxyEntry(entry)) {
+      context.addIssue({
+        code: "custom",
+        message: `Expected loopback, linklocal, uniquelocal, an IP address or a CIDR range, got ${entry}.`,
+      });
+    }
+  }
+});
 
 const positiveInteger = (defaultValue: number, minimum = 1) =>
   z.coerce.number().int().min(minimum).default(defaultValue);
@@ -79,6 +116,12 @@ const configSchema = z.object({
   ENABLE_THEME_WATCH: booleanFromEnvironment(false),
   ENABLE_SWAGGER_UI: booleanFromEnvironment(false).optional(),
   CORS_ORIGINS: commaSeparatedList,
+
+  TRUST_PROXY: trustedProxyList,
+  RATE_LIMIT_ENABLED: booleanFromEnvironment(false).optional(),
+  RATE_LIMIT_WINDOW_MS: positiveInteger(60_000),
+  RATE_LIMIT_MAX: positiveInteger(300),
+  RATE_LIMIT_CONVERT_MAX: positiveInteger(30),
 });
 
 const PRODUCTION_LOG_LEVEL = "info";
@@ -137,6 +180,12 @@ export const loadConfig = (source: EnvironmentSource = process.env): AppConfig =
     ENABLE_THEME_WATCH: parsedConfig.ENABLE_THEME_WATCH,
     ENABLE_SWAGGER_UI: parsedConfig.ENABLE_SWAGGER_UI ?? !isProduction,
     CORS_ORIGINS: parsedConfig.CORS_ORIGINS,
+
+    TRUST_PROXY: parsedConfig.TRUST_PROXY,
+    RATE_LIMIT_ENABLED: parsedConfig.RATE_LIMIT_ENABLED ?? isProduction,
+    RATE_LIMIT_WINDOW_MS: parsedConfig.RATE_LIMIT_WINDOW_MS,
+    RATE_LIMIT_MAX: parsedConfig.RATE_LIMIT_MAX,
+    RATE_LIMIT_CONVERT_MAX: parsedConfig.RATE_LIMIT_CONVERT_MAX,
   };
 
   assertProductionInvariants(config);

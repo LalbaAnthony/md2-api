@@ -17,6 +17,7 @@ Every row names where the mitigation lives and the test that holds it in place. 
 | Header injection by file name | the request schema refuses anything outside `[\w\-. ]`, and the accepted name is sanitised again before the header | `header injection through the file name`                     |
 | Decompression bomb            | `MAX_IMAGE_BYTES` and `MAX_IMAGE_PIXELS` enforced on the metadata, before any full decode                          | `image bounds`, `tests/unit/normalize-images.test.ts`        |
 | Processor exhaustion          | the semaphore and its bounded queue, `CONVERT_TIMEOUT_MS`, and `under-pressure` in production                      | `processor exhaustion`, `tests/unit/concurrency.test.ts`     |
+| Request flooding by a client  | two budgets per client address and window, answered 429 before the body is read (ADR 0010)                         | `tests/contract/rate-limit.test.ts`                          |
 | Hostile front matter          | known keys only, everything else lands in `custom` as a string truncated to 500 characters                         | `hostile front matter`                                       |
 | Hostile theme extension       | each backend validates its own slice, unknown keys refused, invalid built in theme stops the start                 | `tests/unit/theme-registry.test.ts`                          |
 
@@ -53,6 +54,9 @@ The fields of section 12.3 are written once per conversion, and the markdown nev
 truncated. Pino redaction removes the request body, the `markdown` field, the authorization header
 and cookies before anything reaches a transport. `tests/contract/logging.test.ts` sends a document
 carrying a distinctive word and asserts that no line of the capture contains it.
+
+`TRUST_PROXY` accepts proxy addresses and ranges only, never `true` or a hop count, so a caller
+cannot choose the address its budget and its log lines are keyed on by sending `X-Forwarded-For`.
 
 `X-Request-Id` is reused from the caller when it matches `REQUEST_ID_PATTERN`, and replaced
 otherwise, so a caller cannot write arbitrary content into a log line or a response header.
