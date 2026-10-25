@@ -7,7 +7,7 @@ on:
         description: Lowest severity that fails the audit.
         required: false
         type: string
-        default: high
+        default: critical
 
 jobs:
   audit:

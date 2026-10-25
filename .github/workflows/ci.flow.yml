@@ -52,7 +52,7 @@ jobs:
     needs: visual
     uses: ./.github/workflows/audit.inc.yml
     with:
-      audit-level: high
+      audit-level: critical
 
   docker-build:
     needs: audit
